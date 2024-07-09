@@ -1,0 +1,8 @@
+---
+add_extension: cpp 
+email: t.paine154@gmail.com
+github: python-project-templates
+project_description: A C++-Python project template
+project_name: cpp template
+python_version_primary: '3.11'
+team: Python Project Template Authors

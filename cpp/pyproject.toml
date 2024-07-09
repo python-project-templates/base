@@ -1,0 +1,109 @@
+[build-system]
+requires = [
+    "cmake",
+    "ninja",
+    "numpy",
+    "pybind11[global]",
+    "scikit-build",
+    "setuptools",
+    "wheel",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cpp"
+authors = [{name = "Tim Paine", email = "t.paine154@gmail.com"}]
+description="A Python/C++ project template"
+version = "0.1.0"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.7"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: C++",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+keywords = []
+dependencies = []
+
+[project.optional-dependencies]
+develop = [
+    "black>=23",
+    "bump2version",
+    "check-manifest",
+    "cibuildwheel",
+    "numpy",
+    "pybind11[global]",
+    "pytest",
+    "pytest-cov",
+    "pytest-sugar",
+    "ruff",
+    "scikit-build",
+    "twine",
+    "wheel",
+]
+test = [
+    "pytest",
+    "pytest-cov",
+    "pytest-sugar",
+]
+
+[project.urls]
+Repository = "https://github.com/python-project-templates/cpp"
+Homepage = "https://github.com/python-project-templates/cpp"
+Issues = "https://github.com/python-project-templates/cpp/issues"
+
+[tool.black]
+color = true
+line-length = 150
+target-version = ["py310"]
+skip-string-normalization = true
+
+[tool.check-manifest]
+ignore = []
+
+[tool.cibuildwheel]
+build = "cp38-* cp39-* cp310-* cp311-*"
+before-all = "make develop"
+
+build-verbosity = "2"
+environment = {STATIC_PYTHON="On"}
+
+test-command = "pytest -vvv {project}/cpp_template/tests"
+test-requires = [
+    "pytest",
+    "pytest-cov",
+    "pytest-sugar",
+]
+
+[tool.cibuildwheel.linux]
+archs = "x86_64 aarch64"
+skip = "*musllinux* *i686"
+
+[tool.cibuildwheel.macos]
+archs = "x86_64 arm64"
+environment = {CFLAGS="-I/usr/local/include -L/usr/local/lib", CXXFLAGS="-I/usr/local/include -L/usr/local/lib", LDFLAGS="-L/usr/local/lib"}
+
+[tool.cibuildwheel.windows]
+archs = "AMD64"
+skip = "*win32 *arm_64"
+
+[tool.ruff]
+line-length = 150
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401", "F403"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "strict"
+testpaths = "cpp_template/tests"
+
+[tool.setuptools]
+py-modules = ["cpp_template"]

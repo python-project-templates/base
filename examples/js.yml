@@ -1,0 +1,8 @@
+---
+add_extension: js 
+email: t.paine154@gmail.com
+github: python-project-templates
+project_description: A JavaScript-Python project template
+project_name: js template
+python_version_primary: '3.11'
+team: Python Project Template Authors

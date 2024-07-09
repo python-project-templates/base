@@ -1,0 +1,65 @@
+_exclude:
+    - name-slug.jinja
+    - module-slug.jinja
+
+project_name:
+    type: str
+    help: What is your project name?
+
+project_description:
+    type: str
+    help: What is your project description?
+
+project_name_formatted:
+    type: str
+    default: "{% include 'name-slug.jinja' %}"
+    when: false
+
+module:
+    type: str
+    default: "{% include 'module-slug.jinja' %}"
+    when: false
+
+github:
+    type: str
+    help: What is your GitHub User/Organization name?
+
+team:
+    type: str
+    help: What is your name or your team's name?
+
+email:
+    type: str
+    help: What is your email?
+
+add_extension:
+  type: str
+  choices:
+    none:
+      value: python
+    "C++":
+      value: cpp
+    JavaScript:
+      value: js
+    Rust:
+      value: rust
+    Jupyter Widget:
+      value: jupyter
+    Rust JavaScript WebAssembly:
+      value: rustjswasm
+
+_subdirectory: "{{ add_extension }}"
+
+python_version_primary:
+  type: str
+  default: 3.11
+  choices:
+    "3.9":
+      value: "3.9"
+    "3.10":
+      value: "3.10"
+    "3.11":
+      value: "3.11"
+    "3.12":
+      value: "3.12"
+  help: Primary version of Python to use in CI/CD

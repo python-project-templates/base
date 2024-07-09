@@ -1,0 +1,8 @@
+---
+add_extension: python
+email: t.paine154@gmail.com
+github: python-project-templates
+project_description: A pure-python project template
+project_name: python template
+python_version_primary: '3.11'
+team: Python Project Template Authors

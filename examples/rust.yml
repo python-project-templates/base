@@ -1,0 +1,8 @@
+---
+add_extension: rust
+email: t.paine154@gmail.com
+github: python-project-templates
+project_description: A Rust-Python project template
+project_name: rust template
+python_version_primary: '3.11'
+team: Python Project Template Authors

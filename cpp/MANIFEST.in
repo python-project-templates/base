@@ -1,0 +1,40 @@
+# Python
+graft cpp_template
+
+# C++
+graft src
+graft cmake
+include CMakeLists.txt
+
+# Markdown / Text
+include LICENSE
+include README.md
+
+# Project files
+include pyproject.toml
+include setup.py
+
+# Remove IDE and CI/CD
+prune .vscode
+prune .github
+
+# Remove test and lint assets
+prune .pytest_cache
+prune .ruff_cache
+prune .mypy_cache
+prune _skbuild
+exclude .clang-format
+
+# Remove VCS assets
+exclude .bumpversion.cfg
+exclude .gitignore
+exclude .gitattributes
+exclude Makefile
+
+# Patterns to exclude from any directory
+global-exclude *~
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude .git
+global-exclude .ipynb_checkpoints
+global-exclude .DS_Store
