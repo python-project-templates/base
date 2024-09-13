@@ -95,15 +95,24 @@ environment = {CFLAGS="-I/usr/local/include -L/usr/local/lib", CXXFLAGS="-I/usr/
 archs = "AMD64"
 skip = "*win32 *arm_64"
 
-[tool.ruff]
-line-length = 150
-
-[tool.ruff.per-file-ignores]
-"__init__.py" = ["F401", "F403"]
-
 [tool.pytest.ini_options]
 asyncio_mode = "strict"
 testpaths = "cpp_template/tests"
+
+[tool.ruff]
+line-length = 150
+
+[tool.ruff.lint]
+extend-select = ["I"]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+default-section = "third-party"
+known-first-party = ["{{module}}"]
+section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401", "F403"]
 
 [tool.setuptools]
 py-modules = ["cpp_template"]
