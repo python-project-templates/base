@@ -6,7 +6,7 @@ develop-py:
 	python -m pip install -e .[develop]
 
 develop-js:
-	cd js; yarn
+	cd js; pnpm install
 
 develop: develop-js develop-py  ## setup project for development
 
@@ -15,7 +15,7 @@ build-py:
 	python -m build -w -n
 
 build-js:
-	cd js; yarn build
+	cd js; pnpm build
 
 build: build-js build-py  ## build the project
 
@@ -32,7 +32,7 @@ lint-py:  ## run python linter with ruff
 	python -m ruff format --check {{module}}
 
 lint-js:  ## run js linter
-	cd js; yarn lint
+	cd js; pnpm lint
 
 lint: lint-js lint-py  ## run project linters
 
@@ -45,7 +45,7 @@ fix-py:  ## fix python formatting with ruff
 	python -m ruff format {{module}}
 
 fix-js:  ## fix js formatting
-	cd js; yarn fix
+	cd js; pnpm fix
 
 fix: fix-js fix-py  ## run project autoformatters
 
@@ -83,7 +83,7 @@ coverage-py:  ## run python tests and collect test coverage
 
 .PHONY: test-js tests-js coverage-js
 test-js:  ## run js tests
-	cd js; yarn test
+	cd js; pnpm test
 
 # alias
 tests-js: test-js
@@ -123,7 +123,7 @@ dist-build-py:  # build python dists
 	python -m build -w -s
 
 dist-build-js:  # build js dists
-	cd js; yarn pack
+	cd js; pnpm pack
 
 dist-check:  ## run python dist checker with twine
 	python -m twine check dist/*
