@@ -41,7 +41,7 @@ lint-py:  ## run python linter with ruff
 	python -m ruff check {{module}}
 	python -m ruff format --check {{module}}
 
-lint-rust:  ## run the rust linter
+lint-rust:  ## run rust linter
 	make -C rust lint
 
 lint: lint-rust lint-py  ## run project linters
