@@ -7,7 +7,8 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: [
-    ["html", { outputFile: "playwright-report/index.html" }],
+    ["line"],
+    ["html", { outputFile: "playwright-report/index.html", open: "never" }],
     ["junit", { outputFile: "junit.xml" }],
   ],
   use: {

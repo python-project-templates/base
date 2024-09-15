@@ -44,16 +44,12 @@ jobs:
         cache: 'pip'
         cache-dependency-path: 'pyproject.toml'
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
       with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'yarn'
-        cache-dependency-path: js/yarn.lock
-  
-    - name: Install yarn
-      run: npm install -g yarn
-  
+        version: 9
+        package_json_file: js/package.json
+
     - name: Install dependencies
       run: make develop
 
@@ -72,7 +68,7 @@ jobs:
       run: make coverage
       if: ${{ matrix.os == 'ubuntu-latest' }}
 
-    - name: Upload test results (Python)
+    - name: Upload test results
       uses: actions/upload-artifact@v4
       with:
         name: test-results-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.node-version }}

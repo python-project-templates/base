@@ -6,16 +6,16 @@ develop-py:
 	python -m pip install -e .[develop]
 
 develop-js:
-	cd js; pnpm install
+	cd js; pnpm install && npx playwright install
 
 develop: develop-js develop-py  ## setup project for development
 
 .PHONY: build-py build-js build
 build-py:
-	maturin build
+	python -m build -w -n
 
 build-js:
-	cd js; pnpm run build
+	cd js; pnpm build
 
 build: build-js build-py  ## build the project
 
@@ -26,15 +26,16 @@ install:  ## install python library
 #########
 # LINTS #
 #########
-.PHONY: lint-py lint-hs lint lints
+.PHONY: lint-py lint-js lint lints
 lint-py:  ## run python linter with ruff
 	python -m ruff check {{module}}
 	python -m ruff format --check {{module}}
 
-lint-js:  ## run the ruff linter
-	cd js; pnpm run lint
+lint-js:  ## run js linter
+	cd js; pnpm lint
 
 lint: lint-js lint-py  ## run project linters
+
 # alias
 lints: lint
 
@@ -43,10 +44,11 @@ fix-py:  ## fix python formatting with ruff
 	python -m ruff check --fix {{module}}
 	python -m ruff format {{module}}
 
-fix-js:  ## fix hs formatting
-	cd js; pnpm run fix
+fix-js:  ## fix js formatting
+	cd js; pnpm fix
 
 fix: fix-js fix-py  ## run project autoformatters
+
 # alias
 format: fix
 
@@ -69,26 +71,29 @@ annotate:  ## run python type annotation checks with mypy
 #########
 # TESTS #
 #########
-.PHONY: test test-py coverage-py tests
-
+.PHONY: test-py tests-py coverage-py
 test-py:  ## run python tests
 	python -m pytest -v {{module}}/tests --junitxml=junit.xml
+
 # alias
 tests-py: test-py
 
 coverage-py:  ## run python tests and collect test coverage
 	python -m pytest -v {{module}}/tests --junitxml=junit.xml --cov={{module}} --cov-branch --cov-fail-under=50 --cov-report term-missing --cov-report xml
 
+.PHONY: test-js tests-js coverage-js
 test-js:  ## run js tests
-	cd js; pnpm run test
+	cd js; pnpm test
+
 # alias
 tests-js: test-js
 
-coverage-js:  ## run js tests and collect test coverage
-	pnpm run test
+coverage-js: test-js  ## run js tests and collect test coverage
 
+.PHONY: test coverage tests
 test: test-py test-js  ## run all tests
 coverage: coverage-py coverage-js  ## run all tests and collect test coverage
+
 # alias
 tests: test
 
@@ -118,7 +123,7 @@ dist-build-py:  # build python dists
 	python -m build -w -s
 
 dist-build-js:  # build js dists
-	cd js; pnpm run dist
+	cd js; pnpm pack
 
 dist-check:  ## run python dist checker with twine
 	python -m twine check dist/*

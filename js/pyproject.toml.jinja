@@ -1,6 +1,9 @@
 [build-system]
-requires = ["maturin>=1,<2"]
-build-backend = "maturin"
+requires = [
+    "hatchling",
+    "hatch-jupyter-builder",
+]
+build-backend="hatchling.build"
 
 [project]
 name = "{{project_name_formatted}}"
@@ -14,7 +17,6 @@ keywords = []
 
 classifiers = [
     "Development Status :: 3 - Alpha",
-    "Programming Language :: Rust",
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
     "Programming Language :: Python :: 3",
@@ -36,7 +38,8 @@ develop = [
     "build",
     "bump-my-version",
     "check-manifest",
-    "maturin>=1,<2",
+    "hatch-jupyter-builder",
+    "hatchling",
     "pytest",
     "pytest-cov",
     "ruff",
@@ -62,22 +65,71 @@ search = 'version = "{current_version}"'
 replace = 'version = "{new_version}"'
 
 [[tool.bumpversion.files]]
-filename = "Cargo.toml"
-search = 'version = "{current_version}"'
-replace = 'version = "{new_version}"'
-
-[[tool.bumpversion.files]]
-filename = "rust/Cargo.toml"
-search = 'version = "{current_version}"'
-replace = 'version = "{new_version}"'
+filename = "js/package.json"
+search = '"version": "{current_version}"'
+replace = '"version": "{new_version}"'
 
 [tool.check-manifest]
 ignore = [
     ".copier-answers.yml",
+    "js/pnpm-lock.yaml",
     "Makefile",
     "setup.py",
-    "rust/Cargo.lock",
+    "{{module}}/**/*",
 ]
+
+[tool.hatch.build]
+artifacts = [
+    "{{module}}/extension",
+]
+
+[tool.hatch.build.sources]
+src = "/"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/{{module}}",
+    "/js",
+    "LICENSE",
+    "README.md",
+]
+exclude = [
+    ".copier-answers.yml",
+    "/.github",
+    "/.gitattributes",
+    "/.gitignore",
+    "/js/node_modules",
+]
+
+[tool.hatch.build.targets.wheel]
+include = [
+    "/{{module}}",
+]
+exclude = [
+    ".copier-answers.yml",
+    "/.github",
+    "/.gitattributes",
+    "/.gitignore",
+    "/js/node_modules",
+    "/pyproject.toml",
+]
+
+[tool.hatch.build.hooks.jupyter-builder]
+build-function = "hatch_jupyter_builder.npm_builder"
+ensured-targets = [
+    "{{module}}/extension/cdn/index.js",
+]
+skip-if-exists = [
+    "{{module}}/extension/cdn/index.js",
+]
+dependencies = [
+    "hatch-jupyter-builder",
+]
+
+[tool.hatch.build.hooks.jupyter-builder.build-kwargs]
+path = "js"
+build_cmd = "build"
+npm = "pnpm"
 
 [tool.pytest.ini_options]
 asyncio_mode = "strict"

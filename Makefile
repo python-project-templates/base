@@ -19,6 +19,11 @@ gen-cpp:  ## regenerate the c++ template from scratch
 	cd ../cpp-template && rm -rf ./* && rm -rf .copier-answers.yml .gitignore .github .gitattributes
 	copier copy -w . ../cpp-template --data-file examples/cpp.yml
 
+.PHONY: gen-js
+gen-js:  ## regenerate the js template from scratch
+	cd ../js-template && rm -rf ./* && rm -rf .copier-answers.yml .gitignore .github .gitattributes
+	copier copy -w . ../js-template --data-file examples/js.yml
+
 .PHONY: gen-jupyter
 gen-jupyter:  ## regenerate the jupyter template from scratch
 	cd ../jupyter-template && rm -rf ./* && rm -rf .copier-answers.yml .gitignore .github .gitattributes
