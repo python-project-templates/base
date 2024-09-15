@@ -48,11 +48,12 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'yarn'
-        cache-dependency-path: js/yarn.lock
   
-    - name: Install yarn
-      run: npm install -g yarn
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: 9
+        package_json_file: js/package.json
   
     - name: Install dependencies
       run: make develop
