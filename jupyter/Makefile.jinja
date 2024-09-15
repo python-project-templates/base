@@ -1,63 +1,53 @@
 #########
 # BUILD #
 #########
-.PHONY: develop-py develop-rust develop
+.PHONY: develop-py develop-js develop
 develop-py:
 	python -m pip install -e .[develop]
 
-develop-rust:
-	make -C rust develop
+develop-js:
+	cd js; pnpm install && npx playwright install
 
-develop: develop-rust develop-py  ## setup project for development
+develop: develop-js develop-py  ## setup project for development
 
-.PHONY: build-py build-rust build dev
+.PHONY: build-py build-js build
 build-py:
-	maturin build
+	python setup.py build build_ext --inplace
 
-build-rust:
-	make -C rust build
+build-js:
+	cd js; pnpm build
 
-dev: build  ## lightweight in-place build for iterative dev
-	$(_CP_COMMAND)
-
-build: build-rust build-py  ## build the project
+build: build-js build-py  ## build the project
 
 .PHONY: install
 install:  ## install python library
 	python -m pip install .
 
-UNAME := $(shell uname)
-ifeq ($(UNAME), Darwin)
-	_CP_COMMAND := cp target/debug/lib{{module}}.dylib {{module}}/{{module}}.abi3.so
-else
-	_CP_COMMAND := cp target/debug/lib{{module}}.so {{module}}/{{module}}.abi3.so
-endif
-
 #########
 # LINTS #
 #########
-.PHONY: lint-py lint-rust lint lints
+.PHONY: lint-py lint-js lint lints
 lint-py:  ## run python linter with ruff
 	python -m ruff check {{module}}
 	python -m ruff format --check {{module}}
 
-lint-rust:  ## run rust linter
-	make -C rust lint
+lint-js:  ## run js linter
+	cd js; pnpm lint
 
-lint: lint-rust lint-py  ## run project linters
+lint: lint-js lint-py  ## run project linters
 
 # alias
 lints: lint
 
-.PHONY: fix-py fix-rust fix format
+.PHONY: fix-py fix-js fix format
 fix-py:  ## fix python formatting with ruff
 	python -m ruff check --fix {{module}}
 	python -m ruff format {{module}}
 
-fix-rust:  ## fix rust formatting
-	make -C rust fix
+fix-js:  ## fix js formatting
+	cd js; pnpm fix
 
-fix: fix-rust fix-py  ## run project autoformatters
+fix: fix-js fix-py  ## run project autoformatters
 
 # alias
 format: fix
@@ -91,19 +81,18 @@ tests-py: test-py
 coverage-py:  ## run python tests and collect test coverage
 	python -m pytest -v {{module}}/tests --junitxml=junit.xml --cov={{module}} --cov-branch --cov-fail-under=50 --cov-report term-missing --cov-report xml
 
-.PHONY: test-rust tests-rust coverage-rust
-test-rust:  ## run rust tests
-	make -C rust test
+.PHONY: test-js tests-js coverage-js
+test-js:  ## run js tests
+	cd js; pnpm test
 
 # alias
-tests-rust: test-rust
+tests-js: test-js
 
-coverage-rust:  ## run rust tests and collect test coverage
-	make -C rust coverage
+coverage-js: test-js  ## run js tests and collect test coverage
 
 .PHONY: test coverage tests
-test: test-py test-rust  ## run all tests
-coverage: coverage-py coverage-rust  ## run all tests and collect test coverage
+test: test-py test-js  ## run all tests
+coverage: coverage-py coverage-js  ## run all tests and collect test coverage
 
 # alias
 tests: test
@@ -133,13 +122,13 @@ major:  ## bump a major version
 dist-build-py:  # build python dists
 	python -m build -w -s
 
-dist-build-rust:  # build rust dists
-	make -C rust dist
+dist-build-js:  # build js dists
+	cd js; pnpm pack
 
 dist-check:  ## run python dist checker with twine
 	python -m twine check dist/*
 
-dist: clean build dist-build-rust dist-build-py dist-check  ## build all dists
+dist: clean build dist-build-js dist-build-py dist-check  ## build all dists
 
 publish: dist  # publish python assets
 
