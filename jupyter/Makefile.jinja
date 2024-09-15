@@ -6,7 +6,7 @@ develop-py:
 	python -m pip install -e .[develop]
 
 develop-js:
-	cd js; pnpm install && npx playwright install
+	cd js; yarn
 
 develop: develop-js develop-py  ## setup project for development
 
@@ -15,7 +15,7 @@ build-py:
 	python -m build -w -n
 
 build-js:
-	cd js; pnpm build
+	cd js; yarn build
 
 build: build-js build-py  ## build the project
 
@@ -32,7 +32,7 @@ lint-py:  ## run python linter with ruff
 	python -m ruff format --check {{module}}
 
 lint-js:  ## run js linter
-	cd js; pnpm lint
+	cd js; yarn lint
 
 lint: lint-js lint-py  ## run project linters
 
@@ -45,7 +45,7 @@ fix-py:  ## fix python formatting with ruff
 	python -m ruff format {{module}}
 
 fix-js:  ## fix js formatting
-	cd js; pnpm fix
+	cd js; yarn fix
 
 fix: fix-js fix-py  ## run project autoformatters
 
@@ -83,7 +83,7 @@ coverage-py:  ## run python tests and collect test coverage
 
 .PHONY: test-js tests-js coverage-js
 test-js:  ## run js tests
-	cd js; pnpm test
+	cd js; yarn test
 
 # alias
 tests-js: test-js
@@ -123,7 +123,7 @@ dist-build-py:  # build python dists
 	python -m build -w -s
 
 dist-build-js:  # build js dists
-	cd js; pnpm pack
+	cd js; yarn pack
 
 dist-check:  ## run python dist checker with twine
 	python -m twine check dist/*

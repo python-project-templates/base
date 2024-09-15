@@ -10,7 +10,7 @@ develop-rust:
 
 develop: develop-rust develop-py  ## setup project for development
 
-.PHONY: build-py build-rust build
+.PHONY: build-py build-rust build dev
 build-py:
 	maturin build
 
@@ -45,6 +45,7 @@ lint-rust:  ## run rust linter
 	make -C rust lint
 
 lint: lint-rust lint-py  ## run project linters
+
 # alias
 lints: lint
 
@@ -57,6 +58,7 @@ fix-rust:  ## fix rust formatting
 	make -C rust fix
 
 fix: fix-rust fix-py  ## run project autoformatters
+
 # alias
 format: fix
 
@@ -79,26 +81,30 @@ annotate:  ## run python type annotation checks with mypy
 #########
 # TESTS #
 #########
-.PHONY: test test-py coverage-py tests
-
+.PHONY: test-py tests-py coverage-py
 test-py:  ## run python tests
 	python -m pytest -v {{module}}/tests --junitxml=junit.xml
+
 # alias
 tests-py: test-py
 
 coverage-py:  ## run python tests and collect test coverage
 	python -m pytest -v {{module}}/tests --junitxml=junit.xml --cov={{module}} --cov-branch --cov-fail-under=50 --cov-report term-missing --cov-report xml
 
+.PHONY: test-rust tests-rust coverage-rust
 test-rust:  ## run rust tests
 	make -C rust test
+
 # alias
 tests-rust: test-rust
 
 coverage-rust:  ## run rust tests and collect test coverage
 	make -C rust coverage
 
+.PHONY: test coverage tests
 test: test-py test-rust  ## run all tests
 coverage: coverage-py coverage-rust  ## run all tests and collect test coverage
+
 # alias
 tests: test
 

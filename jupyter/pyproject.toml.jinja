@@ -2,6 +2,7 @@
 requires = [
     "hatchling",
     "hatch-jupyter-builder",
+    "jupyterlab>=4,<5",
 ]
 build-backend="hatchling.build"
 
@@ -40,6 +41,7 @@ develop = [
     "check-manifest",
     "hatch-jupyter-builder",
     "hatchling",
+    "jupyterlab>=4,<5",
     "pytest",
     "pytest-cov",
     "ruff",
@@ -72,15 +74,16 @@ replace = '"version": "{new_version}"'
 [tool.check-manifest]
 ignore = [
     ".copier-answers.yml",
-    "js/pnpm-lock.yaml",
     "Makefile",
     "setup.py",
-    "{{module}}/**/*",
+    "{{module}}/labextension/**",
+    "{{module}}/nbextension/**",
 ]
 
 [tool.hatch.build]
 artifacts = [
-    "{{module}}/extension",
+    "{{module}}/nbextension",
+    "{{module}}/labextension",
 ]
 
 [tool.hatch.build.sources]
@@ -114,13 +117,16 @@ exclude = [
     "/pyproject.toml",
 ]
 
+[tool.hatch.build.targets.wheel.shared-data]
+"{{module}}/labextension" = "share/jupyter/labextensions/{{module}}"
+
 [tool.hatch.build.hooks.jupyter-builder]
 build-function = "hatch_jupyter_builder.npm_builder"
 ensured-targets = [
-    "{{module}}/extension/cdn/index.js",
+    "{{module}}/labextension/package.json",
 ]
 skip-if-exists = [
-    "{{module}}/extension/cdn/index.js",
+    "{{module}}/labextension/package.json",
 ]
 dependencies = [
     "hatch-jupyter-builder",
@@ -129,7 +135,7 @@ dependencies = [
 [tool.hatch.build.hooks.jupyter-builder.build-kwargs]
 path = "js"
 build_cmd = "build"
-npm = "pnpm"
+npm = "yarn"
 
 [tool.pytest.ini_options]
 asyncio_mode = "strict"
