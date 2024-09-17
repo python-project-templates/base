@@ -128,10 +128,13 @@ major:  ## bump a major version
 ########
 # DIST #
 ########
-.PHONY: dist dist-build dist-sdist dist-local-wheel publish
+.PHONY: dist-build-py-wheel dist-build-py-sdist dist-build-rust dist-check dist publish
 
-dist-build-py:  # build python dists
-	python -m build -w -s
+dist-build-py-wheel:  # build python wheel
+	python -m cibuildwheel --output-dir dist
+
+dist-build-py-sdist:  # build python sdist
+	python -m build --sdist -o dist
 
 dist-build-rust:  # build rust dists
 	make -C rust dist
