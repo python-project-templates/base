@@ -112,5 +112,5 @@ jobs:
 
     - uses: actions/upload-artifact@v4
       with:
-        name: wheels
+        name: {% raw %}dist-${{matrix.os}}{% endraw %}
         path: dist
