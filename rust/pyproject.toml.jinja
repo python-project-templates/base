@@ -84,22 +84,21 @@ ignore = [
 [tool.cibuildwheel]
 before-build = "rustup show"
 build = "cp39-*"
+skip = "*musllinux*"
 test-command = "pytest -vvv {project}/{{module}}/tests"
 test-requires = ["pytest", "pytest-cov", "pytest-sugar", "pytest-xdist"]
 
 [tool.cibuildwheel.linux]
 before-build = "curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain=stable --profile=minimal -y && rustup show"
 environment = {PATH="$HOME/.cargo/bin:$PATH", CARGO_TERM_COLOR="always"}
-skip = "*i686 musllinux*"
-manylinux-x86_64-image = "manylinux_2_28"
+archs = "x86_64 aarch64"
 
 [tool.cibuildwheel.macos]
-archs = "arm64"
+archs = "universal2"
 
 [tool.cibuildwheel.windows]
 environment = {PATH="$UserProfile\\.cargo\bin;$PATH"}
-archs = "AMD64 *win32"
-skip = "*arm_64"
+archs = "AMD64 x86"
 
 [tool.pytest.ini_options]
 asyncio_mode = "strict"
