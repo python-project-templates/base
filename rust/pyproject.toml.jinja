@@ -84,7 +84,7 @@ ignore = [
 [tool.cibuildwheel]
 before-build = "rustup show"
 build = "cp39-*"
-test-command = "pytest -vvv {{module}}/tests"
+test-command = "pytest -vvv {project}/{{module}}/tests"
 test-requires = ["pytest", "pytest-cov", "pytest-sugar", "pytest-xdist"]
 
 [tool.cibuildwheel.linux]
