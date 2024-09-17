@@ -98,15 +98,15 @@ jobs:
 
     - name: Make dist
       run: |
-        dist-build-rust
-        dist-build-py-sdist
-        dist-build-py-wheel
+        dist-rust
+        dist-py-sdist
+        dist-py-wheel
         dist-check
       if: {% raw %}${{ matrix.os == 'ubuntu-latest' }}{% endraw %}
 
     - name: Make dist
       run: |
-        dist-build-py-wheel
+        dist-py-wheel
         dist-check
       if: {% raw %}${{ matrix.os != 'ubuntu-latest' }}{% endraw %}
 
