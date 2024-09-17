@@ -88,8 +88,8 @@ test-command = "pytest -vvv {{module}}/tests"
 test-requires = ["pytest", "pytest-cov", "pytest-sugar", "pytest-xdist"]
 
 [tool.cibuildwheel.linux]
-before-build ="curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain=stable --profile=minimal -y && rustup show"
-environment = {PATH="$HOME/.cargo/bin:$PATH" CARGO_TERM_COLOR="always"}
+before-build = "curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain=stable --profile=minimal -y && rustup show"
+environment = {PATH="$HOME/.cargo/bin:$PATH", CARGO_TERM_COLOR="always"}
 skip = "*i686 musllinux*"
 manylinux-x86_64-image = "manylinux_2_28"
 

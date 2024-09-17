@@ -128,21 +128,21 @@ major:  ## bump a major version
 ########
 # DIST #
 ########
-.PHONY: dist-build-py-wheel dist-build-py-sdist dist-build-rust dist-check dist publish
+.PHONY: dist-py-wheel dist-py-sdist dist-rust dist-check dist publish
 
-dist-build-py-wheel:  # build python wheel
+dist-py-wheel:  # build python wheel
 	python -m cibuildwheel --output-dir dist
 
-dist-build-py-sdist:  # build python sdist
+dist-py-sdist:  # build python sdist
 	python -m build --sdist -o dist
 
-dist-build-rust:  # build rust dists
+dist-rust:  # build rust dists
 	make -C rust dist
 
 dist-check:  ## run python dist checker with twine
 	python -m twine check dist/*
 
-dist: clean build dist-build-rust dist-build-py dist-check  ## build all dists
+dist: clean build dist-rust dist-py-wheel dist-py-sdist dist-check  ## build all dists
 
 publish: dist  # publish python assets
 
