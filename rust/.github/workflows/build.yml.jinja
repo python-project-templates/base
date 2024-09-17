@@ -98,16 +98,16 @@ jobs:
 
     - name: Make dist
       run: |
-        dist-rust
-        dist-py-sdist
-        dist-py-wheel
-        dist-check
+        make dist-rust
+        make dist-py-sdist
+        make dist-py-wheel
+        make dist-check
       if: {% raw %}${{ matrix.os == 'ubuntu-latest' }}{% endraw %}
 
     - name: Make dist
       run: |
-        dist-py-wheel
-        dist-check
+        make dist-py-wheel
+        make dist-check
       if: {% raw %}${{ matrix.os != 'ubuntu-latest' }}{% endraw %}
 
     - uses: actions/upload-artifact@v4
