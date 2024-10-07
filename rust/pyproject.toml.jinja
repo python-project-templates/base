@@ -36,6 +36,7 @@ develop = [
     "build",
     "bump-my-version",
     "check-manifest",
+    "cibuildwheel",
     "maturin>=1,<2",
     "pytest",
     "pytest-cov",
@@ -79,6 +80,25 @@ ignore = [
     "rust/Cargo.lock",
     "rust/README.md",
 ]
+
+[tool.cibuildwheel]
+before-build = "rustup show"
+build = "cp39-*"
+skip = "*musllinux*"
+test-command = "pytest -vvv {project}/{{module}}/tests"
+test-requires = ["pytest", "pytest-cov", "pytest-sugar", "pytest-xdist"]
+
+[tool.cibuildwheel.linux]
+before-build = "curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain=stable --profile=minimal -y && rustup show"
+environment = {PATH="$HOME/.cargo/bin:$PATH", CARGO_TERM_COLOR="always"}
+archs = "x86_64"
+
+[tool.cibuildwheel.macos]
+archs = "x86_64 arm64"
+
+[tool.cibuildwheel.windows]
+environment = {PATH="$UserProfile\\.cargo\bin;$PATH"}
+archs = "AMD64 x86"
 
 [tool.pytest.ini_options]
 asyncio_mode = "strict"

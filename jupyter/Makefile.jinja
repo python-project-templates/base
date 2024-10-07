@@ -117,18 +117,18 @@ major:  ## bump a major version
 ########
 # DIST #
 ########
-.PHONY: dist dist-build dist-sdist dist-local-wheel publish
+.PHONY: dist dist-py dist-js dist-check publish
 
-dist-build-py:  # build python dists
+dist-py:  # build python dists
 	python -m build -w -s
 
-dist-build-js:  # build js dists
+dist-js:  # build js dists
 	cd js; pnpm pack
 
 dist-check:  ## run python dist checker with twine
 	python -m twine check dist/*
 
-dist: clean build dist-build-js dist-build-py dist-check  ## build all dists
+dist: clean build dist-js dist-py dist-check  ## build all dists
 
 publish: dist  # publish python assets
 
