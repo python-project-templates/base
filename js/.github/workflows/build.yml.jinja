@@ -1,4 +1,3 @@
-{% raw %}
 name: Build Status
 
 on:
@@ -16,7 +15,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  group: {% raw %}${{ github.workflow }}-${{ github.head_ref || github.run_id }}{% endraw %}
   cancel-in-progress: true
 
 permissions:
@@ -26,24 +25,29 @@ permissions:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
+    runs-on: {% raw %}${{ matrix.os }}{% endraw %}
 
     strategy:
       matrix:
         os: [ubuntu-latest]
-        python-version: [{% endraw %}"{{python_version_primary}}"{% raw %}]
+        python-version: ["{{python_version_primary}}"]
         node-version: [20.x]
 
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python {% raw %}${{ matrix.python-version }}{% endraw %}
       uses: actions/setup-python@v5
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: {% raw %}${{ matrix.python-version }}{% endraw %}
         cache: 'pip'
         cache-dependency-path: 'pyproject.toml'
 
+    - name: Use Node.js {% raw %}${{ matrix.node-version }}{% endraw %}
+      uses: actions/setup-node@v4
+      with:
+        node-version: {% raw %}${{ matrix.node-version }}{% endraw %}
+  
     - name: Install pnpm
       uses: pnpm/action-setup@v4
       with:
@@ -55,38 +59,47 @@ jobs:
 
     - name: Lint
       run: make lint
-      if: ${{ matrix.os == 'ubuntu-latest' }}
+      if: matrix.os == 'ubuntu-latest'
 
     - name: Checks
       run: make checks
-      if: ${{ matrix.os == 'ubuntu-latest' }}
+      if: matrix.os == 'ubuntu-latest'
 
     - name: Build
       run: make build
 
     - name: Test
       run: make coverage
-      if: ${{ matrix.os == 'ubuntu-latest' }}
+      if: matrix.os == 'ubuntu-latest'
 
     - name: Upload test results
       uses: actions/upload-artifact@v4
       with:
-        name: test-results-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.node-version }}
+        name: {% raw %}test-results-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.node-version }}{% endraw %}
         path: |
           **/junit.xml
-      if: ${{ always() }}
+      if: {% raw %}${{ always() }}{% endraw %}
 
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v2
       with:
         files: |
             **/junit.xml
-      if: ${{ matrix.os == 'ubuntu-latest' }}
+      if: matrix.os == 'ubuntu-latest'
 
     - name: Upload coverage
       uses: codecov/codecov-action@v4
+      with:
+        token: {% raw %}${{ secrets.CODECOV_TOKEN }}{% endraw %}
 
     - name: Make dist
       run: make dist
-      if: ${{ matrix.os == 'ubuntu-latest' }}
-{% endraw %}
+      if: matrix.os == 'ubuntu-latest'
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: {% raw %}dist-${{matrix.os}}{% endraw %}
+        path: dist
+      if: matrix.os == 'ubuntu-latest'
+
+

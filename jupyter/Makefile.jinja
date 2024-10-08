@@ -73,13 +73,13 @@ annotate:  ## run python type annotation checks with mypy
 #########
 .PHONY: test-py tests-py coverage-py
 test-py:  ## run python tests
-	python -m pytest -v {{module}}/tests --junitxml=junit.xml
+	python -m pytest -v {{module}}/tests
 
 # alias
 tests-py: test-py
 
 coverage-py:  ## run python tests and collect test coverage
-	python -m pytest -v {{module}}/tests --junitxml=junit.xml --cov={{module}} --cov-branch --cov-fail-under=50 --cov-report term-missing --cov-report xml
+	python -m pytest -v {{module}}/tests --cov={{module}} --cov-report term-missing --cov-report xml
 
 .PHONY: test-js tests-js coverage-js
 test-js:  ## run js tests

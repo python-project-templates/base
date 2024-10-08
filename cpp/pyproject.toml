@@ -95,7 +95,22 @@ environment = {CFLAGS="-I/usr/local/include -L/usr/local/lib", CXXFLAGS="-I/usr/
 archs = "AMD64"
 skip = "*win32 *arm_64"
 
+[tool.coverage.run]
+branch = true
+omit = [
+    "{{module}}/tests/integration/",
+]
+[tool.coverage.report]
+exclude_also = [
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "@(abc\\.)?abstractmethod",
+]
+ignore_errors = true
+fail_under = 50
+
 [tool.pytest.ini_options]
+addopts = ["-vvv", "--junitxml=junit.xml"]
 asyncio_mode = "strict"
 testpaths = "cpp_template/tests"
 

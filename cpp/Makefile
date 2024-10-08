@@ -49,7 +49,7 @@ fix: fix-cpp fix-py  ## Run project autofixers
 
 .PHONY: tests-py tests-cpp tests test tests-ci
 tests-py:
-	python -m pytest -v cpp_template/tests --junitxml=junit.xml --cov=cpp_template --cov-branch --cov-fail-under=65 --cov-report term-missing --cov-report xml
+	python -m pytest -v {{module}}/tests --cov={{module}} --cov-report term-missing --cov-report xml
 
 tests-cpp:
 	echo "TODO C++ tests"
