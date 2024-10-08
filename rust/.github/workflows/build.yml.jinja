@@ -77,7 +77,7 @@ jobs:
 
     - name: Checks
       run: make checks
-      if: {% raw %}${{ matrix.os == 'ubuntu-latest' }}{% endraw %}
+      if: matrix.os == 'ubuntu-latest'
 
     - name: Build
       run: make build
@@ -88,8 +88,9 @@ jobs:
     - name: Upload test results (Python)
       uses: actions/upload-artifact@v4
       with:
-        name: {% raw %}pytest-results-${{ matrix.os }}-${{ matrix.python-version }}{% endraw %}
-        path: junit.xml
+        name: {% raw %}test-results-${{ matrix.os }}-${{ matrix.python-version }}{% endraw %}
+        path: |
+          **/junit.xml
       if: {% raw %}${{ always() }}{% endraw %}
 
     - name: Publish Unit Test Results
@@ -97,12 +98,12 @@ jobs:
       with:
         files: |
             **/junit.xml
-      if: {% raw %}${{ matrix.os == 'ubuntu-latest' }}{% endraw %}
+      if: matrix.os == 'ubuntu-latest'
 
     - name: Upload coverage
       uses: codecov/codecov-action@v4
       with:
-        token: ${{ secrets.CODECOV_TOKEN }}
+        token: {% raw %}${{ secrets.CODECOV_TOKEN }}{% endraw %}
 
     - name: Make dist
       run: |
@@ -110,13 +111,13 @@ jobs:
         make dist-py-sdist
         make dist-py-wheel
         make dist-check
-      if: {% raw %}${{ matrix.os == 'ubuntu-latest' }}{% endraw %}
+      if: matrix.os == 'ubuntu-latest'
 
     - name: Make dist
       run: |
         make dist-py-wheel
         make dist-check
-      if: {% raw %}${{ matrix.os != 'ubuntu-latest' }}{% endraw %}
+      if: matrix.os != 'ubuntu-latest'
 
     - uses: actions/upload-artifact@v4
       with:
