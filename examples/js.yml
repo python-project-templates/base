@@ -3,6 +3,6 @@ add_extension: js
 email: 3105306+timkpaine@users.noreply.github.com
 github: python-project-templates
 project_description: A JavaScript-Python project template
-project_name: js template
+project_name: python template js
 python_version_primary: '3.11'
 team: Python Project Template Authors

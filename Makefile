@@ -9,28 +9,42 @@ help:
 print-%:
 	@echo '$*=$($*)'
 
+UNAME := $(shell uname)
+ifeq ($(UNAME), Linux)
+SED = sed -i
+endif
+ifeq ($(UNAME), Darwin)
+SED = sed -i '' -e
+endif
+
+
 .PHONY: gen-python
 gen-python:  ## regenerate the python template from scratch
 	mkdir -p ../python-template && cd ../python-template && rm -rf ./* && rm -rf .copier-answers.yml .gitignore .github .gitattributes
 	copier copy -w . ../python-template --data-file examples/python.yml
+	cd ../python-template && $(SED) 's#_src_path: .#_src_path: https://github.com/python-project-templates/base.git#g' ./.copier-answers.yml
 
 .PHONY: gen-cpp
 gen-cpp:  ## regenerate the c++ template from scratch
-	mkdir -p ../cpp-template && cd ../cpp-template && rm -rf ./* && rm -rf .copier-answers.yml .gitignore .github .gitattributes
-	copier copy -w . ../cpp-template --data-file examples/cpp.yml
+	mkdir -p ../python-template-cpp && cd ../python-template-cpp && rm -rf ./* && rm -rf .copier-answers.yml .gitignore .github .gitattributes
+	copier copy -w . ../python-template-cpp --data-file examples/cpp.yml
+	cd ../python-template-cpp && $(SED) 's#_src_path: .#_src_path: https://github.com/python-project-templates/base.git#g' ./.copier-answers.yml
 
 .PHONY: gen-js
 gen-js:  ## regenerate the js template from scratch
-	mkdir -p ../js-template && cd ../js-template && rm -rf ./* && rm -rf .copier-answers.yml .gitignore .github .gitattributes
-	copier copy -w . ../js-template --data-file examples/js.yml
+	mkdir -p ../python-template-js && cd ../python-template-js && rm -rf ./* && rm -rf .copier-answers.yml .gitignore .github .gitattributes
+	copier copy -w . ../python-template-js --data-file examples/js.yml
+	cd ../python-template-js && $(SED) 's#_src_path: .#_src_path: https://github.com/python-project-templates/base.git#g' ./.copier-answers.yml
 
 .PHONY: gen-jupyter
 gen-jupyter:  ## regenerate the jupyter template from scratch
-	mkdir -p ../jupyter-template && cd ../jupyter-template && rm -rf ./* && rm -rf .copier-answers.yml .gitignore .github .gitattributes
-	copier copy -w . ../jupyter-template --data-file examples/jupyter.yml
+	mkdir -p ../python-template-jupyter && cd ../python-template-jupyter && rm -rf ./* && rm -rf .copier-answers.yml .gitignore .github .gitattributes
+	copier copy -w . ../python-template-jupyter --data-file examples/jupyter.yml
+	cd ../python-template-jupyter && $(SED) 's#_src_path: .#_src_path: https://github.com/python-project-templates/base.git#g' ./.copier-answers.yml
 
 .PHONY: gen-rust
 gen-rust:  ## regenerate the rust template from scratch
-	mkdir -p ../rust-template && cd ../rust-template && rm -rf ./* && rm -rf .copier-answers.yml .gitignore .github .gitattributes
-	copier copy -w . ../rust-template --data-file examples/rust.yml
+	mkdir -p ../python-template-rust && cd ../python-template-rust && rm -rf ./* && rm -rf .copier-answers.yml .gitignore .github .gitattributes
+	copier copy -w . ../python-template-rust --data-file examples/rust.yml
+	cd ../python-template-rust && $(SED) 's#_src_path: .#_src_path: https://github.com/python-project-templates/base.git#g' ./.copier-answers.yml
 

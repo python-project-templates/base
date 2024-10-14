@@ -3,6 +3,6 @@ add_extension: jupyter
 email: 3105306+timkpaine@users.noreply.github.com
 github: python-project-templates
 project_description: A Jupyter-Python project template
-project_name: jupyter template
+project_name: python template jupyter
 python_version_primary: '3.11'
 team: Python Project Template Authors
