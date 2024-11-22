@@ -142,10 +142,10 @@ jobs:
         os:
           - ubuntu-22.04
         python-version:
-          - '3.8'
           - '3.9'
           - '3.10'
           - '3.11'
+          - '3.12'
       fail-fast: false
     runs-on: ${{ matrix.os }}
     if: ${{ needs.initialize.outputs.FULL_BUILD == 'true' }}
@@ -190,10 +190,10 @@ jobs:
           # - windows-2019 # https://github.com/actions/virtual-environments/blob/main/images/win/Windows2019-Readme.md
           - windows-2022 # https://github.com/actions/virtual-environments/blob/main/images/win/Windows2022-Readme.md
         python-version:
-          - '3.8'
           - '3.9'
           - '3.10'
           - '3.11'
+          - '3.12'
       fail-fast: false
     runs-on: ${{ matrix.os }}
     if: ${{ needs.initialize.outputs.FULL_BUILD == 'true' }}
@@ -333,10 +333,10 @@ jobs:
           # - windows-2019 # https://github.com/actions/virtual-environments/blob/main/images/win/Windows2019-Readme.md
           - windows-2022 # https://github.com/actions/virtual-environments/blob/main/images/win/Windows2022-Readme.md
         python-version:
-          - '3.8'
           - '3.9'
           - '3.10'
           - '3.11'
+          - '3.12'
       fail-fast: false
     runs-on: ${{ matrix.os }}
     if: ${{ needs.initialize.outputs.FULL_BUILD == 'true' }}
@@ -399,10 +399,10 @@ jobs:
           # - windows-2019 # https://github.com/actions/virtual-environments/blob/main/images/win/Windows2019-Readme.md
           - windows-2022 # https://github.com/actions/virtual-environments/blob/main/images/win/Windows2022-Readme.md
         python-version:
-          - '3.8'
           - '3.9'
           - '3.10'
           - '3.11'
+          - '3.12'
       fail-fast: false
     runs-on: ${{ matrix.os }}
     if: ${{ needs.initialize.outputs.FULL_BUILD == 'true' }}
