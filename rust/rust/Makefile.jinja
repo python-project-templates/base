@@ -35,7 +35,6 @@ test:  ## run the tests
 tests: test
 
 coverage:
-	cargo llvm-cov nextest --cobertura --output-path junit.xml
 	cargo llvm-cov nextest --lcov --output-path coverage
 
 .PHONY: dist publish
