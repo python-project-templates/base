@@ -18,33 +18,67 @@ SED = sed -i '' -e
 endif
 
 
-.PHONY: gen-python
+.PHONY: gen-python gen-cpp gen-js gen-jupyter gen-rust
 gen-python:  ## regenerate the python template from scratch
 	mkdir -p ../python-template && cd ../python-template && rm -rf ./* && rm -rf .copier-answers.yml .gitignore .github .gitattributes
 	copier copy -w . ../python-template --data-file examples/python.yml
 	cd ../python-template && $(SED) 's#_src_path: .#_src_path: https://github.com/python-project-templates/base.git#g' ./.copier-answers.yml
 
-.PHONY: gen-cpp
 gen-cpp:  ## regenerate the c++ template from scratch
 	mkdir -p ../python-template-cpp && cd ../python-template-cpp && rm -rf ./* && rm -rf .copier-answers.yml .gitignore .github .gitattributes
 	copier copy -w . ../python-template-cpp --data-file examples/cpp.yml
 	cd ../python-template-cpp && $(SED) 's#_src_path: .#_src_path: https://github.com/python-project-templates/base.git#g' ./.copier-answers.yml
 
-.PHONY: gen-js
 gen-js:  ## regenerate the js template from scratch
 	mkdir -p ../python-template-js && cd ../python-template-js && rm -rf ./* && rm -rf .copier-answers.yml .gitignore .github .gitattributes
 	copier copy -w . ../python-template-js --data-file examples/js.yml
 	cd ../python-template-js && $(SED) 's#_src_path: .#_src_path: https://github.com/python-project-templates/base.git#g' ./.copier-answers.yml
 
-.PHONY: gen-jupyter
 gen-jupyter:  ## regenerate the jupyter template from scratch
 	mkdir -p ../python-template-jupyter && cd ../python-template-jupyter && rm -rf ./* && rm -rf .copier-answers.yml .gitignore .github .gitattributes
 	copier copy -w . ../python-template-jupyter --data-file examples/jupyter.yml
 	cd ../python-template-jupyter && $(SED) 's#_src_path: .#_src_path: https://github.com/python-project-templates/base.git#g' ./.copier-answers.yml
 
-.PHONY: gen-rust
 gen-rust:  ## regenerate the rust template from scratch
 	mkdir -p ../python-template-rust && cd ../python-template-rust && rm -rf ./* && rm -rf .copier-answers.yml .gitignore .github .gitattributes
 	copier copy -w . ../python-template-rust --data-file examples/rust.yml
 	cd ../python-template-rust && $(SED) 's#_src_path: .#_src_path: https://github.com/python-project-templates/base.git#g' ./.copier-answers.yml
+
+.PHONY: test-python test-cpp test-js test-jupyter test-rust
+test-python:
+	cd ../python-template && git config --global user.name "github-actions" && git config --global user.email "41898282+github-actions[bot]@users.noreply.github.c@example.com" && git init && git add . && git commit -m "initial commit"
+	cd ../python-template && make develop
+	cd ../python-template && make lint
+	cd ../python-template && make checks
+	cd ../python-template && make test
+
+test-cpp:
+	cd ../python-template-cpp && git config --global user.name "github-actions" && git config --global user.email "41898282+github-actions[bot]@users.noreply.github.c@example.com" && git init && git add . && git commit -m "initial commit"
+	cd ../python-template-cpp && git init && git add . && git commit -m "initial commit"
+	cd ../python-template-cpp && make develop
+	cd ../python-template-cpp && make lint
+	cd ../python-template-cpp && make checks
+	cd ../python-template-cpp && make test
+
+test-js:
+	cd ../python-template-js && git config --global user.name "github-actions" && git config --global user.email "41898282+github-actions[bot]@users.noreply.github.c@example.com" && git init && git add . && git commit -m "initial commit"
+	cd ../python-template-js && make develop
+	cd ../python-template-js && make lint
+	cd ../python-template-js && make checks
+	cd ../python-template-js && make test
+
+test-jupyter:
+	cd ../python-template-jupyter && git config --global user.name "github-actions" && git config --global user.email "41898282+github-actions[bot]@users.noreply.github.c@example.com" && git init && git add . && git commit -m "initial commit"
+	cd ../python-template-jupyter && make develop
+	cd ../python-template-jupyter && make lint
+	cd ../python-template-jupyter && make checks
+	cd ../python-template-jupyter && make test
+
+test-rust:
+	cd ../python-template-rust && git config --global user.name "github-actions" && git config --global user.email "41898282+github-actions[bot]@users.noreply.github.c@example.com" && git init && git add . && git commit -m "initial commit"
+	cd ../python-template-rust && make develop
+	cd ../python-template-rust && git add Cargo.lock && git commit -m "lockfile"
+	cd ../python-template-rust && make lint
+	cd ../python-template-rust && make checks
+	cd ../python-template-rust && make test
 

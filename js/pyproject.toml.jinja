@@ -74,7 +74,9 @@ ignore = [
     "js/pnpm-lock.yaml",
     "Makefile",
     "setup.py",
-    "{{module}}/**/*",
+    "{{module}}/extension/**/*",
+    "docs/**/*",
+    "js/dist/**/*",
 ]
 
 [tool.coverage.run]
@@ -111,6 +113,7 @@ exclude = [
     "/.github",
     "/.gitattributes",
     "/.gitignore",
+    "/docs",
     "/js/node_modules",
 ]
 
@@ -123,8 +126,9 @@ exclude = [
     "/.github",
     "/.gitattributes",
     "/.gitignore",
-    "/js/node_modules",
     "/pyproject.toml",
+    "/docs",
+    "/js/node_modules",
 ]
 
 [tool.hatch.build.hooks.jupyter-builder]
