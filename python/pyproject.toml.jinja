@@ -88,31 +88,10 @@ artifacts = []
 src = "/"
 
 [tool.hatch.build.targets.sdist]
-include = [
-    "/{{module}}",
-    "LICENSE",
-    "README.md",
-]
-exclude = [
-    ".copier-answers.yml",
-    "/.github",
-    "/.gitattributes",
-    "/.gitignore",
-    "/docs",
-]
+packages = ["{{module}}"]
 
 [tool.hatch.build.targets.wheel]
-include = [
-    "/{{module}}",
-]
-exclude = [
-    ".copier-answers.yml",
-    "/.github",
-    "/.gitattributes",
-    "/.gitignore",
-    "/pyproject.toml",
-    "/docs",
-]
+packages = ["{{module}}"]
 
 [tool.hatch.build.targets.wheel.shared-data]
 

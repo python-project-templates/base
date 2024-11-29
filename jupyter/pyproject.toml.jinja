@@ -105,34 +105,14 @@ artifacts = [
 src = "/"
 
 [tool.hatch.build.targets.sdist]
-include = [
-    "/{{module}}",
-    "/js",
-    "LICENSE",
-    "README.md",
-]
+packages = ["{{module}}", "js"]
 exclude = [
-    ".copier-answers.yml",
-    "/.github",
-    "/.gitattributes",
-    "/.gitignore",
+    "/js/dist",
     "/js/node_modules",
-    "/docs",
 ]
 
 [tool.hatch.build.targets.wheel]
-include = [
-    "/{{module}}",
-]
-exclude = [
-    ".copier-answers.yml",
-    "/.github",
-    "/.gitattributes",
-    "/.gitignore",
-    "/pyproject.toml",
-    "/docs",
-    "/js/node_modules",
-]
+packages = ["{{module}}"]
 
 [tool.hatch.build.targets.wheel.shared-data]
 "{{module}}/labextension" = "share/jupyter/labextensions/{{module}}"
