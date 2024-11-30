@@ -55,7 +55,7 @@ format: fix
 ################
 # Other Checks #
 ################
-.PHONY: check-manifest checks check annotate
+.PHONY: check-manifest checks check
 
 check-manifest:  ## check python sdist manifest with check-manifest
 	check-manifest -v
@@ -64,9 +64,6 @@ checks: check-manifest
 
 # alias
 check: checks
-
-annotate:  ## run python type annotation checks with mypy
-	python -m mypy ./{{module}}
 
 #########
 # TESTS #

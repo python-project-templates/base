@@ -102,34 +102,14 @@ artifacts = [
 src = "/"
 
 [tool.hatch.build.targets.sdist]
-include = [
-    "/{{module}}",
-    "/js",
-    "LICENSE",
-    "README.md",
-]
+packages = ["{{module}}", "js"]
 exclude = [
-    ".copier-answers.yml",
-    "/.github",
-    "/.gitattributes",
-    "/.gitignore",
-    "/docs",
+    "/js/dist",
     "/js/node_modules",
 ]
 
 [tool.hatch.build.targets.wheel]
-include = [
-    "/{{module}}",
-]
-exclude = [
-    ".copier-answers.yml",
-    "/.github",
-    "/.gitattributes",
-    "/.gitignore",
-    "/pyproject.toml",
-    "/docs",
-    "/js/node_modules",
-]
+packages = ["{{module}}"]
 
 [tool.hatch.build.hooks.jupyter-builder]
 build-function = "hatch_jupyter_builder.npm_builder"
