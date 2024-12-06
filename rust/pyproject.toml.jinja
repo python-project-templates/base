@@ -96,6 +96,7 @@ archs = "x86_64"
 
 [tool.cibuildwheel.macos]
 archs = "x86_64 arm64"
+environment = {MACOS_DEPLOYMENT_TARGET=11.0}
 
 [tool.cibuildwheel.windows]
 environment = {PATH="$UserProfile\\.cargo\bin;$PATH"}
