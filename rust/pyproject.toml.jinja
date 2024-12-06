@@ -115,6 +115,9 @@ exclude_also = [
 ignore_errors = true
 fail_under = 50
 
+[tool.maturin]
+include = [{ path = "rust/**/*", format = "sdist" }]
+
 [tool.pytest.ini_options]
 addopts = ["-vvv", "--junitxml=junit.xml"]
 asyncio_mode = "strict"

@@ -117,6 +117,8 @@ jobs:
       run: |
         make dist-py-wheel
         make dist-check
+      env:
+        MACOS_DEPLOYMENT_TARGET: 10.12
       if: matrix.os != 'ubuntu-latest'
 
     - uses: actions/upload-artifact@v4
