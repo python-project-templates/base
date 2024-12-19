@@ -17,6 +17,7 @@ keywords = []
 
 classifiers = [
     "Development Status :: 3 - Alpha",
+    "Programming Language :: Python",
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
     "Programming Language :: Python :: 3",
@@ -27,10 +28,6 @@ classifiers = [
 ]
 
 dependencies = []
-
-[project.urls]
-Repository = "https://github.com/{{github}}/{{project_name_formatted}}"
-Homepage = "https://github.com/{{github}}/{{project_name_formatted}}"
 
 [project.optional-dependencies]
 develop = [
@@ -47,6 +44,10 @@ develop = [
 ]
 
 [project.scripts]
+
+[project.urls]
+Repository = "https://github.com/{{github}}/{{project_name_formatted}}"
+Homepage = "https://github.com/{{github}}/{{project_name_formatted}}"
 
 [tool.bumpversion]
 current_version = "0.1.0"
