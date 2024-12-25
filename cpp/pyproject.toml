@@ -13,7 +13,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "cpp"
 authors = [{name = "Tim Paine", email = "t.paine154@gmail.com"}]
-description="A Python/C++ project template"
+description = "A Python/C++ project template"
 version = "0.1.0"
 readme = "README.md"
 license = { file = "LICENSE" }
