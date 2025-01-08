@@ -76,15 +76,13 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: {% raw %}test-results-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.node-version }}{% endraw %}
-        path: |
-          **/junit.xml
+        path: '**/junit.xml'
       if: {% raw %}${{ always() }}{% endraw %}
 
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v2
       with:
-        files: |
-            **/junit.xml
+        files: '**/junit.xml'
       if: matrix.os == 'ubuntu-latest'
 
     - name: Upload coverage
