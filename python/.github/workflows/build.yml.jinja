@@ -47,18 +47,15 @@ jobs:
 
     - name: Lint
       run: make lint
-      if: matrix.os == 'ubuntu-latest'
 
     - name: Checks
       run: make checks
-      if: matrix.os == 'ubuntu-latest'
 
     - name: Build
       run: make build
 
     - name: Test
       run: make coverage
-      if: matrix.os == 'ubuntu-latest'
 
     - name: Upload test results (Python)
       uses: actions/upload-artifact@v4
@@ -70,9 +67,7 @@ jobs:
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v2
       with:
-        files: |
-            **/junit.xml
-      if: matrix.os == 'ubuntu-latest'
+        files: '**/junit.xml'
 
     - name: Upload coverage
       uses: codecov/codecov-action@v5
@@ -81,10 +76,8 @@ jobs:
 
     - name: Make dist
       run: make dist
-      if: matrix.os == 'ubuntu-latest'
 
     - uses: actions/upload-artifact@v4
       with:
         name: {% raw %}dist-${{matrix.os}}{% endraw %}
         path: dist
-      if: matrix.os == 'ubuntu-latest'
