@@ -1,7 +1,7 @@
 import os
 import os.path
-from .extension import *
 
+from .extension import *
 
 __version__ = "0.1.0"
 
