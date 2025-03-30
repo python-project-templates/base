@@ -35,12 +35,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set up Python {% raw %}${{ matrix.python-version }}{% endraw %}
-      uses: actions/setup-python@v5
+    - uses: actions-ext/python/setup@main
       with:
-        python-version: {% raw %}${{ matrix.python-version }}{% endraw %}
-        cache: 'pip'
-        cache-dependency-path: 'pyproject.toml'
+        version: {% raw %}${{ matrix.python-version }}{% endraw %}
 
     - name: Install dependencies
       run: make develop
