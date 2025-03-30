@@ -35,12 +35,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set up Python {% raw %}${{ matrix.python-version }}{% endraw %}
-      uses: actions/setup-python@v5
+    - uses: actions-ext/python/setup@main
       with:
-        python-version: {% raw %}${{ matrix.python-version }}{% endraw %}
-        cache: 'pip'
-        cache-dependency-path: 'pyproject.toml'
+        version: {% raw %}${{ matrix.python-version }}{% endraw %}
 
     - name: Set up Rust
       uses: dtolnay/rust-toolchain@stable
@@ -52,7 +49,7 @@ jobs:
       uses: Swatinem/rust-cache@v2
       with:
         key: {% raw %}${{ matrix.os }}{% endraw %}
-  
+
     - name: Setup rust targets (MacOS)
       run: |
         rustup toolchain install stable-x86_64-apple-darwin
