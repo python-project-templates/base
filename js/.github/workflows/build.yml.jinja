@@ -36,18 +36,15 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set up Python {% raw %}${{ matrix.python-version }}{% endraw %}
-      uses: actions/setup-python@v5
+    - uses: actions-ext/python/setup@main
       with:
-        python-version: {% raw %}${{ matrix.python-version }}{% endraw %}
-        cache: 'pip'
-        cache-dependency-path: 'pyproject.toml'
+        version: {% raw %}${{ matrix.python-version }}{% endraw %}
 
     - name: Use Node.js {% raw %}${{ matrix.node-version }}{% endraw %}
       uses: actions/setup-node@v4
       with:
         node-version: {% raw %}${{ matrix.node-version }}{% endraw %}
-  
+
     - name: Install pnpm
       uses: pnpm/action-setup@v4
       with:

@@ -32,25 +32,35 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Prework
+      run: |
+        # python
+        touch pyproject.toml
+
+        # node
+        echo '{"name": "a", "version": "0.0.0", "scripts": {}}' > package.json
+        printf 'lockfileVersion: '9.0'\nsettings:\n\tautoInstallPeers: true\n\texcludeLinksFromLockfile: false\nimporters:\n.: {}' > pnpm-lock.yaml
+
+        # rust
+        printf '[package]\nname = "rust"\nversion = "0.1.0"\nedition = "2021"\n[dependencies]\n' > Cargo.toml
+        mkdir -p src
+        printf 'fn main() {\n    println!("Hello, world!");\n}\n' > src/main.rs
+
     - uses: actions-ext/python/setup@main
       with:
         version: '3.11'
 
-    - run: pip install copier
+    - run: uv pip install copier
 
-    - uses: actions/setup-node@v4
+    - uses: actions-ext/node/setup@main
       with:
-        node-version: 20.x
+        version: 20.x
 
-    - uses: pnpm/action-setup@v4
-      with:
-        version: 9
+    - uses: actions-ext/rust/setup@main
 
-    - name: Set up Rust
-      uses: dtolnay/rust-toolchain@stable
-      with:
-        toolchain: stable
-        components: clippy, rustfmt
+    - run: |
+        pnpm install
+        cargo build
 
     - run: |
         make gen-${{matrix.template}}
