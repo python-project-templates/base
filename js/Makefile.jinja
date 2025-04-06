@@ -3,7 +3,7 @@
 #########
 .PHONY: develop-py develop-js develop
 develop-py:
-	python -m pip install -e .[develop]
+	uv pip install -e .[develop]
 
 develop-js:
 	cd js; pnpm install && npx playwright install
@@ -21,7 +21,7 @@ build: build-js build-py  ## build the project
 
 .PHONY: install
 install:  ## install python library
-	python -m pip install .
+	uv pip install .
 
 #########
 # LINTS #
