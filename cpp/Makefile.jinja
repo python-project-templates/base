@@ -3,7 +3,7 @@
 #########
 .PHONY: develop
 develop:  ## setup project for development
-	uv pip install -e .[develop]
+	python -m pip install -e .[develop]
 
 .PHONY: build-py build-cpp build
 build-py:
@@ -19,7 +19,7 @@ build: build-cpp build-py  ## build the project
 
 .PHONY: install
 install:  ## install python library
-	uv pip install .
+	python -m pip install .
 
 #########
 # LINTS #
