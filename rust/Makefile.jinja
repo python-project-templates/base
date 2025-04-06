@@ -3,7 +3,7 @@
 #########
 .PHONY: develop-py develop-rust develop
 develop-py:
-	python -m pip install -e .[develop]
+	uv pip install -e .[develop]
 
 develop-rust:
 	make -C rust develop
@@ -24,7 +24,7 @@ build: build-rust build-py  ## build the project
 
 .PHONY: install
 install:  ## install python library
-	python -m pip install .
+	uv pip install .
 
 UNAME := $(shell uname)
 ifeq ($(UNAME), Darwin)
