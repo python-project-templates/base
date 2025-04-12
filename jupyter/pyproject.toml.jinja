@@ -18,6 +18,8 @@ keywords = []
 
 classifiers = [
     "Development Status :: 3 - Alpha",
+    "Framework :: Jupyter",
+    "Framework :: Jupyter :: JupyterLab",
     "Programming Language :: Python",
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
@@ -26,6 +28,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
 ]
 
 dependencies = []
@@ -122,9 +125,11 @@ packages = ["{{module}}"]
 [tool.hatch.build.hooks.jupyter-builder]
 build-function = "hatch_jupyter_builder.npm_builder"
 ensured-targets = [
+    "{{module}}/nbextension/static/notebook.js",
     "{{module}}/labextension/package.json",
 ]
 skip-if-exists = [
+    "{{module}}/nbextension/static/notebook.js",
     "{{module}}/labextension/package.json",
 ]
 dependencies = [

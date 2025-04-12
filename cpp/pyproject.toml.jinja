@@ -26,6 +26,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
 ]
 
 dependencies = []
@@ -88,7 +89,7 @@ archs = "arm64"
 
 [tool.cibuildwheel.windows]
 archs = "AMD64"
-skip = "*win32 *arm_64"	
+skip = "*win32 *arm_64"
 
 [tool.coverage.run]
 branch = true
