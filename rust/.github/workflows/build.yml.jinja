@@ -75,6 +75,12 @@ jobs:
       with:
         token: {% raw %}${{ secrets.CODECOV_TOKEN }}{% endraw %}
 
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+      with:
+        platforms: all
+      if: runner.os == 'Linux' && runner.arch == 'X64'
+
     - name: Make dist
       run: |
         make dist-rust
