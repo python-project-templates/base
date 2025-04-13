@@ -39,32 +39,7 @@ jobs:
       with:
         version: {% raw %}${{ matrix.python-version }}{% endraw %}
 
-    - name: Set up Rust
-      uses: dtolnay/rust-toolchain@stable
-      with:
-        toolchain: stable
-        components: clippy, rustfmt
-
-    - name: Setup Rust cache
-      uses: Swatinem/rust-cache@v2
-      with:
-        key: {% raw %}${{ matrix.os }}{% endraw %}
-
-    - name: Setup rust targets (MacOS)
-      run: |
-        rustup toolchain install stable-x86_64-apple-darwin
-        rustup target add x86_64-apple-darwin
-        rustup toolchain install stable-aarch64-apple-darwin
-        rustup target add aarch64-apple-darwin
-      if: matrix.os == 'macos-latest'
-
-    - name: Setup rust targets (Windows)
-      run: |
-        rustup toolchain install stable-x86_64-pc-windows-msvc
-        rustup target add x86_64-pc-windows-msvc
-        rustup toolchain install stable-i686-pc-windows-msvc
-        rustup target add i686-pc-windows-msvc
-      if: matrix.os == 'windows-latest'
+    - uses: actions-ext/rust/setup@main
 
     - name: Install dependencies
       run: make develop
