@@ -1,3 +1,5 @@
+_answers_file: .copier-answers.yaml
+
 _exclude:
     - name-slug.jinja
     - module-slug.jinja
