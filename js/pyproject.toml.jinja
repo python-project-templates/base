@@ -111,7 +111,9 @@ exclude = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["{{module}}"]
-exclude = ["js"]
+exclude = [
+    "/js"
+]
 
 [tool.hatch.build.hooks.jupyter-builder]
 build-function = "hatch_jupyter_builder.npm_builder"
