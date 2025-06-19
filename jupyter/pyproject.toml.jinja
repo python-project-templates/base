@@ -122,6 +122,8 @@ exclude = ["js"]
 
 [tool.hatch.build.targets.wheel.shared-data]
 "{{module}}/labextension" = "share/jupyter/labextensions/{{module}}"
+"{{module}}/extension/install.json" = "share/jupyter/labextensions/{{module}}/install.json"
+"{{module}}/extension/{{module}}.json" = "etc/jupyter/jupyter_server_config.d/{{module}}.json"
 
 [tool.hatch.build.hooks.jupyter-builder]
 build-function = "hatch_jupyter_builder.npm_builder"
