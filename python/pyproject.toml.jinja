@@ -115,3 +115,13 @@ section-order = ["future", "standard-library", "third-party", "first-party", "lo
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
+
+{%- if add_docs %}
+
+[tool.yardang]
+title = "{{ project_name }}"
+root = "README.md"
+pages = []
+use-autoapi = true
+
+{% endif -%}
