@@ -114,7 +114,7 @@ known-first-party = ["{{module}}"]
 section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
 
 [tool.ruff.lint.per-file-ignores]
-"__init__.py" = ["F401"]
+"__init__.py" = ["F401", "F403"]
 
 {%- if add_docs %}
 
