@@ -65,3 +65,8 @@ python_version_primary:
     "3.12":
       value: "3.12"
   help: Primary version of Python to use in CI/CD
+
+add_docs:
+  type: bool
+  default: false
+  help: Add documentation using Yardang/Sphinx
