@@ -34,6 +34,9 @@ develop = [
     "bump-my-version",
     "check-manifest",
     "cibuildwheel",
+    "codespell>=2.4,<2.5",
+    "mdformat>=0.7.22,<0.8",
+    "mdformat-tables>=1",
     "maturin>=1,<2",
     "pytest",
     "pytest-cov",
@@ -52,6 +55,7 @@ Homepage = "https://github.com/{{github}}/{{project_name_formatted}}"
 current_version = "0.1.0"
 commit = true
 tag = true
+commit_args = "-s"
 
 [[tool.bumpversion.files]]
 filename = "{{module}}/__init__.py"

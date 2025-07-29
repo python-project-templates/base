@@ -70,3 +70,8 @@ add_docs:
   type: bool
   default: false
   help: Add documentation using Yardang/Sphinx
+
+add_wiki:
+  type: bool
+  default: false
+  help: Add documentation using GitHub wiki

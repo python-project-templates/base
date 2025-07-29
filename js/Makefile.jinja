@@ -34,12 +34,16 @@ lint-py:  ## run python linter with ruff
 lint-js:  ## run js linter
 	cd js; pnpm lint
 
-lint: lint-js lint-py  ## run project linters
+lint-docs:  ## lint docs with mdformat and codespell
+	python -m mdformat --check README.md {% if add_wiki %}docs/wiki/{% endif %}
+	python -m codespell_lib README.md {% if add_wiki %}docs/wiki/{% endif %}
+
+lint: lint-js lint-py lint-docs  ## run project linters
 
 # alias
 lints: lint
 
-.PHONY: fix-py fix-js fix format
+.PHONY: fix-py fix-js fix-docs fix format
 fix-py:  ## fix python formatting with ruff
 	python -m ruff check --fix {{module}}
 	python -m ruff format {{module}}
@@ -47,7 +51,11 @@ fix-py:  ## fix python formatting with ruff
 fix-js:  ## fix js formatting
 	cd js; pnpm fix
 
-fix: fix-js fix-py  ## run project autoformatters
+fix-docs:  ## autoformat docs with mdformat and codespell
+	python -m mdformat README.md {% if add_wiki %}docs/wiki/{% endif %}
+	python -m codespell_lib --write README.md {% if add_wiki %}docs/wiki/{% endif %}
+
+fix: fix-js fix-py fix-docs  ## run project autoformatters
 
 # alias
 format: fix

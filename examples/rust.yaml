@@ -1,5 +1,6 @@
 ---
 add_docs: true
+add_wiki: true
 add_extension: rust
 email: 3105306+timkpaine@users.noreply.github.com
 github: python-project-templates
