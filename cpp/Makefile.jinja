@@ -24,13 +24,17 @@ install:  ## install python library
 #########
 # LINTS #
 #########
-.PHONY: lint-py lint-cpp lint lints
+.PHONY: lint-py lint-cpp lint-docs lint lints
 lint-py:  ## run python linter with ruff
 	python -m ruff check {{module}}
 	python -m ruff format --check {{module}}
 
 lint-cpp:  ## run cpp linter
 	clang-format --dry-run -Werror -i -style=file `find ./cpp -name "*.*pp"`
+
+lint-docs:  ## lint docs with mdformat and codespell
+	python -m mdformat --check README.md {% if add_wiki %}docs/wiki/{% endif %}
+	python -m codespell_lib README.md {% if add_wiki %}docs/wiki/{% endif %}
 
 lint: lint-cpp lint-py  ## run project linters
 
@@ -45,7 +49,11 @@ fix-py:  ## fix python formatting with ruff
 fix-cpp:  ## fix cpp formatting
 	clang-format -i -style=file `find ./cpp -name "*.*pp"`
 
-fix: fix-cpp fix-py  ## run project autoformatters
+fix-docs:  ## autoformat docs with mdformat and codespell
+	python -m mdformat README.md {% if add_wiki %}docs/wiki/{% endif %}
+	python -m codespell_lib --write README.md {% if add_wiki %}docs/wiki/{% endif %}
+
+fix: fix-cpp fix-py fix-docs  ## run project autoformatters
 
 # alias
 format: fix
