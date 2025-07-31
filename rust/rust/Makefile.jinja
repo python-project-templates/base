@@ -1,10 +1,12 @@
 
-.PHONY: develop build
-develop:  ## install required dev dependencies
+.PHONY: requirements develop build
+requirements:  ## install required dev dependencies
 	rustup component add rustfmt
 	rustup component add clippy
-	cargo install cargo-nextest 
+	cargo install cargo-nextest
 	cargo install cargo-llvm-cov
+
+develop: requirements  ## install required dev dependencies
 
 build:  ## build release
 	cargo build --release --all-features

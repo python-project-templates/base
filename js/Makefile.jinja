@@ -5,10 +5,20 @@
 develop-py:
 	uv pip install -e .[develop]
 
-develop-js:
-	cd js; pnpm install && npx playwright install
+develop-js: requirements-js
 
 develop: develop-js develop-py  ## setup project for development
+
+.PHONY: requirements-py requirements-js requirements
+requirements-py:  ## install prerequisite python build requirements
+	python -m pip install --upgrade pip toml
+	python -m pip install `python -c 'import toml; c = toml.load("pyproject.toml"); print("\n".join(c["build-system"]["requires"]))'`
+	python -m pip install `python -c 'import toml; c = toml.load("pyproject.toml"); print(" ".join(c["project"]["optional-dependencies"]["develop"]))'`
+
+requirements-js:  ## install prerequisite javascript build requirements
+	cd js; pnpm install && npx playwright install
+
+requirements: requirements-js requirements-py  ## setup project for development
 
 .PHONY: build-py build-js build
 build-py:
