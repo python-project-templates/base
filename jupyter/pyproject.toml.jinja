@@ -1,9 +1,5 @@
 [build-system]
-requires = [
-    "hatchling",
-    "hatch-jupyter-builder",
-    "jupyterlab>=4,<5",
-]
+requires = ["hatchling", "hatch-js", "jupyterlab>=4,<5"]
 build-backend="hatchling.build"
 
 [project]
@@ -38,8 +34,8 @@ develop = [
     "build",
     "bump-my-version",
     "check-manifest",
-    "hatch-jupyter-builder",
     "codespell>=2.4,<2.5",
+    "hatch-js",
     "hatchling",
     "mdformat>=0.7.22,<0.8",
     "mdformat-tables>=1",
@@ -132,24 +128,15 @@ exclude = [
 "{{module}}/extension/install.json" = "share/jupyter/labextensions/{{module}}/install.json"
 "{{module}}/extension/{{module}}.json" = "etc/jupyter/jupyter_server_config.d/{{module}}.json"
 
-[tool.hatch.build.hooks.jupyter-builder]
-build-function = "hatch_jupyter_builder.npm_builder"
-ensured-targets = [
-    "{{module}}/nbextension/static/notebook.js",
-    "{{module}}/labextension/package.json",
-]
-skip-if-exists = [
-    "{{module}}/nbextension/static/notebook.js",
-    "{{module}}/labextension/package.json",
-]
-dependencies = [
-    "hatch-jupyter-builder",
-]
-
-[tool.hatch.build.hooks.jupyter-builder.build-kwargs]
+[tool.hatch.build.hooks.hatch-js]
 path = "js"
+install_cmd = "install"
 build_cmd = "build"
-npm = "pnpm"
+tool = "pnpm"
+targets = [
+    "{{module}}/nbextension/static/notebook.js",
+    "{{module}}/labextension/package.json",
+]
 
 [tool.pytest.ini_options]
 addopts = ["-vvv", "--junitxml=junit.xml"]
