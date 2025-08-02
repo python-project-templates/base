@@ -1,0 +1,10 @@
+---
+add_docs: true
+add_wiki: true
+add_extension: rustjswasm
+email: 3105306+timkpaine@users.noreply.github.com
+github: python-project-templates
+project_description: A Rust-Python project template
+project_name: python template rust
+python_version_primary: '3.9'
+team: Python Project Template Authors

@@ -28,6 +28,7 @@ jobs:
           - js
           - jupyter
           - rust
+          # - rustjswasm
         os:
           - ubuntu-latest
           - macos-latest

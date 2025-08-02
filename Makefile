@@ -18,7 +18,7 @@ SED = sed -i '' -e
 endif
 
 
-.PHONY: gen-python gen-cpp gen-js gen-jupyter gen-rust
+.PHONY: gen-python gen-cpp gen-js gen-jupyter gen-rust gen-rustjswasm
 gen-python:  ## regenerate the python template from scratch
 	mkdir -p ../python-template && cd ../python-template && rm -rf ./* && rm -rf .copier-answers.yaml .gitignore .github .gitattributes
 	copier copy -w . ../python-template --data-file examples/python.yaml
@@ -44,7 +44,12 @@ gen-rust:  ## regenerate the rust template from scratch
 	copier copy -w . ../python-template-rust --data-file examples/rust.yaml
 	cd ../python-template-rust && $(SED) 's#_src_path: .#_src_path: https://github.com/python-project-templates/base.git#g' ./.copier-answers.yaml
 
-.PHONY: test-python test-cpp test-js test-jupyter test-rust
+gen-rustjswasm:  ## regenerate the rustjswasm template from scratch
+	mkdir -p ../python-template-rustjswasm && cd ../python-template-rustjswasm && rm -rf ./* && rm -rf .copier-answers.yaml .gitignore .github .gitattributes
+	copier copy -w . ../python-template-rustjswasm --data-file examples/rustjswasm.yaml
+	cd ../python-template-rustjswasm && $(SED) 's#_src_path: .#_src_path: https://github.com/python-project-templates/base.git#g' ./.copier-answers.yaml
+
+.PHONY: test-python test-cpp test-js test-jupyter test-rust test-rustjswasm
 test-python:
 	cd ../python-template && git config --global user.name "github-actions" && git config --global user.email "41898282+github-actions[bot]@users.noreply.github.c@example.com" && git init && git add . && git commit -m "initial commit"
 	cd ../python-template && make develop
@@ -81,4 +86,13 @@ test-rust:
 	cd ../python-template-rust && make lint
 	cd ../python-template-rust && make checks
 	cd ../python-template-rust && make test
+
+test-rustjswasm:
+	cd ../python-template-rust && git config --global user.name "github-actions" && git config --global user.email "41898282+github-actions[bot]@users.noreply.github.c@example.com" && git init && git add . && git commit -m "initial commit"
+	cd ../python-template-rust && make develop
+	cd ../python-template-rust && git add Cargo.lock && git commit -m "lockfile"
+	cd ../python-template-rust && make lint
+	cd ../python-template-rust && make checks
+	cd ../python-template-rust && make test
+
 
