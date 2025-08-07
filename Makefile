@@ -88,11 +88,11 @@ test-rust:
 	cd ../python-template-rust && make test
 
 test-rustjswasm:
-	cd ../python-template-rust && git config --global user.name "github-actions" && git config --global user.email "41898282+github-actions[bot]@users.noreply.github.c@example.com" && git init && git add . && git commit -m "initial commit"
-	cd ../python-template-rust && make develop
-	cd ../python-template-rust && git add Cargo.lock && git commit -m "lockfile"
-	cd ../python-template-rust && make lint
-	cd ../python-template-rust && make checks
-	cd ../python-template-rust && make test
+	cd ../python-template-rustjswasm && git config --global user.name "github-actions" && git config --global user.email "41898282+github-actions[bot]@users.noreply.github.c@example.com" && git init && git add . && git commit -m "initial commit"
+	cd ../python-template-rustjswasm && make develop
+	cd ../python-template-rustjswasm && git add Cargo.lock && git commit -m "lockfile"
+	cd ../python-template-rustjswasm && make lint
+	cd ../python-template-rustjswasm && make checks
+	cd ../python-template-rustjswasm && make test
 
 

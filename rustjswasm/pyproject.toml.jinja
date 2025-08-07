@@ -35,7 +35,8 @@ develop = [
     "check-manifest",
     "cibuildwheel",
     "codespell>=2.4,<2.5",
-    "hatch-jupyter-builder",
+    "hatch-js",
+    "hatch-rs",
     "hatchling",
     "mdformat>=0.7.22,<0.8",
     "mdformat-tables>=1",
@@ -74,6 +75,11 @@ search = '"version": "{current_version}"'
 replace = '"version": "{new_version}"'
 
 [[tool.bumpversion.files]]
+filename = "js/Cargo.toml"
+search = 'version = "{current_version}"'
+replace = 'version = "{new_version}"'
+
+[[tool.bumpversion.files]]
 filename = "Cargo.toml"
 search = 'version = "{current_version}"'
 replace = 'version = "{new_version}"'
@@ -86,9 +92,12 @@ replace = 'version = "{new_version}"'
 [tool.check-manifest]
 ignore = [
     ".copier-answers.yaml",
+    "Cargo.toml",
+    "Cargo.lock",
     "js/pnpm-lock.yaml",
     "Makefile",
     ".vscode/*",
+    "{{module}}/extension/**/*",
     "docs/**/*",
     "js/dist/**/*",
     "rust/.config/*",
@@ -97,9 +106,7 @@ ignore = [
 ]
 
 [tool.cibuildwheel]
-before-build = "curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain=stable --profile=minimal -y"
 build = "cp39-*"
-skip = "*musllinux*"
 test-command = "pytest -vvv {project}/{{module}}/tests"
 test-requires = ["pytest", "pytest-cov", "pytest-sugar", "pytest-xdist"]
 
@@ -108,30 +115,17 @@ before-build = """
 curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain=stable --profile=minimal -y
 rustup target add aarch64-unknown-linux-gnu
 rustup target add x86_64-unknown-linux-gnu
-rustup show
 """
-environment = {PATH="$HOME/.cargo/bin:$PATH", CARGO_TERM_COLOR="always"}
-archs = "x86_64 aarch64"
+environment = {PATH="$HOME/.cargo/bin:$PATH", CARGO_TERM_COLOR="always", SKIP_HATCH_JS="1" }
+skip = "*i686* *musllinux*"
 
 [tool.cibuildwheel.macos]
-before-build = """
-curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain=stable --profile=minimal -y
-rustup target add aarch64-apple-darwin
-rustup target add x86_64-apple-darwin
-rustup show
-"""
 environment = {PATH="$HOME/.cargo/bin:$PATH", CARGO_TERM_COLOR="always", MACOS_DEPLOYMENT_TARGET=11.0}
-archs = "x86_64 arm64"
+archs = "arm64"
 
 [tool.cibuildwheel.windows]
-before-build = """
-curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain=stable --profile=minimal -y
-rustup target add x86_64-pc-windows-msvc
-rustup target add aarch64-pc-windows-msvc
-rustup show
-"""
 environment = {PATH="$UserProfile\\.cargo\bin;$PATH", CARGO_TERM_COLOR="always"}
-archs = "AMD64 ARM64"
+skip = "*win32 *arm_64"
 
 [tool.coverage.run]
 branch = true
@@ -147,22 +141,24 @@ exclude_also = [
 ignore_errors = true
 fail_under = 50
 
-[tool.hatch.build.hooks.jupyter-builder]
-build-function = "hatch_jupyter_builder.npm_builder"
-ensured-targets = [
-    "{{module}}/extension/cdn/index.js",
-]
-skip-if-exists = [
-    "{{module}}/extension/cdn/index.js",
-]
-dependencies = [
-    "hatch-jupyter-builder",
-]
-
-[tool.hatch.build.hooks.jupyter-builder.build-kwargs]
+[tool.hatch.build.hooks.hatch-js]
 path = "js"
 build_cmd = "build"
-npm = "pnpm"
+tool = "pnpm"
+targets = ["{{module}}/extension/cdn/index.js"]
+
+[tool.hatch.build.hooks.hatch-rs]
+verbose = true
+module = "{{module}}"
+path = "."
+
+[tool.hatch.build.targets.sdist]
+packages = ["{{module}}", "/js", "/rust", "/src"]
+sources = ["."]
+
+[tool.hatch.build.targets.wheel]
+packages = ["{{module}}"]
+exclude = ["/js", "/rust", "/src"]
 
 [tool.pytest.ini_options]
 addopts = ["-vvv", "--junitxml=junit.xml"]
