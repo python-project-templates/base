@@ -23,7 +23,7 @@ requirements: requirements-rs requirements-py  ## setup project for development
 
 .PHONY: build-py build-rs build dev
 build-py:
-	maturin build
+	python -m build -w -n
 
 build-rs:
 	make -C rust build

@@ -1,6 +1,6 @@
 [build-system]
-requires = ["maturin>=1,<2"]
-build-backend = "maturin"
+requires = ["hatchling", "hatch-rs>=0.1.4"]
+build-backend="hatchling.build"
 
 [project]
 name = "{{project_name_formatted}}"
@@ -35,9 +35,10 @@ develop = [
     "check-manifest",
     "cibuildwheel",
     "codespell>=2.4,<2.5",
+    "hatch-rs",
+    "hatchling",
     "mdformat>=0.7.22,<0.8",
     "mdformat-tables>=1",
-    "maturin>=1,<2",
     "pytest",
     "pytest-cov",
     "ruff",
@@ -80,6 +81,8 @@ replace = 'version = "{new_version}"'
 [tool.check-manifest]
 ignore = [
     ".copier-answers.yaml",
+    "Cargo.toml",
+    "Cargo.lock",
     "Makefile",
     "docs/**/*",
     "rust/.config/*",
@@ -102,7 +105,7 @@ rustup target add x86_64-unknown-linux-gnu
 rustup show
 """
 environment = {PATH="$HOME/.cargo/bin:$PATH", CARGO_TERM_COLOR="always"}
-archs = "x86_64 aarch64"
+skip = "*i686 musllinux*"
 
 [tool.cibuildwheel.macos]
 before-build = """
@@ -112,7 +115,7 @@ rustup target add x86_64-apple-darwin
 rustup show
 """
 environment = {PATH="$HOME/.cargo/bin:$PATH", CARGO_TERM_COLOR="always", MACOS_DEPLOYMENT_TARGET=11.0}
-archs = "x86_64 arm64"
+archs = "arm64"
 
 [tool.cibuildwheel.windows]
 before-build = """
@@ -122,7 +125,7 @@ rustup target add aarch64-pc-windows-msvc
 rustup show
 """
 environment = {PATH="$UserProfile\\.cargo\bin;$PATH", CARGO_TERM_COLOR="always"}
-archs = "AMD64 ARM64"
+skip = "*win32 *arm_64"
 
 [tool.coverage.run]
 branch = true
@@ -137,6 +140,28 @@ exclude_also = [
 ]
 ignore_errors = true
 fail_under = 50
+
+[tool.hatch.build]
+artifacts = [
+    "project/*.dll",
+    "project/*.dylib",
+    "project/*.so",
+]
+
+[tool.hatch.build.sources]
+src = "/"
+
+[tool.hatch.build.hooks.hatch-rs]
+verbose = true
+module = "{{module}}"
+path = "."
+
+[tool.hatch.build.targets.sdist]
+packages = ["{{module}}", "/rust", "/src"]
+sources = ["."]
+
+[tool.hatch.build.targets.wheel]
+packages = ["{{module}}"]
 
 [tool.pytest.ini_options]
 addopts = ["-vvv", "--junitxml=junit.xml"]
