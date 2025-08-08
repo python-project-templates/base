@@ -26,9 +26,9 @@ requirements-rs:  ## install prerequisite rust build requirements
 
 requirements: requirements-rs requirements-js requirements-py  ## setup project for development
 
-.PHONY: build-py build-js build-rs build dev
+.PHONY: build-py build-js build-rs build
 build-py:
-	maturin build
+	python -m build -w -n
 
 build-js:
 	cd js; pnpm build
@@ -36,21 +36,11 @@ build-js:
 build-rs:
 	make -C rust build
 
-dev: build  ## lightweight in-place build for iterative dev
-	$(_CP_COMMAND)
-
 build: build-rs build-js build-py  ## build the project
 
 .PHONY: install
 install:  ## install python library
 	uv pip install .
-
-UNAME := $(shell uname)
-ifeq ($(UNAME), Darwin)
-	_CP_COMMAND := cp target/debug/lib{{module}}.dylib {{module}}/{{module}}.abi3.so
-else
-	_CP_COMMAND := cp target/debug/lib{{module}}.so {{module}}/{{module}}.abi3.so
-endif
 
 #########
 # LINTS #
@@ -169,16 +159,16 @@ major:  ## bump a major version
 ########
 .PHONY: dist-py-wheel dist-py-sdist dist-rs dist-check dist publish
 
-dist-py-wheel:  # build python wheel
+dist-py-wheel:  ## build python wheel
 	python -m cibuildwheel --output-dir dist
 
-dist-py-sdist:  # build python sdist
+dist-py-sdist:  ## build python sdist
 	python -m build --sdist -o dist
 
 dist-js:  # build js dists
 	cd js; pnpm pack
 
-dist-rs:  # build rust dists
+dist-rs:  ## build rust dists
 	make -C rust dist
 
 dist-check:  ## run python dist checker with twine
@@ -186,7 +176,7 @@ dist-check:  ## run python dist checker with twine
 
 dist: clean build dist-rs dist-js dist-py-wheel dist-py-sdist dist-check  ## build all dists
 
-publish: dist  # publish python assets
+publish: dist  ## publish python assets
 
 #########
 # CLEAN #

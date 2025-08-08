@@ -113,9 +113,7 @@ exclude = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["{{module}}"]
-exclude = [
-    "/js"
-]
+exclude = ["/js"]
 
 [tool.hatch.build.hooks.hatch-js]
 path = "js"
