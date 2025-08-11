@@ -111,7 +111,7 @@ test-command = "pytest -vvv {project}/{{module}}/tests"
 test-requires = ["pytest", "pytest-cov", "pytest-sugar", "pytest-xdist"]
 
 [tool.cibuildwheel.linux]
-before-build = """
+before-all = """
 curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain=stable --profile=minimal -y
 rustup target add aarch64-unknown-linux-gnu
 rustup target add x86_64-unknown-linux-gnu
