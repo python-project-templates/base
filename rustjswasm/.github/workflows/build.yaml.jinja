@@ -31,6 +31,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: ["{{python_version_primary}}"]
+        cibuildwheel: ["cp{{python_version_primary.replace('.', '')}}"]
         node-version: [20.x]
 
     steps:
@@ -44,13 +45,14 @@ jobs:
 
     - uses: actions-ext/node/setup@main
       with:
-        version: 20.x
+        version: 22.x
 
     - name: Install dependencies
       run: make develop
 
     - name: Lint
       run: make lint
+      if: matrix.os == 'ubuntu-latest'
 
     - name: Checks
       run: make checks
@@ -67,7 +69,7 @@ jobs:
       with:
         name: {% raw %}test-results-${{ matrix.os }}-${{ matrix.python-version }}{% endraw %}
         path: '**/junit.xml'
-      if: {% raw %}${{ always() }}{% endraw %}
+      if: matrix.os == 'ubuntu-latest'
 
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v2
@@ -92,6 +94,8 @@ jobs:
         make dist-py-sdist
         make dist-py-wheel
         make dist-check
+      env:
+        CIBW_BUILD: {% raw %}"${{ matrix.cibuildwheel }}-manylinux*"{% endraw %}
       if: matrix.os == 'ubuntu-latest'
 
     - name: Make dist

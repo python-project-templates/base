@@ -5,72 +5,62 @@
   "repository": "git@github.com:{{github}}/{{project_name_formatted}}.git",
   "author": "{{team}} <{{email}}>",
   "license": "Apache-2.0",
-  "keywords": [
-    "jupyter",
-    "jupyterlab",
-    "jupyterlab-extension"
-  ],
-  "main": "lib/index.js",
+  "private": true,
+  "type": "module",
+  "unpkg": "dist/cdn/index.js",
+  "jsdelivr": "dist/cdn/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/esm/index.d.ts",
+      "default": "./dist/esm/index.js"
+    },
+    "./dist/*": "./dist/*",
+    "./package.json": "./package.json"
+  },
   "files": [
-    "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
-    "style/**/*.css"
+    "dist/**/*",
+    "index.d.ts"
   ],
-  "jupyterlab": {
-    "extension": "lib/index.js",
-    "outputDir": "../{{module}}/labextension",
-    "discovery": {
-      "server": {
-        "base": {
-          "name": "{{module}}"
-        },
-        "managers": [
-          "pip"
-        ]
-      }
-    }
+  "types": "./dist/esm/index.d.ts",
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
-    "build:babel": "babel src/ --source-maps --out-dir lib/",
-    "build:nbextension": "mkdirp ../{{module}}/nbextension/static/ && cpy --flat 'src/notebook.js' '../{{module}}/nbextension/static/'",
-    "build:labextension": "rimraf ../{{module}}/labextension && jupyter labextension build .",
-    "build": "pnpm clean && pnpm build:babel && pnpm build:labextension && pnpm build:nbextension",
-    "clean": "rimraf lib",
-    "fix": "pnpm lint --fix",
-    "lint": "eslint -c .eslintrc.js --ext .js src/ tests/",
+    "setup": "cargo install -f wasm-bindgen-cli",
+    "build:debug": "node build.mjs --debug",
+    "build:rust": "cargo build --release --all-features --target wasm32-unknown-unknown",
+    "build:wasm-bindgen": "wasm-bindgen target/wasm32-unknown-unknown/release/{{module}}.wasm --out-dir ./dist/pkg --target web",
+    "build:prod": "node build.mjs",
+    "build": "npm-run-all build:rust build:wasm-bindgen build:prod",
+    "clean": "rm -rf dist lib playwright-report ../{{module}}/extension",
+    "dev": "npm-run-all -p start watch",
+    "lint:js": "prettier --check \"src/**/*.{js,ts,jsx,tsx,less,css}\" \"tests/**/*.{js,ts,jsx,tsx}\" \"*.mjs\" \"*.json\"",
+    "lint:rust": "cargo clippy --all-features && cargo fmt --all -- --check",
+    "lint": "npm-run-all lint:*",
+    "fix:js": "prettier  --write \"src/**/*.{js,ts,jsx,tsx,less,css}\" \"tests/**/*.{js,ts,jsx,tsx}\" \"*.mjs\" \"*.json\"",
+    "fix:rust": "cargo fmt --all",
+    "fix": "npm-run-all fix:*",
     "preinstall": "npx only-allow pnpm",
-    "prepublishOnly": "pnpm run build",
-    "test": "jest --coverage --collectCoverageFrom=src/*.{js}"
+    "prepack": "pnpm run build",
+    "start": "http-server -p 3000 -o examples/",
+    "start:tests": "http-server -p 3000 ",
+    "test:js": "playwright test",
+    "test:rust": "cargo test -- --show-output",
+    "test": "npm-run-all test:rust test:js",
+    "watch": "nodemon --watch src -e ts,less,html --exec \"pnpm build:debug\""
   },
-  "dependencies": {
-    "@jupyterlab/application": "^4.4.2",
-    "@jupyterlab/apputils": "^4.5.2",
-    "@jupyterlab/notebook": "^4.4.2",
-    "@jupyterlab/services": "^7.4.2",
-    "@lumino/disposable": "^2.1.4"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@babel/cli": "^7.27.2",
-    "@babel/core": "^7.27.1",
-    "@babel/eslint-parser": "^7.27.1",
-    "@babel/preset-env": "^7.27.2",
-    "@jupyterlab/builder": "^4.4.2",
-    "babel-jest": "^29.7.0",
-    "cpy-cli": "^5.0.0",
-    "eslint": "^8.57.1",
-    "eslint-config-airbnb": "^19.0.4",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-prettier": "^10.1.5",
-    "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-jest": "^28.11.0",
-    "eslint-plugin-json": "^3.1.0",
-    "eslint-plugin-prettier": "^5.4.0",
-    "isomorphic-fetch": "^3.0.0",
-    "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0",
-    "jest-junit": "^16.0.0",
-    "jest-transform-css": "^6.0.2",
-    "mkdirp": "^3.0.1",
-    "prettier": "^3.5.3",
-    "rimraf": "^6.0.1"
+    "@finos/perspective-esbuild-plugin": "^3.2.1",
+    "@playwright/test": "^1.54.2",
+    "@prospective.co/procss": "^0.1.17",
+    "cpy": "^11.1.0",
+    "esbuild": "^0.25.5",
+    "esbuild-plugin-less": "^1.3.25",
+    "http-server": "^14.1.1",
+    "nodemon": "^3.1.10",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.2"
   }
 }
