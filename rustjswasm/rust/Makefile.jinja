@@ -3,8 +3,8 @@
 requirements:  ## install required dev dependencies
 	rustup component add rustfmt
 	rustup component add clippy
-	cargo install cargo-nextest
-	cargo install cargo-llvm-cov
+	cargo install -f cargo-nextest
+	cargo install -f cargo-llvm-cov
 	cargo install -f wasm-bindgen-cli
 	rustup target add wasm32-unknown-unknown
 
