@@ -28,7 +28,7 @@ jobs:
           - js
           - jupyter
           - rust
-          # - rustjswasm
+          - rustjswasm
         os:
           - ubuntu-latest
           - macos-latest
@@ -58,7 +58,7 @@ jobs:
 
     - uses: actions-ext/node/setup@main
       with:
-        version: 20.x
+        version: 22.x
         js_folder: "."
 
     - uses: actions-ext/rust/setup@main
