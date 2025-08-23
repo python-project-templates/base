@@ -64,6 +64,8 @@ python_version_primary:
       value: "3.11"
     "3.12":
       value: "3.12"
+    "3.13":
+      value: "3.13"
   help: Primary version of Python to use in CI/CD
 
 add_docs:
