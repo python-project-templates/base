@@ -78,6 +78,9 @@ ignore = [
     ".clang-format",
     "Makefile",
     "docs/**/*",
+    "{{module}}/*.dll",
+    "{{module}}/*.dylib",
+    "{{module}}/*.so",
 ]
 
 [tool.cibuildwheel]
@@ -112,9 +115,9 @@ fail_under = 50
 
 [tool.hatch.build]
 artifacts = [
-    "project/*.dll",
-    "project/*.dylib",
-    "project/*.so",
+    "{{module}}/*.dll",
+    "{{module}}/*.dylib",
+    "{{module}}/*.so",
 ]
 
 [tool.hatch.build.sources]
@@ -123,7 +126,7 @@ src = "/"
 [tool.hatch.build.hooks.hatch-cpp]
 verbose = true
 libraries = [
-{name = "{{module}}/extension", sources = ["cpp/cpp-template/extension.cpp"], include-dirs = ["cpp"], binding="pybind11"}
+{name = "{{module}}/extension", sources = ["cpp/{{project_name_formatted}}/extension.cpp"], include-dirs = ["cpp"], binding="pybind11"}
 ]
 
 [tool.hatch.build.targets.sdist]
