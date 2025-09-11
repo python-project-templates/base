@@ -17,3 +17,12 @@ strum = "0.24.1"
 [profile.release]
 panic = 'abort'
 lto = true
+
+[profile.test.junit]
+path = "junit.xml"
+
+[workspace]
+members = [
+    "js",
+    "rust",
+]

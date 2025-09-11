@@ -29,7 +29,7 @@
     "setup": "cargo install -f wasm-bindgen-cli --version 0.2.101",
     "build:debug": "node build.mjs --debug",
     "build:rust": "cargo build --release --all-features --target wasm32-unknown-unknown",
-    "build:wasm-bindgen": "wasm-bindgen target/wasm32-unknown-unknown/release/{{module}}.wasm --out-dir ./dist/pkg --target web",
+    "build:wasm-bindgen": "wasm-bindgen ../target/wasm32-unknown-unknown/release/{{module}}.wasm --out-dir ./dist/pkg --target web",
     "build:prod": "node build.mjs",
     "build": "npm-run-all build:rust build:wasm-bindgen build:prod",
     "clean": "rm -rf dist lib playwright-report ../{{module}}/extension",
