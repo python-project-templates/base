@@ -128,7 +128,7 @@ jobs:
       run: make coverage
 
     - name: Upload test results (Python)
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: {% raw %}test-results-${{ matrix.os }}-${{ matrix.python-version }}{% endraw %}
         path: junit.xml
@@ -145,7 +145,7 @@ jobs:
       with:
         token: {% raw %}${{ secrets.CODECOV_TOKEN }}{% endraw %}
 
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v5
       with:
         name: {% raw %}dist-${{matrix.os}}-${{matrix.python-version}}{% endraw %}
         path: dist
