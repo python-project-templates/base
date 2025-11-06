@@ -56,8 +56,6 @@ python_version_primary:
   type: str
   default: 3.11
   choices:
-    "3.9":
-      value: "3.9"
     "3.10":
       value: "3.10"
     "3.11":

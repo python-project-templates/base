@@ -9,7 +9,7 @@ description = "{{project_description}}"
 readme = "README.md"
 license = { text = "Apache-2.0" }
 version = "0.1.0"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 keywords = []
 
 classifiers = [
@@ -19,7 +19,6 @@ classifiers = [
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -107,7 +106,7 @@ ignore = [
 ]
 
 [tool.cibuildwheel]
-build = "cp39-*"
+build = "cp310-*"
 test-command = "pytest -vvv {project}/{{module}}/tests"
 test-requires = ["pytest", "pytest-cov", "pytest-sugar", "pytest-xdist"]
 
