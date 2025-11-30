@@ -125,8 +125,8 @@ exclude = [
 ]
 
 [tool.hatch.build.targets.wheel.shared-data]
-"{{module}}/labextension" = "share/jupyter/labextensions/{{module}}"
-"{{module}}/extension/install.json" = "share/jupyter/labextensions/{{module}}/install.json"
+"{{module}}/labextension" = "share/jupyter/labextensions/{{project_name_formatted}}"
+"{{module}}/extension/install.json" = "share/jupyter/labextensions/{{project_name_formatted}}/install.json"
 "{{module}}/extension/{{module}}.json" = "etc/jupyter/jupyter_server_config.d/{{module}}.json"
 
 [tool.hatch.build.hooks.hatch-js]
