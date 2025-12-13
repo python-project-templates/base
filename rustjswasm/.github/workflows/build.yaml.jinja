@@ -65,7 +65,7 @@ jobs:
       run: make coverage
 
     - name: Upload test results (Python)
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: {% raw %}test-results-${{ matrix.os }}-${{ matrix.python-version }}{% endraw %}
         path: '**/junit.xml'
@@ -106,7 +106,7 @@ jobs:
         CIBW_ENVIRONMENT_MACOS: MACOSX_DEPLOYMENT_TARGET=11.0
       if: matrix.os != 'ubuntu-latest'
 
-    - uses: actions/upload-artifact@v5
+    - uses: actions/upload-artifact@v6
       with:
         name: {% raw %}dist-${{matrix.os}}{% endraw %}
         path: dist
