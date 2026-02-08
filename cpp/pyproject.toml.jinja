@@ -89,7 +89,7 @@ ignore = [
 [tool.cibuildwheel]
 build = "cp310-* cp311-* cp312-* cp313-*"
 test-command = "echo 'TODO'"
-test-requires = []
+test-extras = "develop"
 
 [tool.cibuildwheel.linux]
 skip = "*i686 musllinux*"
