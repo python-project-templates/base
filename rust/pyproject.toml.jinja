@@ -100,12 +100,7 @@ ignore = [
 [tool.cibuildwheel]
 build = "cp310-*"
 test-command = "pytest -vvv {project}/{{module}}/tests"
-test-requires = [
-    "pytest",
-    "pytest-cov",
-    "pytest-sugar",
-    "pytest-xdist",
-]
+test-extras = "develop"
 
 [tool.cibuildwheel.linux]
 before-all = """
