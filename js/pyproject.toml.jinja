@@ -1,10 +1,15 @@
 [build-system]
-requires = ["hatchling", "hatch-js"]
+requires = [
+    "hatchling",
+    "hatch-js",
+]
 build-backend="hatchling.build"
 
 [project]
 name = "{{project_name_formatted}}"
-authors = [{name = "{{team}}", email = "{{email}}"}]
+authors = [
+    {name = "{{team}}", email = "{{email}}"},
+]
 description = "{{project_description}}"
 readme = "README.md"
 license = { text = "Apache-2.0" }
@@ -41,6 +46,8 @@ develop = [
     "pytest-cov",
     "ruff>=0.9,<0.15",
     "twine",
+    "ty",
+    "uv",
     "wheel",
 ]
 
@@ -105,37 +112,71 @@ artifacts = [
 src = "/"
 
 [tool.hatch.build.targets.sdist]
-packages = ["{{module}}", "js"]
+packages = [
+    "{{module}}",
+    "js",
+]
 exclude = [
     "/js/dist",
     "/js/node_modules",
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["{{module}}"]
-exclude = ["/js"]
+packages = [
+    "{{module}}",
+]
+exclude = [
+    "/js",
+]
 
 [tool.hatch.build.hooks.hatch-js]
 path = "js"
 build_cmd = "build"
 tool = "pnpm"
-targets = ["{{module}}/extension/cdn/index.js"]
+targets = [
+    "{{module}}/extension/cdn/index.js",
+]
 
 [tool.pytest.ini_options]
-addopts = ["-vvv", "--junitxml=junit.xml"]
+addopts = [
+    "-vvv",
+    "--junitxml=junit.xml",
+]
 testpaths = "{{module}}/tests"
 
 [tool.ruff]
 line-length = 150
 
 [tool.ruff.lint]
-extend-select = ["I"]
+extend-select = [
+    "I",
+]
 
 [tool.ruff.lint.isort]
 combine-as-imports = true
 default-section = "third-party"
-known-first-party = ["{{module}}"]
-section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
+known-first-party = [
+    "{{module}}",
+]
+section-order = [
+    "future",
+    "standard-library",
+    "third-party",
+    "first-party",
+    "local-folder",
+]
 
 [tool.ruff.lint.per-file-ignores]
-"__init__.py" = ["F401", "F403"]
+"__init__.py" = [
+    "F401",
+    "F403",
+]
+
+{%- if add_docs %}
+
+[tool.yardang]
+title = "{{ project_name }}"
+root = "README.md"
+pages = []
+use-autoapi = true
+{% endif %}

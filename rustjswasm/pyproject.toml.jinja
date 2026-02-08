@@ -1,10 +1,16 @@
 [build-system]
-requires = ["hatchling", "hatch-js", "hatch-rs"]
+requires = [
+    "hatchling",
+    "hatch-js",
+    "hatch-rs",
+]
 build-backend = "hatchling.build"
 
 [project]
 name = "{{project_name_formatted}}"
-authors = [{name = "{{team}}", email = "{{email}}"}]
+authors = [
+    {name = "{{team}}", email = "{{email}}"},
+]
 description = "{{project_description}}"
 readme = "README.md"
 license = { text = "Apache-2.0" }
@@ -44,6 +50,8 @@ develop = [
     "pytest-cov",
     "ruff>=0.9,<0.15",
     "twine",
+    "ty",
+    "uv",
     "wheel",
 ]
 
@@ -108,7 +116,12 @@ ignore = [
 [tool.cibuildwheel]
 build = "cp310-*"
 test-command = "pytest -vvv {project}/{{module}}/tests"
-test-requires = ["pytest", "pytest-cov", "pytest-sugar", "pytest-xdist"]
+test-requires = [
+    "pytest",
+    "pytest-cov",
+    "pytest-sugar",
+    "pytest-xdist",
+]
 
 [tool.cibuildwheel.linux]
 before-all = """
@@ -145,7 +158,9 @@ fail_under = 50
 path = "js"
 build_cmd = "build"
 tool = "pnpm"
-targets = ["{{module}}/extension/cdn/index.js"]
+targets = [
+    "{{module}}/extension/cdn/index.js",
+]
 
 [tool.hatch.build.hooks.hatch-rs]
 verbose = true
@@ -153,28 +168,57 @@ module = "{{module}}"
 path = "."
 
 [tool.hatch.build.targets.sdist]
-packages = ["{{module}}", "/js", "/rust", "/src"]
-sources = ["."]
+packages = [
+    "{{module}}",
+    "/js",
+    "/rust",
+    "/src",
+]
+sources = [
+    ".",
+]
 
 [tool.hatch.build.targets.wheel]
-packages = ["{{module}}"]
-exclude = ["/js", "/rust", "/src"]
+packages = [
+    "{{module}}",
+]
+exclude = [
+    "/js",
+    "/rust",
+    "/src",
+]
 
 [tool.pytest.ini_options]
-addopts = ["-vvv", "--junitxml=junit.xml"]
+addopts = [
+    "-vvv",
+    "--junitxml=junit.xml",
+]
 testpaths = "{{module}}/tests"
 
 [tool.ruff]
 line-length = 150
 
 [tool.ruff.lint]
-extend-select = ["I"]
+extend-select = [
+    "I",
+]
 
 [tool.ruff.lint.isort]
 combine-as-imports = true
 default-section = "third-party"
-known-first-party = ["{{module}}"]
-section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
+known-first-party = [
+    "{{module}}",
+]
+section-order = [
+    "future",
+    "standard-library",
+    "third-party",
+    "first-party",
+    "local-folder",
+]
 
 [tool.ruff.lint.per-file-ignores]
-"__init__.py" = ["F401", "F403"]
+"__init__.py" = [
+    "F401",
+    "F403",
+]
