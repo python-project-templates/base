@@ -29,6 +29,8 @@ jobs:
           - jupyter
           - rust
           - rustjswasm
+          - cpp
+          - cppjswasm
         os:
           - ubuntu-latest
           - macos-latest
@@ -55,6 +57,14 @@ jobs:
         version: '3.11'
 
     - run: uv pip install copier
+
+    - name: Install clang-format
+      run: |
+        if [[ "$RUNNER_OS" == "Linux" ]]; then
+          sudo apt-get install -y clang-format-14
+        elif [[ "$RUNNER_OS" == "macOS" ]]; then
+          brew install clang-format
+        fi
 
     - uses: actions-ext/node/setup@main
       with:

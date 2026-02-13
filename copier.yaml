@@ -49,6 +49,8 @@ add_extension:
       value: jupyter
     Rust JavaScript WebAssembly:
       value: rustjswasm
+    "C++ JavaScript WebAssembly":
+      value: cppjswasm
 
 _subdirectory: "{{ add_extension }}"
 

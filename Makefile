@@ -49,6 +49,11 @@ gen-rustjswasm:  ## regenerate the rustjswasm template from scratch
 	copier copy -w . ../python-template-rustjswasm --data-file examples/rustjswasm.yaml
 	cd ../python-template-rustjswasm && $(SED) 's#_src_path: .#_src_path: https://github.com/python-project-templates/base.git#g' ./.copier-answers.yaml
 
+gen-cppjswasm:  ## regenerate the cppjswasm template from scratch
+	mkdir -p ../python-template-cppjswasm && cd ../python-template-cppjswasm && rm -rf ./* && rm -rf .copier-answers.yaml .gitignore .github .gitattributes
+	copier copy -w . ../python-template-cppjswasm --data-file examples/cppjswasm.yaml
+	cd ../python-template-cppjswasm && $(SED) 's#_src_path: .#_src_path: https://github.com/python-project-templates/base.git#g' ./.copier-answers.yaml
+
 .PHONY: test-python test-cpp test-js test-jupyter test-rust test-rustjswasm
 test-python:
 	cd ../python-template && git config --global user.name "github-actions" && git config --global user.email "41898282+github-actions[bot]@users.noreply.github.c@example.com" && git init && git add . && git commit -m "initial commit"
@@ -95,4 +100,9 @@ test-rustjswasm:
 	cd ../python-template-rustjswasm && make checks
 	cd ../python-template-rustjswasm && make test
 
-
+test-cppjswasm:
+	cd ../python-template-cppjswasm && git config --global user.name "github-actions" && git config --global user.email "41898282+github-actions[bot]@users.noreply.github.c@example.com" && git init && git add . && git commit -m "initial commit"
+	cd ../python-template-cppjswasm && make develop
+	cd ../python-template-cppjswasm && make lint
+	cd ../python-template-cppjswasm && make checks
+	cd ../python-template-cppjswasm && make test
