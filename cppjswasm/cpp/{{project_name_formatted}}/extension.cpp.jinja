@@ -1,0 +1,18 @@
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+
+#include "{{project_name_formatted}}/example.hpp"
+
+namespace py = pybind11;
+
+PYBIND11_MODULE(extension_cpp, m) {
+  m.doc() = "pybind11 extension module";
+
+  m.def("add", &add, "A function that adds two numbers");
+
+  py::class_<Example>(m, "Example")
+    .def(py::init<const std::string&>())
+    .def_readwrite("stuff", &Example::stuff)
+    .def("__str__", [](const Example& e) { return e.stuff; })
+    .def("__repr__", [](const Example& e) { return std::string("Example<") + e.stuff + ">"; });
+}

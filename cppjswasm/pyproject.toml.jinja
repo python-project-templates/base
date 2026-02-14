@@ -1,0 +1,218 @@
+[build-system]
+requires = [
+    "hatchling",
+    "hatch-cpp",
+    "hatch-js",
+    "pybind11",
+]
+build-backend = "hatchling.build"
+
+[project]
+name = "{{project_name_formatted}}"
+authors = [
+    {name = "{{team}}", email = "{{email}}"},
+]
+description = "{{project_description}}"
+readme = "README.md"
+license = { text = "Apache-2.0" }
+version = "0.1.0"
+requires-python = ">=3.10"
+keywords = []
+
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: C++",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+
+dependencies = []
+
+[project.optional-dependencies]
+develop = [
+    "build",
+    "bump-my-version",
+    "check-manifest",
+    "cibuildwheel",
+    "codespell>=2.4,<2.5",
+    "hatch-cpp",
+    "hatch-js",
+    "hatchling",
+    "mdformat>=0.7.22,<1.1",
+    "mdformat-tables>=1",
+    "pytest",
+    "pytest-cov",
+    "ruff>=0.9,<0.15",
+    "twine",
+    "ty",
+    "uv",
+    "wheel",
+]
+
+[project.scripts]
+
+[project.urls]
+Repository = "https://github.com/{{github}}/{{project_name_formatted}}"
+Homepage = "https://github.com/{{github}}/{{project_name_formatted}}"
+
+[tool.bumpversion]
+current_version = "0.1.0"
+commit = true
+tag = true
+commit_args = "-s"
+
+[[tool.bumpversion.files]]
+filename = "{{module}}/__init__.py"
+search = '__version__ = "{current_version}"'
+replace = '__version__ = "{new_version}"'
+
+[[tool.bumpversion.files]]
+filename = "pyproject.toml"
+search = 'version = "{current_version}"'
+replace = 'version = "{new_version}"'
+
+[[tool.bumpversion.files]]
+filename = "js/package.json"
+search = '"version": "{current_version}"'
+replace = '"version": "{new_version}"'
+
+[tool.check-manifest]
+ignore = [
+    ".copier-answers.yaml",
+    ".clang-format",
+    "js/pnpm-lock.yaml",
+    "Makefile",
+    ".vscode/*",
+    "{{module}}/extension/**/*",
+    "{{module}}/*.dll",
+    "{{module}}/*.dylib",
+    "{{module}}/*.so",
+    "docs/**/*",
+    "js/dist/**/*",
+]
+
+[tool.cibuildwheel]
+build = "cp310-*"
+test-command = "pytest -vvv {project}/{{module}}/tests"
+test-extras = "develop"
+
+[tool.cibuildwheel.linux]
+environment = {SKIP_HATCH_JS="1"}
+skip = "*i686* *musllinux*"
+
+[tool.cibuildwheel.macos]
+environment = {MACOSX_DEPLOYMENT_TARGET="11.0", SKIP_HATCH_JS="1"}
+archs = "arm64"
+
+[tool.cibuildwheel.windows]
+environment = {SKIP_HATCH_JS="1"}
+skip = "*win32 *arm_64"
+
+[tool.coverage.run]
+branch = true
+omit = [
+    "{{module}}/tests/integration/",
+]
+[tool.coverage.report]
+exclude_also = [
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "@(abc\\.)?abstractmethod",
+]
+ignore_errors = true
+fail_under = 50
+
+[tool.hatch.build]
+artifacts = [
+    "{{module}}/*.dll",
+    "{{module}}/*.dylib",
+    "{{module}}/*.so",
+    "{{module}}/extension",
+]
+
+[tool.hatch.build.sources]
+src = "/"
+
+[tool.hatch.build.hooks.hatch-js]
+path = "js"
+build_cmd = "build"
+tool = "pnpm"
+targets = [
+    "{{module}}/extension/cdn/index.js",
+]
+
+[tool.hatch.build.hooks.hatch-cpp]
+verbose = true
+libraries = [
+    {name = "{{module}}/extension_cpp", sources = ["cpp/{{project_name_formatted}}/example.cpp", "cpp/{{project_name_formatted}}/extension.cpp"], include-dirs = ["cpp"], binding="pybind11"}
+]
+
+[tool.hatch.build.targets.sdist]
+packages = [
+    "{{module}}",
+    "/js",
+    "/cpp",
+]
+sources = [
+    ".",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = [
+    "{{module}}",
+]
+exclude = [
+    "/js",
+    "/cpp",
+]
+
+[tool.pytest.ini_options]
+addopts = [
+    "-vvv",
+    "--junitxml=junit.xml",
+]
+testpaths = "{{module}}/tests"
+
+[tool.ruff]
+line-length = 150
+
+[tool.ruff.lint]
+extend-select = [
+    "I",
+]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+default-section = "third-party"
+known-first-party = [
+    "{{module}}",
+]
+section-order = [
+    "future",
+    "standard-library",
+    "third-party",
+    "first-party",
+    "local-folder",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = [
+    "F401",
+    "F403",
+]
+
+{%- if add_docs %}
+
+[tool.yardang]
+title = "{{ project_name }}"
+root = "README.md"
+pages = []
+use-autoapi = true
+{% endif %}

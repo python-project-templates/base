@@ -1,0 +1,11 @@
+#include <emscripten/bind.h>
+
+#include "{{project_name_formatted}}/example.hpp"
+
+using namespace emscripten;
+
+EMSCRIPTEN_BINDINGS({{module}}) {
+  function("add", &add);
+
+  class_<Example>("Example").constructor<std::string>().property("stuff", &Example::stuff);
+}

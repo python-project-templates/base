@@ -1,0 +1,202 @@
+#########
+# BUILD #
+#########
+EMSDK_ENV := $(shell pwd)/emsdk/emsdk_env.sh
+ACTIVATE_EMSDK := if [ -f "$(EMSDK_ENV)" ]; then . "$(EMSDK_ENV)" 2>/dev/null; fi
+
+.PHONY: develop-py develop-js develop-cpp develop
+develop-py:
+	$(ACTIVATE_EMSDK) && uv pip install -e .[develop]
+
+develop-js: requirements-js
+
+develop-cpp:
+	make -C cpp develop
+
+develop: develop-cpp develop-js develop-py  ## setup project for development
+
+.PHONY: requirements-py requirements-js requirements-cpp requirements
+requirements-py:  ## install prerequisite python build requirements
+	python -m pip install --upgrade pip toml
+	python -m pip install `python -c 'import toml; c = toml.load("pyproject.toml"); print("\n".join(c["build-system"]["requires"]))'`
+	python -m pip install `python -c 'import toml; c = toml.load("pyproject.toml"); print(" ".join(c["project"]["optional-dependencies"]["develop"]))'`
+
+requirements-js:  ## install prerequisite javascript build requirements
+	cd js; pnpm install && npx playwright install
+
+requirements-cpp:  ## install prerequisite C++ build requirements
+	make -C cpp requirements
+
+requirements: requirements-cpp requirements-js requirements-py  ## setup project for development
+
+.PHONY: build-py build-js build-cpp build
+build-py:
+	$(ACTIVATE_EMSDK) && python -m build -w -n
+
+build-js:
+	$(ACTIVATE_EMSDK) && cd js && pnpm build
+
+build-cpp:
+	make -C cpp build
+
+build: build-cpp build-js build-py  ## build the project
+
+.PHONY: install
+install:  ## install python library
+	uv pip install .
+
+#########
+# LINTS #
+#########
+.PHONY: lint-py lint-js lint-cpp lint-docs lint lints
+lint-py:  ## run python linter with ruff
+	python -m ruff check {{module}}
+	python -m ruff format --check {{module}}
+
+lint-js:  ## run js linter
+	cd js; pnpm lint
+
+lint-cpp:  ## run C++ linter
+	make -C cpp lint
+
+lint-docs:  ## lint docs with mdformat and codespell
+	python -m mdformat --check README.md {% if add_wiki %}docs/wiki/{% endif %}
+	python -m codespell_lib README.md {% if add_wiki %}docs/wiki/{% endif %}
+
+lint: lint-cpp lint-js lint-py lint-docs  ## run project linters
+
+# alias
+lints: lint
+
+.PHONY: fix-py fix-js fix-cpp fix-docs fix format
+fix-py:  ## fix python formatting with ruff
+	python -m ruff check --fix {{module}}
+	python -m ruff format {{module}}
+
+fix-js:  ## fix js formatting
+	cd js; pnpm fix
+
+fix-cpp:  ## fix C++ formatting
+	make -C cpp fix
+
+fix-docs:  ## autoformat docs with mdformat and codespell
+	python -m mdformat README.md {% if add_wiki %}docs/wiki/{% endif %}
+	python -m codespell_lib --write README.md {% if add_wiki %}docs/wiki/{% endif %}
+
+fix: fix-cpp fix-js fix-py fix-docs  ## run project autoformatters
+
+# alias
+format: fix
+
+################
+# Other Checks #
+################
+.PHONY: check-manifest checks check
+
+check-manifest:  ## check python sdist manifest with check-manifest
+	check-manifest -v
+
+checks: check-manifest
+
+# alias
+check: checks
+
+#########
+# TESTS #
+#########
+.PHONY: test-py tests-py coverage-py
+test-py:  ## run python tests
+	python -m pytest -v {{module}}/tests
+
+# alias
+tests-py: test-py
+
+coverage-py:  ## run python tests and collect test coverage
+	python -m pytest -v {{module}}/tests --cov={{module}} --cov-report term-missing --cov-report xml
+
+.PHONY: test-js tests-js coverage-js
+test-js:  ## run js tests
+	cd js; pnpm test
+
+# alias
+tests-js: test-js
+
+coverage-js: test-js  ## run js tests and collect test coverage
+
+.PHONY: test-cpp tests-cpp coverage-cpp
+test-cpp:  ## run C++ tests
+	make -C cpp test
+
+# alias
+tests-cpp: test-cpp
+
+coverage-cpp:  ## run C++ tests and collect test coverage
+	make -C cpp coverage
+
+.PHONY: test coverage tests
+test: test-py test-js test-cpp  ## run all tests
+coverage: coverage-py coverage-js coverage-cpp  ## run all tests and collect test coverage
+
+# alias
+tests: test
+
+###########
+# VERSION #
+###########
+.PHONY: show-version patch minor major
+
+show-version:  ## show current library version
+	@bump-my-version show current_version
+
+patch:  ## bump a patch version
+	@bump-my-version bump patch
+
+minor:  ## bump a minor version
+	@bump-my-version bump minor
+
+major:  ## bump a major version
+	@bump-my-version bump major
+
+########
+# DIST #
+########
+.PHONY: dist-py-wheel dist-py-sdist dist-check dist publish
+
+dist-py-wheel:  ## build python wheel
+	python -m cibuildwheel --output-dir dist
+
+dist-py-sdist:  ## build python sdist
+	python -m build --sdist -o dist
+
+dist-js:  # build js dists
+	cd js; pnpm pack
+
+dist-check:  ## run python dist checker with twine
+	python -m twine check dist/*
+
+dist: clean build dist-js dist-py-wheel dist-py-sdist dist-check  ## build all dists
+
+publish: dist  ## publish python assets
+
+#########
+# CLEAN #
+#########
+.PHONY: deep-clean clean
+
+deep-clean: ## clean everything from the repository
+	git clean -fdx
+
+clean: ## clean the repository
+	rm -rf .coverage coverage cover htmlcov logs build dist *.egg-info
+
+############################################################################################
+
+.PHONY: help
+
+# Thanks to Francoise at marmelab.com for this
+.DEFAULT_GOAL := help
+help:
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
+print-%:
+	@echo '$*=$($*)'
