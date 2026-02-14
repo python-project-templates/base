@@ -64,7 +64,6 @@ test-python:
 
 test-cpp:
 	cd ../python-template-cpp && git config --global user.name "github-actions" && git config --global user.email "41898282+github-actions[bot]@users.noreply.github.c@example.com" && git init && git add . && git commit -m "initial commit"
-	cd ../python-template-cpp && git init && git add . && git commit -m "initial commit"
 	cd ../python-template-cpp && make develop
 	cd ../python-template-cpp && make lint
 	cd ../python-template-cpp && make checks
