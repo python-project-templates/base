@@ -1,8 +1,8 @@
 #########
 # BUILD #
 #########
-EMSDK_ENV := $(shell pwd)/emsdk/emsdk_env.sh
-ACTIVATE_EMSDK := if [ -f "$(EMSDK_ENV)" ]; then . "$(EMSDK_ENV)" 2>/dev/null; fi
+EMSDK_DIR := $(shell pwd)/emsdk
+ACTIVATE_EMSDK := if [ -d "$(EMSDK_DIR)/upstream/emscripten" ]; then export PATH="$(EMSDK_DIR):$(EMSDK_DIR)/upstream/emscripten:$$PATH"; fi
 
 .PHONY: develop-py develop-js develop-cpp develop
 develop-py:
