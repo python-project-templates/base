@@ -92,6 +92,7 @@ test-command = "echo 'TODO'"
 test-extras = "develop"
 
 [tool.cibuildwheel.linux]
+manylinux-x86_64-image = "manylinux_2_28"
 skip = "*i686 musllinux*"
 
 [tool.cibuildwheel.macos]
