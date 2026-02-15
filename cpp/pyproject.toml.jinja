@@ -1,7 +1,7 @@
 [build-system]
 requires = [
     "hatchling",
-    "hatch-cpp<0.3",
+    "hatch-cpp",
     "pybind11",
 ]
 build-backend="hatchling.build"
@@ -40,7 +40,7 @@ develop = [
     "check-manifest",
     "cibuildwheel",
     "codespell>=2.4,<2.5",
-    "hatch-cpp<0.3",
+    "hatch-cpp",
     "hatchling",
     "mdformat>=0.7.22,<1.1",
     "mdformat-tables>=1",
@@ -92,6 +92,7 @@ test-command = "echo 'TODO'"
 test-extras = "develop"
 
 [tool.cibuildwheel.linux]
+manylinux-x86_64-image = "manylinux_2_28"
 skip = "*i686 musllinux*"
 
 [tool.cibuildwheel.macos]
