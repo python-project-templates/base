@@ -158,11 +158,8 @@ libraries = [
 [tool.hatch.build.targets.sdist]
 packages = [
     "{{module}}",
-    "/js",
-    "/cpp",
-]
-sources = [
-    ".",
+    "cpp",
+    "js",
 ]
 
 [tool.hatch.build.targets.wheel]
@@ -170,8 +167,8 @@ packages = [
     "{{module}}",
 ]
 exclude = [
-    "/js",
-    "/cpp",
+    "js",
+    "cpp",
 ]
 
 [tool.pytest.ini_options]
