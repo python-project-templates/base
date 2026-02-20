@@ -36,7 +36,6 @@ develop = [
     "build",
     "bump-my-version",
     "check-dist",
-    "check-manifest",
     "codespell",
     "hatchling",
     "mdformat",
@@ -71,13 +70,6 @@ replace = '__version__ = "{new_version}"'
 filename = "pyproject.toml"
 search = 'version = "{current_version}"'
 replace = 'version = "{new_version}"'
-
-[tool.check-manifest]
-ignore = [
-    ".copier-answers.yaml",
-    "Makefile",
-    "docs/**/*",
-]
 
 [tool.coverage.run]
 branch = true
