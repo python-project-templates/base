@@ -107,10 +107,9 @@ ignore = [
     ".vscode/*",
     "{{module}}/extension/**/*",
     "docs/**/*",
-    "js/dist/**/*",
-    "rust/.config/*",
-    "rust/Cargo.lock",
-    "rust/README.md",
+    "js/**/*",
+    "rust/**/*",
+    "src/**/*",
 ]
 
 [tool.cibuildwheel]
@@ -165,12 +164,17 @@ path = "."
 [tool.hatch.build.targets.sdist]
 packages = [
     "{{module}}",
-    "/js",
-    "/rust",
-    "/src",
 ]
-sources = [
-    ".",
+include = [
+    "js",
+    "rust",
+    "src",
+    "Cargo.toml",
+    "Cargo.lock",
+]
+exclude = [
+    "js/node_modules",
+    "target",
 ]
 
 [tool.hatch.build.targets.wheel]
@@ -178,9 +182,9 @@ packages = [
     "{{module}}",
 ]
 exclude = [
-    "/js",
-    "/rust",
-    "/src",
+    "js",
+    "rust",
+    "src",
 ]
 
 [tool.pytest.ini_options]
