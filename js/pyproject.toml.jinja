@@ -37,7 +37,6 @@ develop = [
     "build",
     "bump-my-version",
     "check-dist",
-    "check-manifest",
     "codespell",
     "hatch-js",
     "hatchling",
@@ -79,17 +78,6 @@ filename = "js/package.json"
 search = '"version": "{current_version}"'
 replace = '"version": "{new_version}"'
 
-[tool.check-manifest]
-ignore = [
-    ".copier-answers.yaml",
-    "js/pnpm-lock.yaml",
-    "Makefile",
-    ".vscode/*",
-    "{{module}}/extension/**/*",
-    "docs/**/*",
-    "js/dist/**/*",
-]
-
 [tool.coverage.run]
 branch = true
 omit = [
@@ -118,8 +106,8 @@ packages = [
     "js",
 ]
 exclude = [
-    "/js/dist",
-    "/js/node_modules",
+    "js/dist",
+    "js/node_modules",
 ]
 
 [tool.hatch.build.targets.wheel]
@@ -127,7 +115,7 @@ packages = [
     "{{module}}",
 ]
 exclude = [
-    "/js",
+    "js",
 ]
 
 [tool.hatch.build.hooks.hatch-js]

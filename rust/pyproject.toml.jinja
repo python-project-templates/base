@@ -38,7 +38,6 @@ develop = [
     "build",
     "bump-my-version",
     "check-dist",
-    "check-manifest",
     "cibuildwheel",
     "codespell",
     "hatch-rs",
@@ -85,17 +84,6 @@ replace = 'version = "{new_version}"'
 filename = "rust/Cargo.toml"
 search = 'version = "{current_version}"'
 replace = 'version = "{new_version}"'
-
-[tool.check-manifest]
-ignore = [
-    ".copier-answers.yaml",
-    "Cargo.toml",
-    "Cargo.lock",
-    "Makefile",
-    "docs/**/*",
-    "rust/**/*",
-    "src/**/*",
-]
 
 [tool.cibuildwheel]
 build = "cp310-*"
@@ -152,14 +140,13 @@ path = "."
 [tool.hatch.build.targets.sdist]
 packages = [
     "{{module}}",
-]
-include = [
     "rust",
     "src",
     "Cargo.toml",
     "Cargo.lock",
 ]
 exclude = [
+    "rust/Makefile",
     "target",
 ]
 
