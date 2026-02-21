@@ -72,6 +72,7 @@ test-cpp:
 test-js:
 	cd ../python-template-js && git config --global user.name "github-actions" && git config --global user.email "41898282+github-actions[bot]@users.noreply.github.c@example.com" && git init && git add . && git commit -m "initial commit"
 	cd ../python-template-js && make develop
+	cd ../python-template-js && git add js/pnpm-lock.yaml && git commit -m "lockfile"
 	cd ../python-template-js && make lint
 	cd ../python-template-js && make checks
 	cd ../python-template-js && make test
@@ -79,6 +80,7 @@ test-js:
 test-jupyter:
 	cd ../python-template-jupyter && git config --global user.name "github-actions" && git config --global user.email "41898282+github-actions[bot]@users.noreply.github.c@example.com" && git init && git add . && git commit -m "initial commit"
 	cd ../python-template-jupyter && make develop
+	cd ../python-template-jupyter && git add js/pnpm-lock.yaml && git commit -m "lockfile"
 	cd ../python-template-jupyter && make lint
 	cd ../python-template-jupyter && make checks
 	cd ../python-template-jupyter && make test
