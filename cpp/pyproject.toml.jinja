@@ -38,7 +38,6 @@ develop = [
     "build",
     "bump-my-version",
     "check-dist",
-    "check-manifest",
     "cibuildwheel",
     "codespell",
     "hatch-cpp",
@@ -76,17 +75,6 @@ replace = '__version__ = "{new_version}"'
 filename = "pyproject.toml"
 search = 'version = "{current_version}"'
 replace = 'version = "{new_version}"'
-
-[tool.check-manifest]
-ignore = [
-    ".copier-answers.yaml",
-    ".clang-format",
-    "Makefile",
-    "docs/**/*",
-    "{{module}}/*.dll",
-    "{{module}}/*.dylib",
-    "{{module}}/*.so",
-]
 
 [tool.cibuildwheel]
 build = "cp310-* cp311-* cp312-* cp313-*"
