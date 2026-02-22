@@ -40,7 +40,6 @@ develop = [
     "build",
     "bump-my-version",
     "check-dist",
-    "check-manifest",
     "cibuildwheel",
     "codespell",
     "hatch-cpp<0.3",
@@ -84,21 +83,6 @@ replace = 'version = "{new_version}"'
 filename = "js/package.json"
 search = '"version": "{current_version}"'
 replace = '"version": "{new_version}"'
-
-[tool.check-manifest]
-ignore = [
-    ".copier-answers.yaml",
-    ".clang-format",
-    "js/pnpm-lock.yaml",
-    "Makefile",
-    ".vscode/*",
-    "{{module}}/extension/**/*",
-    "{{module}}/*.dll",
-    "{{module}}/*.dylib",
-    "{{module}}/*.so",
-    "docs/**/*",
-    "js/dist/**/*",
-]
 
 [tool.cibuildwheel]
 build = "cp310-*"
