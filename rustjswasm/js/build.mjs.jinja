@@ -1,10 +1,9 @@
 import { NodeModulesExternal } from "@finos/perspective-esbuild-plugin/external.js";
 import { build } from "@finos/perspective-esbuild-plugin/build.js";
-import { BuildCss } from "@prospective.co/procss/target/cjs/procss.js";
+import { transform } from "lightningcss";
 import { getarg } from "./tools/getarg.mjs";
 import fs from "fs";
 import cpy from "cpy";
-import path_mod from "path";
 
 const DEBUG = getarg("--debug");
 
@@ -40,31 +39,29 @@ const BUILD = [
 
 async function compile_css() {
   const process_path = (path) => {
-    const outpath = path.replace("src/less", "dist/css");
+    const outpath = path.replace("src/css", "dist/css");
     fs.mkdirSync(outpath, { recursive: true });
 
-    fs.readdirSync(path).forEach((file_or_folder) => {
-      if (file_or_folder.endsWith(".less")) {
-        const outfile = file_or_folder.replace(".less", ".css");
-        const builder = new BuildCss("");
-        builder.add(
-          `${path}/${file_or_folder}`,
-          fs
-            .readFileSync(path_mod.join(`${path}/${file_or_folder}`))
-            .toString(),
-        );
-        fs.writeFileSync(
-          `${path.replace("src/less", "dist/css")}/${outfile}`,
-          builder.compile().get(outfile),
-        );
-      } else {
-        process_path(`${path}/${file_or_folder}`);
+    fs.readdirSync(path, { withFileTypes: true }).forEach((entry) => {
+      const input = `${path}/${entry.name}`;
+      const output = `${outpath}/${entry.name}`;
+
+      if (entry.isDirectory()) {
+        process_path(input);
+      } else if (entry.isFile() && entry.name.endsWith(".css")) {
+        const source = fs.readFileSync(input);
+        const { code } = transform({
+          filename: entry.name,
+          code: source,
+          minify: !DEBUG,
+          sourceMap: false,
+        });
+        fs.writeFileSync(output, code);
       }
     });
   };
-  // recursively process all less files in src/less
-  process_path("src/less");
-  cpy("src/css/*", "dist/css/");
+
+  process_path("src/css");
 }
 
 async function copy_html() {
