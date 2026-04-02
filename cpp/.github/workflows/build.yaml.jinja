@@ -84,33 +84,6 @@ jobs:
       run: make checks
       if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'
 
-    - name: Install build dependencies
-      run: pip install cibuildwheel
-
-    - name: Build (Linux)
-      run: make build-cibw
-      env:
-        CIBW_BUILD: {% raw %}"${{ matrix.cibuildwheel }}-manylinux*"{% endraw %}
-        CIBW_BUILD_VERBOSITY: 3
-      if: matrix.os == 'ubuntu-latest'
-
-    - name: Build (Macos)
-      run: make build-cibw
-      env:
-        CIBW_BUILD: {% raw %}"${{ matrix.cibuildwheel }}-macos*"{% endraw %}
-        CIBW_BUILD_VERBOSITY: 3
-      if: matrix.os == 'macos-latest'
-
-    - name: Build (Windows)
-      run: |
-        call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-        make build-cibw
-      shell: cmd
-      env:
-        CIBW_BUILD: {% raw %}"${{ matrix.cibuildwheel }}-win_amd64"{% endraw %}
-        CIBW_BEFORE_ALL: call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-      if: matrix.os == 'windows-latest'
-
     - name: Test
       run: make coverage
 
@@ -131,6 +104,37 @@ jobs:
       uses: codecov/codecov-action@v6
       with:
         token: {% raw %}${{ secrets.CODECOV_TOKEN }}{% endraw %}
+
+    - name: Install build dependencies
+      run: pip install cibuildwheel
+
+    - name: Make dist (Linux)
+      run: |
+        make dist-py-sdist
+        make dist-py-wheel
+        make dist-check
+      env:
+        CIBW_BUILD: {% raw %}"${{ matrix.cibuildwheel }}-manylinux*"{% endraw %}
+        CIBW_BUILD_VERBOSITY: 3
+      if: matrix.os == 'ubuntu-latest'
+
+    - name: Make dist (Macos)
+      run: |
+        make dist-py-wheel
+      env:
+        CIBW_BUILD: {% raw %}"${{ matrix.cibuildwheel }}-macos*"{% endraw %}
+        CIBW_BUILD_VERBOSITY: 3
+      if: matrix.os == 'macos-latest'
+
+    - name: Make dist (Windows)
+      run: |
+        call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        make dist-py-wheel
+      shell: cmd
+      env:
+        CIBW_BUILD: {% raw %}"${{ matrix.cibuildwheel }}-win_amd64"{% endraw %}
+        CIBW_BEFORE_ALL: call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+      if: matrix.os == 'windows-latest'
 
     - uses: actions/upload-artifact@v7
       with:

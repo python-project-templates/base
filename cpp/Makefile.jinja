@@ -12,9 +12,6 @@ build-py:
 build-cpp:
 	python -m hatchling build --hooks-only
 
-build-cibw:
-	python -m cibuildwheel --output-dir dist
-
 build: build-cpp build-py  ## build the project
 
 .PHONY: install
@@ -114,15 +111,18 @@ major:  ## bump a major version
 ########
 # DIST #
 ########
-.PHONY: dist dist-py dist-check publish
+.PHONY: dist-py-wheel dist-py-sdist dist-check dist publish
 
-dist-py:  ## build python dists
-	python -m build -w -s
+dist-py-wheel:  ## build python wheel
+	python -m cibuildwheel --output-dir dist
+
+dist-py-sdist:  ## build python sdist
+	python -m build --sdist -o dist
 
 dist-check:  ## run python dist checker with twine
 	python -m twine check dist/*
 
-dist: clean build dist-js dist-py dist-check  ## build all dists
+dist: clean build dist-py-wheel dist-py-sdist dist-check  ## build all dists
 
 publish: dist  ## publish python assets
 
