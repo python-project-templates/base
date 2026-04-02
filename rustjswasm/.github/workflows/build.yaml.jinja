@@ -88,7 +88,7 @@ jobs:
         platforms: all
       if: runner.os == 'Linux' && runner.arch == 'X64'
 
-    - name: Make dist
+    - name: Make dist (Linux)
       run: |
         make dist-rs
         make dist-py-sdist
@@ -98,7 +98,7 @@ jobs:
         CIBW_BUILD: {% raw %}"${{ matrix.cibuildwheel }}-manylinux*"{% endraw %}
       if: matrix.os == 'ubuntu-latest'
 
-    - name: Make dist
+    - name: Make dist (Macos / Windows)
       run: |
         make dist-py-wheel
         make dist-check
