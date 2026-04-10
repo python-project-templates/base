@@ -1,21 +1,46 @@
 name: Publish Docs
 
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["Build Status"]
+    branches: [main]
+    types: [completed]
   workflow_dispatch:
+
 permissions:
+  actions: read
   contents: write
+
 jobs:
   docs:
     runs-on: ubuntu-latest
+    if: {% raw %}${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}{% endraw %}
     steps:
       - uses: actions/checkout@v6
       - uses: actions-ext/python/setup@main
-      - run: uv pip install .[develop]
-      - run: uv pip install yardang
+
+      - name: Download dist from build
+        uses: actions/download-artifact@v7
+        with:
+          name: dist-ubuntu-latest
+          path: dist
+          run-id: {% raw %}${{ github.event.workflow_run.id }}{% endraw %}
+        if: github.event_name == 'workflow_run'
+
+      - name: Install from wheel
+        run: |
+          uv pip install dist/*.whl
+          uv pip install yardang
+        if: github.event_name == 'workflow_run'
+
+      - name: Install from source (manual trigger)
+        run: |
+          uv pip install .[develop]
+          uv pip install yardang
+        if: github.event_name == 'workflow_dispatch'
+
       - run: yardang build
+
       - uses: peaceiris/actions-gh-pages@v4
         with:
           publish_branch: gh-pages
