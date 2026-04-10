@@ -23,8 +23,8 @@ install:  ## install python library
 #########
 .PHONY: lint-py lint-cpp lint-docs lint lints
 lint-py:  ## run python linter with ruff
-	python -m ruff check {{module}}
-	python -m ruff format --check {{module}}
+	python -m ruff check {{ module }}
+	python -m ruff format --check {{ module }}
 
 lint-cpp:  ## run cpp linter
 	clang-format --dry-run -Werror -i -style=file `find ./cpp -name "*.*pp"`
@@ -40,8 +40,8 @@ lints: lint
 
 .PHONY: fix-py fix-cpp fix format
 fix-py:  ## fix python formatting with ruff
-	python -m ruff check --fix {{module}}
-	python -m ruff format {{module}}
+	python -m ruff check --fix {{ module }}
+	python -m ruff format {{ module }}
 
 fix-cpp:  ## fix cpp formatting
 	clang-format -i -style=file `find ./cpp -name "*.*pp"`
@@ -76,13 +76,13 @@ check: checks
 #########
 .PHONY: test-py tests-py coverage-py
 test-py:  ## run python tests
-	python -m pytest -v {{module}}/tests
+	python -m pytest -v {{ module }}/tests
 
 # alias
 tests-py: test-py
 
 coverage-py:  ## run python tests and collect test coverage
-	python -m pytest -v {{module}}/tests --cov={{module}} --cov-report term-missing --cov-report xml
+	python -m pytest -v {{ module }}/tests --cov={{ module }} --cov-report term-missing --cov-report xml
 
 .PHONY: test coverage tests
 test: test-py  ## run all tests

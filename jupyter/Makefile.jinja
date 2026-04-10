@@ -38,8 +38,8 @@ install:  ## install python library
 #########
 .PHONY: lint-py lint-js lint-docs lint lints
 lint-py:  ## run python linter with ruff
-	python -m ruff check {{module}}
-	python -m ruff format --check {{module}}
+	python -m ruff check {{ module }}
+	python -m ruff format --check {{ module }}
 
 lint-js:  ## run js linter
 	cd js; pnpm lint
@@ -55,8 +55,8 @@ lints: lint
 
 .PHONY: fix-py fix-js fix-docs fix format
 fix-py:  ## fix python formatting with ruff
-	python -m ruff check --fix {{module}}
-	python -m ruff format {{module}}
+	python -m ruff check --fix {{ module }}
+	python -m ruff format {{ module }}
 
 fix-js:  ## fix js formatting
 	cd js; pnpm fix
@@ -91,13 +91,13 @@ check: checks
 #########
 .PHONY: test-py tests-py coverage-py
 test-py:  ## run python tests
-	python -m pytest -v {{module}}/tests
+	python -m pytest -v {{ module }}/tests
 
 # alias
 tests-py: test-py
 
 coverage-py:  ## run python tests and collect test coverage
-	python -m pytest -v {{module}}/tests --cov={{module}} --cov-report term-missing --cov-report xml
+	python -m pytest -v {{ module }}/tests --cov={{ module }} --cov-report term-missing --cov-report xml
 
 .PHONY: test-js tests-js coverage-js
 test-js:  ## run js tests

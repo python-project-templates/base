@@ -7,11 +7,11 @@ requires = [
 build-backend = "hatchling.build"
 
 [project]
-name = "{{project_name_formatted}}"
+name = "{{ project_name_formatted }}"
 authors = [
-    {name = "{{team}}", email = "{{email}}"},
+    {name = "{{ team }}", email = "{{ email }}"},
 ]
-description = "{{project_description}}"
+description = "{{ project_description }}"
 readme = "README.md"
 license = { text = "Apache-2.0" }
 version = "0.1.0"
@@ -61,8 +61,8 @@ develop = [
 [project.scripts]
 
 [project.urls]
-Repository = "https://github.com/{{github}}/{{project_name_formatted}}"
-Homepage = "https://github.com/{{github}}/{{project_name_formatted}}"
+Repository = "https://github.com/{{ github }}/{{ project_name_formatted }}"
+Homepage = "https://github.com/{{ github }}/{{ project_name_formatted }}"
 
 [tool.bumpversion]
 current_version = "0.1.0"
@@ -71,7 +71,7 @@ tag = true
 commit_args = "-s"
 
 [[tool.bumpversion.files]]
-filename = "{{module}}/__init__.py"
+filename = "{{ module }}/__init__.py"
 search = '__version__ = "{current_version}"'
 replace = '__version__ = "{new_version}"'
 
@@ -88,7 +88,7 @@ replace = '"version": "{new_version}"'
 [tool.coverage.run]
 branch = true
 omit = [
-    "{{module}}/tests/integration/",
+    "{{ module }}/tests/integration/",
 ]
 
 [tool.coverage.report]
@@ -102,8 +102,8 @@ fail_under = 50
 
 [tool.hatch.build]
 artifacts = [
-    "{{module}}/nbextension",
-    "{{module}}/labextension",
+    "{{ module }}/nbextension",
+    "{{ module }}/labextension",
 ]
 
 [tool.hatch.build.sources]
@@ -111,7 +111,7 @@ src = "/"
 
 [tool.hatch.build.targets.sdist]
 packages = [
-    "{{module}}",
+    "{{ module }}",
     "js",
 ]
 exclude = [
@@ -121,24 +121,24 @@ exclude = [
 
 [tool.hatch.build.targets.wheel]
 packages = [
-    "{{module}}",
+    "{{ module }}",
 ]
 exclude = [
     "js"
 ]
 
 [tool.hatch.build.targets.wheel.shared-data]
-"{{module}}/labextension" = "share/jupyter/labextensions/{{project_name_formatted}}"
-"{{module}}/extension/install.json" = "share/jupyter/labextensions/{{project_name_formatted}}/install.json"
-"{{module}}/extension/{{module}}.json" = "etc/jupyter/jupyter_server_config.d/{{module}}.json"
+"{{ module }}/labextension" = "share/jupyter/labextensions/{{ project_name_formatted }}"
+"{{ module }}/extension/install.json" = "share/jupyter/labextensions/{{ project_name_formatted }}/install.json"
+"{{ module }}/extension/{{ module }}.json" = "etc/jupyter/jupyter_server_config.d/{{ module }}.json"
 
 [tool.hatch.build.hooks.hatch-js]
 path = "js"
 build_cmd = "build"
 tool = "pnpm"
 targets = [
-    "{{module}}/nbextension/static/notebook.js",
-    "{{module}}/labextension/package.json",
+    "{{ module }}/nbextension/static/notebook.js",
+    "{{ module }}/labextension/package.json",
 ]
 
 [tool.pytest.ini_options]
@@ -146,7 +146,7 @@ addopts = [
     "-vvv",
     "--junitxml=junit.xml",
 ]
-testpaths = "{{module}}/tests"
+testpaths = "{{ module }}/tests"
 
 [tool.ruff]
 line-length = 150
@@ -160,7 +160,7 @@ extend-select = [
 combine-as-imports = true
 default-section = "third-party"
 known-first-party = [
-    "{{module}}",
+    "{{ module }}",
 ]
 section-order = [
     "future",

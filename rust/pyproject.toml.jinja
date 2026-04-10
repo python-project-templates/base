@@ -6,11 +6,11 @@ requires = [
 build-backend = "hatchling.build"
 
 [project]
-name = "{{project_name_formatted}}"
+name = "{{ project_name_formatted }}"
 authors = [
-    {name = "{{team}}", email = "{{email}}"},
+    {name = "{{ team }}", email = "{{ email }}"},
 ]
-description = "{{project_description}}"
+description = "{{ project_description }}"
 readme = "README.md"
 license = { text = "Apache-2.0" }
 version = "0.1.0"
@@ -56,8 +56,8 @@ develop = [
 [project.scripts]
 
 [project.urls]
-Repository = "https://github.com/{{github}}/{{project_name_formatted}}"
-Homepage = "https://github.com/{{github}}/{{project_name_formatted}}"
+Repository = "https://github.com/{{ github }}/{{ project_name_formatted }}"
+Homepage = "https://github.com/{{ github }}/{{ project_name_formatted }}"
 
 [tool.bumpversion]
 current_version = "0.1.0"
@@ -66,7 +66,7 @@ tag = true
 commit_args = "-s"
 
 [[tool.bumpversion.files]]
-filename = "{{module}}/__init__.py"
+filename = "{{ module }}/__init__.py"
 search = '__version__ = "{current_version}"'
 replace = '__version__ = "{new_version}"'
 
@@ -87,7 +87,7 @@ replace = 'version = "{new_version}"'
 
 [tool.cibuildwheel]
 build = "cp310-*"
-test-command = "pytest -vvv {project}/{{module}}/tests"
+test-command = "pytest -vvv {project}/{{ module }}/tests"
 test-extras = "develop"
 
 [tool.cibuildwheel.linux]
@@ -111,7 +111,7 @@ skip = "*win32 *arm_64"
 [tool.coverage.run]
 branch = true
 omit = [
-    "{{module}}/tests/integration/",
+    "{{ module }}/tests/integration/",
 ]
 
 [tool.coverage.report]
@@ -136,12 +136,12 @@ src = "/"
 [tool.hatch.build.hooks.hatch-rs]
 verbose = true
 abi3 = true
-module = "{{module}}"
+module = "{{ module }}"
 path = "."
 
 [tool.hatch.build.targets.sdist]
 packages = [
-    "{{module}}",
+    "{{ module }}",
     "rust",
     "Cargo.toml",
     "Cargo.lock",
@@ -153,7 +153,7 @@ exclude = [
 
 [tool.hatch.build.targets.wheel]
 packages = [
-    "{{module}}",
+    "{{ module }}",
 ]
 exclude = [
     "rust",
@@ -164,7 +164,7 @@ addopts = [
     "-vvv",
     "--junitxml=junit.xml",
 ]
-testpaths = "{{module}}/tests"
+testpaths = "{{ module }}/tests"
 
 [tool.ruff]
 line-length = 150
@@ -178,7 +178,7 @@ extend-select = [
 combine-as-imports = true
 default-section = "third-party"
 known-first-party = [
-    "{{module}}",
+    "{{ module }}",
 ]
 section-order = [
     "future",

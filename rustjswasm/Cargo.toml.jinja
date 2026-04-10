@@ -1,16 +1,16 @@
 [package]
-name = "{{module}}_py"
+name = "{{ module }}_py"
 version = "0.1.0"
 edition = "2021"
 publish = false
 
 [lib]
-name = "{{module}}"
+name = "{{ module }}"
 path = "rust/python/lib.rs"
 crate-type = ["cdylib"]
 
 [dependencies]
-{{module}} = { path = "./rust", version = "*" }
+{{ module }} = { path = "./rust", version = "*" }
 pyo3 = { version = "0.28.2", features = ["abi3", "extension-module", "multiple-pymethods"] }
 
 [profile.release]

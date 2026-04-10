@@ -1,9 +1,9 @@
 {
-  "name": "{{project_name_formatted}}",
+  "name": "{{ project_name_formatted }}",
   "version": "0.1.0",
-  "description": "{{project_description}}",
-  "repository": "git@github.com:{{github}}/{{project_name_formatted}}.git",
-  "author": "{{team}} <{{email}}>",
+  "description": "{{ project_description }}",
+  "repository": "git@github.com:{{ github }}/{{ project_name_formatted }}.git",
+  "author": "{{ team }} <{{ email }}>",
   "license": "Apache-2.0",
   "private": true,
   "type": "module",
@@ -28,7 +28,7 @@
   "scripts": {
     "build:debug": "node build.mjs --debug",
     "build": "node build.mjs",
-    "clean": "rm -rf dist playwright-report ../{{module}}/extension",
+    "clean": "rm -rf dist playwright-report ../{{ module }}/extension",
     "dev": "npm-run-all -p start watch",
     "lint": "prettier --check \"src/**/*.{js,ts,jsx,tsx,css}\" \"tests/**/*.{js,ts,jsx,tsx}\" \"*.mjs\" \"*.json\"",
     "fix": "prettier  --write \"src/**/*.{js,ts,jsx,tsx,css}\" \"tests/**/*.{js,ts,jsx,tsx}\" \"*.mjs\" \"*.json\"",
@@ -41,7 +41,6 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@finos/perspective-esbuild-plugin": "^3.2.1",
     "@playwright/test": "^1.59.1",
     "cpy": "^13.2.1",
     "esbuild": "^0.27.3",

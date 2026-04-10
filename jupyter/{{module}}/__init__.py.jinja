@@ -2,11 +2,11 @@ __version__ = "0.1.0"
 
 
 def _jupyter_server_extension_paths():
-    return [{"module": "{{module}}"}]
+    return [{"module": "{{ module }}"}]
 
 
 def _jupyter_server_extension_points():
-    return [{"module": "{{module}}"}]
+    return [{"module": "{{ module }}"}]
 
 
 def _load_jupyter_server_extension(nb_server_app, nb6_entrypoint=False):
@@ -24,7 +24,7 @@ def _jupyter_nbextension_paths():
         {
             "section": "tree",
             "src": "nbextension/static",
-            "dest": "{{module}}",
-            "require": "{{module}}/notebook",
+            "dest": "{{ module }}",
+            "require": "{{ module }}/notebook",
         }
     ]
