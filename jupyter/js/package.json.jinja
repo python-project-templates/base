@@ -1,9 +1,9 @@
 {
-  "name": "{{project_name_formatted}}",
+  "name": "{{ project_name_formatted }}",
   "version": "0.1.0",
-  "description": "{{project_description}}",
-  "repository": "git@github.com:{{github}}/{{project_name_formatted}}.git",
-  "author": "{{team}} <{{email}}>",
+  "description": "{{ project_description }}",
+  "repository": "git@github.com:{{ github }}/{{ project_name_formatted }}.git",
+  "author": "{{ team }} <{{ email }}>",
   "license": "Apache-2.0",
   "keywords": [
     "jupyter",
@@ -17,11 +17,11 @@
   ],
   "jupyterlab": {
     "extension": "lib/index.js",
-    "outputDir": "../{{module}}/labextension",
+    "outputDir": "../{{ module }}/labextension",
     "discovery": {
       "server": {
         "base": {
-          "name": "{{module}}"
+          "name": "{{ module }}"
         },
         "managers": [
           "pip"
@@ -31,9 +31,9 @@
   },
   "scripts": {
     "build:babel": "babel src/ --source-maps --out-dir lib/",
-    "build:extension": "mkdirp ../{{module}}/extension/ && cpy --flat 'src/extension/*' '../{{module}}/extension/'",
-    "build:nbextension": "mkdirp ../{{module}}/nbextension/static/ && cpy --flat 'src/notebook.js' '../{{module}}/nbextension/static/'",
-    "build:labextension": "rimraf ../{{module}}/labextension && jupyter labextension build .",
+    "build:extension": "mkdirp ../{{ module }}/extension/ && cpy --flat 'src/extension/*' '../{{ module }}/extension/'",
+    "build:nbextension": "mkdirp ../{{ module }}/nbextension/static/ && cpy --flat 'src/notebook.js' '../{{ module }}/nbextension/static/'",
+    "build:labextension": "rimraf ../{{ module }}/labextension && jupyter labextension build .",
     "build": "pnpm clean && pnpm build:babel && pnpm build:extension && pnpm build:labextension && pnpm build:nbextension",
     "clean": "rimraf lib",
     "fix": "pnpm lint --fix",

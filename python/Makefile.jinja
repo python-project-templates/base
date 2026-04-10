@@ -23,16 +23,16 @@ install:  ## install library
 .PHONY: lint-py lint-docs fix-py fix-docs lint lints fix format
 
 lint-py:  ## lint python with ruff
-	python -m ruff check {{module}}
-	python -m ruff format --check {{module}}
+	python -m ruff check {{ module }}
+	python -m ruff format --check {{ module }}
 
 lint-docs:  ## lint docs with mdformat and codespell
 	python -m mdformat --check README.md {% if add_wiki %}docs/wiki/{% endif %}
 	python -m codespell_lib README.md {% if add_wiki %}docs/wiki/{% endif %}
 
 fix-py:  ## autoformat python code with ruff
-	python -m ruff check --fix {{module}}
-	python -m ruff format {{module}}
+	python -m ruff check --fix {{ module }}
+	python -m ruff format {{ module }}
 
 fix-docs:  ## autoformat docs with mdformat and codespell
 	python -m mdformat README.md {% if add_wiki %}docs/wiki/{% endif %}
@@ -65,10 +65,10 @@ check: checks
 .PHONY: test coverage tests
 
 test:  ## run python tests
-	python -m pytest -v {{module}}/tests
+	python -m pytest -v {{ module }}/tests
 
 coverage:  ## run tests and collect test coverage
-	python -m pytest -v {{module}}/tests --cov={{module}} --cov-report term-missing --cov-report xml
+	python -m pytest -v {{ module }}/tests --cov={{ module }} --cov-report term-missing --cov-report xml
 
 # Alias
 tests: test

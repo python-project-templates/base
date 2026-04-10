@@ -1,9 +1,9 @@
 {
-  "name": "{{project_name_formatted}}",
+  "name": "{{ project_name_formatted }}",
   "version": "0.1.0",
-  "description": "{{project_description}}",
-  "repository": "git@github.com:{{github}}/{{project_name_formatted}}.git",
-  "author": "{{team}} <{{email}}>",
+  "description": "{{ project_description }}",
+  "repository": "git@github.com:{{ github }}/{{ project_name_formatted }}.git",
+  "author": "{{ team }} <{{ email }}>",
   "license": "Apache-2.0",
   "private": true,
   "type": "module",
@@ -26,11 +26,11 @@
     "access": "public"
   },
   "scripts": {
-    "build:cpp": "node -e \"require('fs').mkdirSync('dist/pkg',{recursive:true})\" && em++ -O2 -std=c++17 -s WASM=1 -s MODULARIZE=1 -s EXPORT_ES6=1 -s SINGLE_FILE=1 -s ALLOW_MEMORY_GROWTH=1 -s ENVIRONMENT=web,worker --bind -I ../cpp ../cpp/{{project_name_formatted}}/example.cpp src/cpp/bindings.cpp -o dist/pkg/{{module}}.js",
+    "build:cpp": "node -e \"require('fs').mkdirSync('dist/pkg',{recursive:true})\" && em++ -O2 -std=c++17 -s WASM=1 -s MODULARIZE=1 -s EXPORT_ES6=1 -s SINGLE_FILE=1 -s ALLOW_MEMORY_GROWTH=1 -s ENVIRONMENT=web,worker --bind -I ../cpp ../cpp/{{ project_name_formatted }}/example.cpp src/cpp/bindings.cpp -o dist/pkg/{{ module }}.js",
     "build:debug": "node build.mjs --debug",
     "build:prod": "node build.mjs",
     "build": "npm-run-all build:cpp build:prod",
-    "clean": "rm -rf dist lib playwright-report ../{{module}}/extension",
+    "clean": "rm -rf dist lib playwright-report ../{{ module }}/extension",
     "dev": "npm-run-all -p start watch",
     "lint:js": "prettier --check \"src/**/*.{js,ts,jsx,tsx,css}\" \"tests/**/*.{js,ts,jsx,tsx}\" \"*.mjs\" \"*.json\"",
     "lint:cpp": "clang-format --dry-run -Werror -style=file:../.clang-format src/cpp/*.cpp",
@@ -48,7 +48,6 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@finos/perspective-esbuild-plugin": "^3.2.1",
     "@playwright/test": "^1.59.1",
     "cpy": "^13.2.1",
     "esbuild": "^0.27.3",

@@ -18,6 +18,12 @@ SED = sed -i '' -e
 endif
 
 
+.PHONY: lint fix format test
+lint:  ## lint this repo
+fix:  ## fix formatting in this repo
+format: fix
+test:  ## run tests for this repo
+
 .PHONY: gen-python gen-cpp gen-js gen-jupyter gen-rust gen-rustjswasm
 gen-python:  ## regenerate the python template from scratch
 	mkdir -p ../python-template && cd ../python-template && rm -rf ./* && rm -rf .copier-answers.yaml .gitignore .github .gitattributes
