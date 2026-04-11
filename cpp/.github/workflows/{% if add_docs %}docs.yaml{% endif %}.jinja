@@ -22,7 +22,7 @@ jobs:
       - name: Download dist from build
         uses: actions/download-artifact@v7
         with:
-          pattern: dist-ubuntu-latest*
+          pattern: dist-ubuntu-latest-{{python_version_primary}}
           merge-multiple: true
           path: dist
           run-id: {% raw %}${{ github.event.workflow_run.id }}{% endraw %}
