@@ -83,6 +83,7 @@ jobs:
 
     - name: Make dist (Linux)
       run: |
+        rm -rf dist
         make dist-rs
         make dist-py-sdist
         make dist-py-wheel
@@ -91,6 +92,7 @@ jobs:
 
     - name: Make dist (Macos / Windows)
       run: |
+        rm -rf dist
         make dist-py-wheel
         make dist-check
       env:
