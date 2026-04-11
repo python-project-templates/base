@@ -88,6 +88,7 @@ jobs:
         make dist-py-sdist
         make dist-py-wheel
         make dist-check
+      shell: bash
       if: matrix.os == 'ubuntu-latest'
 
     - name: Make dist (Macos / Windows)
@@ -95,6 +96,7 @@ jobs:
         rm -rf dist
         make dist-py-wheel
         make dist-check
+      shell: bash
       env:
         CIBW_ENVIRONMENT_MACOS: MACOSX_DEPLOYMENT_TARGET=11.0
       if: matrix.os != 'ubuntu-latest'
