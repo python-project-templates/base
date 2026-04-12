@@ -35,8 +35,8 @@ const bundle_one = async (file, resolver) => {
     resolver: resolver || DEFAULT_RESOLVER,
   });
   const outName = path.basename(file);
-  fs.mkdirSync("./dist", { recursive: true });
-  fs.writeFileSync(path.join("./dist", outName), code);
+  fs.mkdirSync("./dist/css", { recursive: true });
+  fs.writeFileSync(path.join("./dist/css", outName), code);
 };
 
 export const bundle_css = async (root = "src/css/index.css", resolver = null) => {

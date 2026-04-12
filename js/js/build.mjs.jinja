@@ -1,9 +1,7 @@
 import { bundle } from "./tools/bundle.mjs";
 import { bundle_css } from "./tools/css.mjs";
 import { node_modules_external } from "./tools/externals.mjs";
-import { getarg } from "./tools/getarg.mjs";
 
-import { transform } from "lightningcss";
 import fs from "fs";
 import cpy from "cpy";
 
@@ -24,8 +22,6 @@ async function build() {
   await bundle_css();
 
   // Copy HTML
-  fs.mkdirSync("dist/html", { recursive: true });
-  cpy("src/html/*", "dist/html");
   cpy("src/html/*", "dist/");
 
   // Copy images
@@ -34,9 +30,11 @@ async function build() {
 
   await Promise.all(BUNDLES.map(bundle)).catch(() => process.exit(1));
 
-  // Copy from dist to python
+  // Copy servable assets to python extension (exclude esm/)
   fs.mkdirSync("../{{ module }}/extension", { recursive: true });
-  cpy("dist/**/*", "../{{ module }}/extension");
+  cpy("dist/**/*", "../{{ module }}/extension", {
+    filter: (file) => !file.relativePath.startsWith("esm"),
+  });
 }
 
 build();
