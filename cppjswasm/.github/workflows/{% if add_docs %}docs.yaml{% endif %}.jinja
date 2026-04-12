@@ -20,7 +20,7 @@ jobs:
       - uses: actions-ext/python/setup@main
 
       - name: Download dist from build
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           pattern: dist-ubuntu-latest-{{python_version_primary}}
           merge-multiple: true
