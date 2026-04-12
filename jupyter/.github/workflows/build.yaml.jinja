@@ -84,18 +84,14 @@ jobs:
       run: make dist
       if: matrix.os == 'ubuntu-latest'
 
-    - name: Test wheel install
-      run: |
-        python -m venv /tmp/test-wheel
-        /tmp/test-wheel/bin/pip install dist/*.whl
-        /tmp/test-wheel/bin/python -c "import {{module}}"
+    - uses: actions-ext/python/test-wheel@main
+      with:
+        module: {{module}}
       if: matrix.os == 'ubuntu-latest'
 
-    - name: Test sdist install
-      run: |
-        python -m venv /tmp/test-sdist
-        /tmp/test-sdist/bin/pip install dist/*.tar.gz
-        /tmp/test-sdist/bin/python -c "import {{module}}"
+    - uses: actions-ext/python/test-sdist@main
+      with:
+        module: {{module}}
       if: matrix.os == 'ubuntu-latest'
 
     - uses: actions/upload-artifact@v7
