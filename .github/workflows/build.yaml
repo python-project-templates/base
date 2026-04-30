@@ -66,17 +66,22 @@ jobs:
         elif [[ "$RUNNER_OS" == "macOS" ]]; then
           brew install clang-format
         fi
+      if: matrix.template == 'cpp' || matrix.template == 'cppjswasm'
 
     - uses: actions-ext/node/setup@main
       with:
         version: 22.x
         js_folder: "."
+      if: matrix.template == 'js' || matrix.template == 'jupyter' || matrix.template == 'cppjswasm' || matrix.template == 'rustjswasm'
 
     - uses: actions-ext/rust/setup@main
+      if: matrix.template == 'rust' || matrix.template == 'rustjswasm'
 
-    - run: |
-        pnpm install
-        cargo build
+    - run: pnpm install
+      if: matrix.template == 'js' || matrix.template == 'jupyter' || matrix.template == 'cppjswasm' || matrix.template == 'rustjswasm'
+
+    - run: cargo build
+      if: matrix.template == 'rust' || matrix.template == 'rustjswasm'
 
     - run: |
         make gen-${{matrix.template}}
