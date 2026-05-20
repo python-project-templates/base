@@ -16,11 +16,11 @@ jobs:
     runs-on: ubuntu-latest
     if: {% raw %}${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}{% endraw %}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: actions-ext/python/setup@main
 
       - name: Download dist from build
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           pattern: dist-ubuntu-latest-{{python_version_primary}}
           merge-multiple: true
@@ -45,7 +45,7 @@ jobs:
 
       - run: yardang build
 
-      - uses: peaceiris/actions-gh-pages@v4
+      - uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d475ec49e8ef4d45e # v4
         with:
           publish_branch: gh-pages
           github_token: {% raw %}${{ secrets.GITHUB_TOKEN }}{% endraw %}
