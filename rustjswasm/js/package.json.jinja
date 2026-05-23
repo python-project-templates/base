@@ -26,7 +26,7 @@
     "access": "public"
   },
   "scripts": {
-    "setup": "cargo install -f wasm-bindgen-cli --version 0.2.121 --locked",
+    "setup": "node -e \"const cp = require('node:child_process'); try { const version = cp.execFileSync('wasm-bindgen', ['--version'], { encoding: 'utf8' }); process.exit(version.includes('0.2.121') ? 0 : 1); } catch { process.exit(1); }\" || cargo install --force wasm-bindgen-cli --version 0.2.121 --locked",
     "build:debug": "node build.mjs --debug",
     "build:rust": "cargo build --release --all-features --target wasm32-unknown-unknown",
     "build:wasm-bindgen": "wasm-bindgen ../target/wasm32-unknown-unknown/release/{{ module }}.wasm --out-dir ./dist/pkg --target web",

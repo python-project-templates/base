@@ -1,11 +1,15 @@
 
 .PHONY: requirements develop build
+
+CARGO_TARGET_DIR ?= $(abspath ../target)
+export CARGO_TARGET_DIR
+
 requirements:  ## install required dev dependencies
 	rustup component add rustfmt
 	rustup component add clippy
-	cargo install --force --locked cargo-nextest
-	cargo install --force --locked cargo-llvm-cov
-	cargo install --force --locked wasm-bindgen-cli --version 0.2.121
+	command -v cargo-nextest >/dev/null 2>&1 || cargo install --locked cargo-nextest
+	command -v cargo-llvm-cov >/dev/null 2>&1 || cargo install --locked cargo-llvm-cov
+	wasm-bindgen --version | grep "0.2.121" >/dev/null 2>&1 || cargo install --force --locked wasm-bindgen-cli --version 0.2.121
 	rustup target add wasm32-unknown-unknown
 
 develop: requirements  ## install required dev dependencies

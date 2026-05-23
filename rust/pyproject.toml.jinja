@@ -92,12 +92,16 @@ test-extras = "develop"
 
 [tool.cibuildwheel.linux]
 before-all = """
-curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain=stable --profile=minimal -y
+if ! command -v rustup >/dev/null 2>&1; then
+    curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain=stable --profile=minimal -y
+fi
+rustup toolchain install stable --profile minimal
+rustup default stable
 rustup target add aarch64-unknown-linux-gnu
 rustup target add x86_64-unknown-linux-gnu
 rustup show
 """
-environment = {PATH="$HOME/.cargo/bin:$PATH", CARGO_TERM_COLOR="always"}
+environment = {PATH="/project/.cargo/bin:$HOME/.cargo/bin:$PATH", CARGO_HOME="/project/.cargo", RUSTUP_HOME="/project/.rustup", CARGO_TARGET_DIR="/project/target", CARGO_TERM_COLOR="always"}
 skip = "*i686* *musllinux*"
 
 [tool.cibuildwheel.macos]
