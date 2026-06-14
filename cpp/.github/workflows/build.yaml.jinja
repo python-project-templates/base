@@ -71,7 +71,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        for /f "usebackq tokens=*" %%i in (`vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do call "%%i\VC\Auxiliary\Build\vcvars64.bat"
         make develop
       shell: cmd
       if: matrix.os == 'windows-latest'
@@ -131,12 +131,12 @@ jobs:
     - name: Make dist (Windows)
       run: |
         if exist dist rmdir /s /q dist
-        call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        for /f "usebackq tokens=*" %%i in (`vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do call "%%i\VC\Auxiliary\Build\vcvars64.bat"
         make dist-py-wheel
       shell: cmd
       env:
         CIBW_BUILD: {% raw %}"${{ matrix.cibuildwheel }}-win_amd64"{% endraw %}
-        CIBW_BEFORE_ALL: call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        CIBW_BEFORE_ALL: for /f "usebackq tokens=*" %i in (`vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do call "%i\VC\Auxiliary\Build\vcvars64.bat"
       if: matrix.os == 'windows-latest'
 
     - uses: actions-ext/python/test-wheel@main
