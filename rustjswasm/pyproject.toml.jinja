@@ -157,6 +157,7 @@ packages = [
     "Cargo.lock",
 ]
 exclude = [
+    "{{ module }}/extension",
     "js/node_modules",
     "rust/Makefile",
     "target",
@@ -165,6 +166,9 @@ exclude = [
 [tool.hatch.build.targets.wheel]
 packages = [
     "{{ module }}",
+]
+artifacts = [
+    "{{ module }}/extension/**/*",
 ]
 exclude = [
     "js",
