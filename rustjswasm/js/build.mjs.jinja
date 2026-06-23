@@ -33,7 +33,10 @@ async function build() {
   await Promise.all(BUNDLES.map(bundle)).catch(() => process.exit(1));
 
   // Copy servable assets to python extension (exclude esm/)
-  fs.rmSync("../{{ module }}/extension", { recursive: true, force: true });
+  fs.rmSync("../{{ module }}/extension", {
+    recursive: true,
+    force: true,
+  });
   fs.mkdirSync("../{{ module }}/extension", { recursive: true });
   await cpy("dist/**/*", "../{{ module }}/extension", {
     filter: (file) =>

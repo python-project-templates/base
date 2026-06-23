@@ -157,7 +157,11 @@ packages = [
     "Cargo.lock",
 ]
 exclude = [
+    "{{ module }}/*.dll",
+    "{{ module }}/*.dylib",
+    "{{ module }}/*.so",
     "{{ module }}/extension",
+    "js/dist",
     "js/node_modules",
     "rust/Makefile",
     "target",
