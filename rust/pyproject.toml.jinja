@@ -125,9 +125,9 @@ fail_under = 50
 
 [tool.hatch.build]
 artifacts = [
-    "project/*.dll",
-    "project/*.dylib",
-    "project/*.so",
+    "{{ module }}/*.dll",
+    "{{ module }}/*.dylib",
+    "{{ module }}/*.so",
 ]
 
 [tool.hatch.build.sources]
