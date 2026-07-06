@@ -221,3 +221,12 @@ section-order = [
     "F401",
     "F403",
 ]
+
+{%- if add_docs %}
+
+[tool.yardang]
+title = "{{ project_name }}"
+root = "README.md"
+pages = []
+use-autoapi = true
+{% endif %}
