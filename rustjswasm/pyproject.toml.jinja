@@ -98,7 +98,7 @@ search = 'version = "{current_version}"'
 replace = 'version = "{new_version}"'
 
 [tool.cibuildwheel]
-build = "cp310-*"
+build = "cp{{ python_version_primary.replace('.', '') }}-*"
 test-command = "pytest -vvv {project}/{{ module }}/tests"
 test-extras = "develop"
 
