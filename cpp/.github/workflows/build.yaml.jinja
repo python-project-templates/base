@@ -30,33 +30,53 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: [ "3.10", "3.11", "3.12", "3.13"]
-        cibuildwheel: ["cp310", "cp311", "cp312", "cp313"]
+        python-version: [{% if python_version_primary == "3.10" %}"3.10", {% endif %}{% if python_version_primary in ["3.10", "3.11"] %}"3.11", {% endif %}{% if python_version_primary in ["3.10", "3.11", "3.12"] %}"3.12", {% endif %}"3.13"]
+        cibuildwheel: [{% if python_version_primary == "3.10" %}"cp310", {% endif %}{% if python_version_primary in ["3.10", "3.11"] %}"cp311", {% endif %}{% if python_version_primary in ["3.10", "3.11", "3.12"] %}"cp312", {% endif %}"cp313"]
+        {% if python_version_primary != "3.13" -%}
         exclude:
+          {% if python_version_primary == "3.10" -%}
           - python-version: "3.10"
             cibuildwheel: "cp311"
           - python-version: "3.10"
             cibuildwheel: "cp312"
           - python-version: "3.10"
             cibuildwheel: "cp313"
+          {% endif -%}
+          {% if python_version_primary == "3.10" -%}
           - python-version: "3.11"
             cibuildwheel: "cp310"
+          {% endif -%}
+          {% if python_version_primary in ["3.10", "3.11"] -%}
           - python-version: "3.11"
             cibuildwheel: "cp312"
           - python-version: "3.11"
             cibuildwheel: "cp313"
+          {% endif -%}
+          {% if python_version_primary == "3.10" -%}
           - python-version: "3.12"
             cibuildwheel: "cp310"
+          {% endif -%}
+          {% if python_version_primary in ["3.10", "3.11"] -%}
           - python-version: "3.12"
             cibuildwheel: "cp311"
+          {% endif -%}
+          {% if python_version_primary in ["3.10", "3.11", "3.12"] -%}
           - python-version: "3.12"
             cibuildwheel: "cp313"
+          {% endif -%}
+          {% if python_version_primary == "3.10" -%}
           - python-version: "3.13"
             cibuildwheel: "cp310"
+          {% endif -%}
+          {% if python_version_primary in ["3.10", "3.11"] -%}
           - python-version: "3.13"
             cibuildwheel: "cp311"
+          {% endif -%}
+          {% if python_version_primary in ["3.10", "3.11", "3.12"] -%}
           - python-version: "3.13"
             cibuildwheel: "cp312"
+          {% endif -%}
+        {% endif -%}
 
     steps:
     - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
