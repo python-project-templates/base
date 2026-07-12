@@ -71,6 +71,7 @@ jobs:
     - uses: actions-ext/node/setup@main
       with:
         version: 22.x
+        pnpm_version: 11.11.0
         js_folder: "."
       if: matrix.template == 'js' || matrix.template == 'jupyter' || matrix.template == 'cppjswasm' || matrix.template == 'rustjswasm'
 
