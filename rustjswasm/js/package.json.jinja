@@ -28,7 +28,7 @@
   "scripts": {
     "setup": "cargo install -f wasm-bindgen-cli --version 0.2.126 --locked",
     "build:debug": "node build.mjs --debug",
-    "build:rust": "cargo build --release --all-features --target wasm32-unknown-unknown",
+    "build:rust": "cargo build --release --all-features --target wasm32-unknown-unknown --target-dir ../target",
     "build:wasm-bindgen": "wasm-bindgen ../target/wasm32-unknown-unknown/release/{{ module }}.wasm --out-dir ./dist/pkg --target web",
     "build:prod": "node build.mjs",
     "build": "npm-run-all build:rust build:wasm-bindgen build:prod",
