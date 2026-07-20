@@ -38,7 +38,7 @@ jobs:
       with:
         persist-credentials: false
 
-    - uses: actions-ext/python/setup@4567028b4cf2be3739404cfd3521f0b9df98b6b1
+    - uses: actions-ext/python/setup@3327753a563b380e4efc5cb91a548301e68c2e64
       with:
         version: {% raw %}${{ matrix.python-version }}{% endraw %}
 
@@ -65,7 +65,7 @@ jobs:
       if: matrix.os == 'ubuntu-latest'
 
     - name: Upload test results (Python)
-      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
       with:
         name: {% raw %}test-results-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.node-version }}{% endraw %}
         path: '**/junit.xml'
@@ -86,17 +86,17 @@ jobs:
       run: make dist
       if: matrix.os == 'ubuntu-latest'
 
-    - uses: actions-ext/python/test-wheel@4567028b4cf2be3739404cfd3521f0b9df98b6b1
+    - uses: actions-ext/python/test-wheel@3327753a563b380e4efc5cb91a548301e68c2e64
       with:
         module: {{module}}
       if: matrix.os == 'ubuntu-latest'
 
-    - uses: actions-ext/python/test-sdist@4567028b4cf2be3739404cfd3521f0b9df98b6b1
+    - uses: actions-ext/python/test-sdist@3327753a563b380e4efc5cb91a548301e68c2e64
       with:
         module: {{module}}
       if: matrix.os == 'ubuntu-latest'
 
-    - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+    - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
       with:
         name: {% raw %}dist-${{matrix.os}}{% endraw %}
         path: dist
