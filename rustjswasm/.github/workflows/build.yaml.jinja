@@ -38,7 +38,7 @@ jobs:
       with:
         persist-credentials: false
 
-    - uses: actions-ext/python/setup@3327753a563b380e4efc5cb91a548301e68c2e64
+    - uses: actions-ext/python/setup@14e52561e5f255ba52d2e04d3cc2f3dedb1065af
       with:
         version: {% raw %}${{ matrix.python-version }}{% endraw %}
 
@@ -109,12 +109,12 @@ jobs:
         CIBW_ENVIRONMENT_MACOS: MACOSX_DEPLOYMENT_TARGET=11.0
       if: matrix.os != 'ubuntu-latest'
 
-    - uses: actions-ext/python/test-wheel@3327753a563b380e4efc5cb91a548301e68c2e64
+    - uses: actions-ext/python/test-wheel@14e52561e5f255ba52d2e04d3cc2f3dedb1065af
       with:
         module: {{module}}
       if: matrix.os == 'ubuntu-latest'
 
-    - uses: actions-ext/python/test-sdist@3327753a563b380e4efc5cb91a548301e68c2e64
+    - uses: actions-ext/python/test-sdist@14e52561e5f255ba52d2e04d3cc2f3dedb1065af
       with:
         module: {{module}}
       if: matrix.os == 'ubuntu-latest'
