@@ -77,7 +77,7 @@ jobs:
         js_folder: "."
       if: matrix.template == 'js' || matrix.template == 'jupyter' || matrix.template == 'cppjswasm' || matrix.template == 'rustjswasm'
 
-    - uses: actions-ext/rust/setup@01743451de2c7bf6bbbd798b1575a46bf1f69b26
+    - uses: actions-ext/rust/setup@751135d96c995eef5da86555d290e9302156319a
       if: matrix.template == 'rust' || matrix.template == 'rustjswasm'
 
     - run: pnpm install
