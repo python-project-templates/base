@@ -37,11 +37,11 @@ jobs:
       with:
         persist-credentials: false
 
-    - uses: actions-ext/python/setup@main
+    - uses: actions-ext/python/setup@4567028b4cf2be3739404cfd3521f0b9df98b6b1
       with:
         version: {% raw %}${{ matrix.python-version }}{% endraw %}
 
-    - uses: actions-ext/rust/setup@main
+    - uses: actions-ext/rust/setup@01743451de2c7bf6bbbd798b1575a46bf1f69b26
 
     - name: Install dependencies
       run: make develop

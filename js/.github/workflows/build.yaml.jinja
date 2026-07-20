@@ -38,11 +38,11 @@ jobs:
       with:
         persist-credentials: false
 
-    - uses: actions-ext/python/setup@main
+    - uses: actions-ext/python/setup@4567028b4cf2be3739404cfd3521f0b9df98b6b1
       with:
         version: {% raw %}${{ matrix.python-version }}{% endraw %}
 
-    - uses: actions-ext/node/setup@main
+    - uses: actions-ext/node/setup@165e261b251b39bcd073c10e84d218393d3b9960
       with:
         version: {% raw %}${{ matrix.node-version }}{% endraw %}
 

@@ -54,7 +54,7 @@ jobs:
         mkdir -p src
         printf 'fn main() {\n    println!("Hello, world!");\n}\n' > src/main.rs
 
-    - uses: actions-ext/python/setup@main
+    - uses: actions-ext/python/setup@4567028b4cf2be3739404cfd3521f0b9df98b6b1
       with:
         version: '3.11'
 
@@ -70,14 +70,14 @@ jobs:
         fi
       if: matrix.template == 'cpp' || matrix.template == 'cppjswasm'
 
-    - uses: actions-ext/node/setup@main
+    - uses: actions-ext/node/setup@165e261b251b39bcd073c10e84d218393d3b9960
       with:
         version: 22.x
         pnpm_version: 11.11.0
         js_folder: "."
       if: matrix.template == 'js' || matrix.template == 'jupyter' || matrix.template == 'cppjswasm' || matrix.template == 'rustjswasm'
 
-    - uses: actions-ext/rust/setup@main
+    - uses: actions-ext/rust/setup@01743451de2c7bf6bbbd798b1575a46bf1f69b26
       if: matrix.template == 'rust' || matrix.template == 'rustjswasm'
 
     - run: pnpm install
