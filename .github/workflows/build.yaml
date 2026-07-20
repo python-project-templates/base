@@ -54,7 +54,7 @@ jobs:
         mkdir -p src
         printf 'fn main() {\n    println!("Hello, world!");\n}\n' > src/main.rs
 
-    - uses: actions-ext/python/setup@14e52561e5f255ba52d2e04d3cc2f3dedb1065af
+    - uses: actions-ext/python/setup@5f78fa2cadf4dad2a7cded3c72655bcdd3dda735
       with:
         version: '3.11'
 
