@@ -16,40 +16,41 @@ jobs:
     runs-on: ubuntu-latest
     if: {% raw %}${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}{% endraw %}
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+    - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       with:
         persist-credentials: false
-      - uses: actions-ext/python/setup@4567028b4cf2be3739404cfd3521f0b9df98b6b1
 
-      - name: Download dist from build
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
-        with:
-          pattern: dist-ubuntu-latest*
-          merge-multiple: true
-          path: dist
-          run-id: {% raw %}${{ github.event.workflow_run.id }}{% endraw %}
-          github-token: {% raw %}${{ secrets.GITHUB_TOKEN }}{% endraw %}
-          repository: {% raw %}${{ github.repository }}{% endraw %}
-        if: github.event_name == 'workflow_run'
+    - uses: actions-ext/python/setup@4567028b4cf2be3739404cfd3521f0b9df98b6b1
 
-      - name: Install from wheel
-        run: |
-          uv pip install dist/*.whl
-          uv pip install dist/*.whl --target . --no-deps
-          uv pip install yardang
-        if: github.event_name == 'workflow_run'
+    - name: Download dist from build
+      uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+      with:
+        pattern: dist-ubuntu-latest*
+        merge-multiple: true
+        path: dist
+        run-id: {% raw %}${{ github.event.workflow_run.id }}{% endraw %}
+        github-token: {% raw %}${{ secrets.GITHUB_TOKEN }}{% endraw %}
+        repository: {% raw %}${{ github.repository }}{% endraw %}
+      if: github.event_name == 'workflow_run'
 
-      - name: Install from source (manual trigger)
-        run: |
-          make develop
-          uv pip install .
-          uv pip install yardang
-        if: github.event_name == 'workflow_dispatch'
+    - name: Install from wheel
+      run: |
+        uv pip install dist/*.whl
+        uv pip install dist/*.whl --target . --no-deps
+        uv pip install yardang
+      if: github.event_name == 'workflow_run'
 
-      - run: yardang build
+    - name: Install from source (manual trigger)
+      run: |
+        make develop
+        uv pip install .
+        uv pip install yardang
+      if: github.event_name == 'workflow_dispatch'
 
-      - uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4.1.0
-        with:
-          publish_branch: gh-pages
-          github_token: {% raw %}${{ secrets.GITHUB_TOKEN }}{% endraw %}
-          publish_dir: docs/html
+    - run: yardang build
+
+    - uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4.1.0
+      with:
+        publish_branch: gh-pages
+        github_token: {% raw %}${{ secrets.GITHUB_TOKEN }}{% endraw %}
+        publish_dir: docs/html
