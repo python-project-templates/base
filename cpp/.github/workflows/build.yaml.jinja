@@ -30,53 +30,25 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: [{% if python_version_primary == "3.10" %}"3.10", {% endif %}{% if python_version_primary in ["3.10", "3.11"] %}"3.11", {% endif %}{% if python_version_primary in ["3.10", "3.11", "3.12"] %}"3.12", {% endif %}"3.13"]
-        cibuildwheel: [{% if python_version_primary == "3.10" %}"cp310", {% endif %}{% if python_version_primary in ["3.10", "3.11"] %}"cp311", {% endif %}{% if python_version_primary in ["3.10", "3.11", "3.12"] %}"cp312", {% endif %}"cp313"]
-        {% if python_version_primary != "3.13" -%}
-        exclude:
+        python:
           {% if python_version_primary == "3.10" -%}
-          - python-version: "3.10"
-            cibuildwheel: "cp311"
-          - python-version: "3.10"
-            cibuildwheel: "cp312"
-          - python-version: "3.10"
-            cibuildwheel: "cp313"
-          {% endif -%}
-          {% if python_version_primary == "3.10" -%}
-          - python-version: "3.11"
+          - version: "3.10"
             cibuildwheel: "cp310"
+            primary: true
           {% endif -%}
           {% if python_version_primary in ["3.10", "3.11"] -%}
-          - python-version: "3.11"
-            cibuildwheel: "cp312"
-          - python-version: "3.11"
-            cibuildwheel: "cp313"
-          {% endif -%}
-          {% if python_version_primary == "3.10" -%}
-          - python-version: "3.12"
-            cibuildwheel: "cp310"
-          {% endif -%}
-          {% if python_version_primary in ["3.10", "3.11"] -%}
-          - python-version: "3.12"
+          - version: "3.11"
             cibuildwheel: "cp311"
+            primary: {{ (python_version_primary == "3.11") | lower }}
           {% endif -%}
           {% if python_version_primary in ["3.10", "3.11", "3.12"] -%}
-          - python-version: "3.12"
-            cibuildwheel: "cp313"
-          {% endif -%}
-          {% if python_version_primary == "3.10" -%}
-          - python-version: "3.13"
-            cibuildwheel: "cp310"
-          {% endif -%}
-          {% if python_version_primary in ["3.10", "3.11"] -%}
-          - python-version: "3.13"
-            cibuildwheel: "cp311"
-          {% endif -%}
-          {% if python_version_primary in ["3.10", "3.11", "3.12"] -%}
-          - python-version: "3.13"
+          - version: "3.12"
             cibuildwheel: "cp312"
+            primary: {{ (python_version_primary == "3.12") | lower }}
           {% endif -%}
-        {% endif -%}
+          - version: "3.13"
+            cibuildwheel: "cp313"
+            primary: {{ (python_version_primary == "3.13") | lower }}
 
     steps:
     - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -85,7 +57,7 @@ jobs:
 
     - uses: actions-ext/python/setup@5f78fa2cadf4dad2a7cded3c72655bcdd3dda735
       with:
-        version: {% raw %}${{ matrix.python-version }}{% endraw %}
+        version: {% raw %}${{ matrix.python.version }}{% endraw %}
 
     - name: Install dependencies
       run: make develop
@@ -100,11 +72,11 @@ jobs:
 
     - name: Lint
       run: make lint
-      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'
+      if: matrix.os == 'ubuntu-latest' && matrix.python.primary
 
     - name: Checks
       run: make checks
-      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'
+      if: matrix.os == 'ubuntu-latest' && matrix.python.primary
 
     - name: Test
       run: make coverage
@@ -112,15 +84,15 @@ jobs:
     - name: Upload test results (Python)
       uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
       with:
-        name: {% raw %}test-results-${{ matrix.os }}-${{ matrix.python-version }}{% endraw %}
+        name: {% raw %}test-results-${{ matrix.os }}-${{ matrix.python.version }}{% endraw %}
         path: junit.xml
-      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'
+      if: matrix.os == 'ubuntu-latest' && matrix.python.primary
 
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@d0a4676d0e0b938bc201470d88276b7c74c712b3 # v2.24.0
       with:
         files: '**/junit.xml'
-      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'
+      if: matrix.os == 'ubuntu-latest' && matrix.python.primary
 
     - name: Upload coverage
       uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
@@ -137,7 +109,7 @@ jobs:
         make dist-py-wheel
         make dist-check
       env:
-        CIBW_BUILD: {% raw %}"${{ matrix.cibuildwheel }}-manylinux*"{% endraw %}
+        CIBW_BUILD: {% raw %}"${{ matrix.python.cibuildwheel }}-manylinux*"{% endraw %}
         CIBW_BUILD_VERBOSITY: 3
       if: matrix.os == 'ubuntu-latest'
 
@@ -146,7 +118,7 @@ jobs:
         rm -rf dist
         make dist-py-wheel
       env:
-        CIBW_BUILD: {% raw %}"${{ matrix.cibuildwheel }}-macos*"{% endraw %}
+        CIBW_BUILD: {% raw %}"${{ matrix.python.cibuildwheel }}-macos*"{% endraw %}
         CIBW_BUILD_VERBOSITY: 3
       if: matrix.os == 'macos-latest'
 
@@ -157,7 +129,7 @@ jobs:
         make dist-py-wheel
       shell: cmd
       env:
-        CIBW_BUILD: {% raw %}"${{ matrix.cibuildwheel }}-win_amd64"{% endraw %}
+        CIBW_BUILD: {% raw %}"${{ matrix.python.cibuildwheel }}-win_amd64"{% endraw %}
         CIBW_BEFORE_ALL: for /f "usebackq tokens=*" %i in (`vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do call "%i\VC\Auxiliary\Build\vcvars64.bat"
       if: matrix.os == 'windows-latest'
 
@@ -173,5 +145,5 @@ jobs:
 
     - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
       with:
-        name: {% raw %}dist-${{matrix.os}}-${{matrix.python-version}}{% endraw %}
+        name: {% raw %}dist-${{matrix.os}}-${{matrix.python.version}}{% endraw %}
         path: dist
