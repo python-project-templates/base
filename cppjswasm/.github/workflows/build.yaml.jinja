@@ -123,12 +123,12 @@ jobs:
         CIBW_BEFORE_ALL: for /f "usebackq tokens=*" %i in (`vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do call "%i\VC\Auxiliary\Build\vcvars64.bat"
       if: matrix.os == 'windows-latest'
 
-    - uses: actions-ext/python/test-wheel@main
+    - uses: actions-ext/python/test-wheel@4567028b4cf2be3739404cfd3521f0b9df98b6b1
       with:
         module: {{module}}
       if: matrix.os == 'ubuntu-latest'
 
-    - uses: actions-ext/python/test-sdist@main
+    - uses: actions-ext/python/test-sdist@4567028b4cf2be3739404cfd3521f0b9df98b6b1
       with:
         module: {{module}}
       if: matrix.os == 'ubuntu-latest'

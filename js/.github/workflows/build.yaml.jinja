@@ -86,12 +86,12 @@ jobs:
       run: make dist
       if: matrix.os == 'ubuntu-latest'
 
-    - uses: actions-ext/python/test-wheel@main
+    - uses: actions-ext/python/test-wheel@4567028b4cf2be3739404cfd3521f0b9df98b6b1
       with:
         module: {{module}}
       if: matrix.os == 'ubuntu-latest'
 
-    - uses: actions-ext/python/test-sdist@main
+    - uses: actions-ext/python/test-sdist@4567028b4cf2be3739404cfd3521f0b9df98b6b1
       with:
         module: {{module}}
       if: matrix.os == 'ubuntu-latest'
