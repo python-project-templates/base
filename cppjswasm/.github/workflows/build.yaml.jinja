@@ -47,18 +47,12 @@ jobs:
       with:
         version: {% raw %}${{ matrix.node-version }}{% endraw %}
 
+    - uses: actions-ext/cpp/setup@51c484ef64088c62434226039d0e3359f5fc8df6
+
     - uses: mymindstorm/setup-emsdk@4528d102f7230f0e7b276855c01ea1159be0e984 # v16
 
     - name: Install dependencies
       run: make develop
-      if: matrix.os != 'windows-latest'
-
-    - name: Install dependencies
-      run: |
-        for /f "usebackq tokens=*" %%i in (`vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do call "%%i\VC\Auxiliary\Build\vcvars64.bat"
-        make develop
-      shell: cmd
-      if: matrix.os == 'windows-latest'
 
     - name: Lint
       run: make lint
@@ -114,13 +108,10 @@ jobs:
 
     - name: Make dist (Windows)
       run: |
-        if exist dist rmdir /s /q dist
-        for /f "usebackq tokens=*" %%i in (`vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do call "%%i\VC\Auxiliary\Build\vcvars64.bat"
+        if (Test-Path dist) { Remove-Item dist -Recurse -Force }
         make dist-py-wheel
-      shell: cmd
       env:
         CIBW_BUILD: {% raw %}"${{ matrix.cibuildwheel }}-win_amd64"{% endraw %}
-        CIBW_BEFORE_ALL: for /f "usebackq tokens=*" %i in (`vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do call "%i\VC\Auxiliary\Build\vcvars64.bat"
       if: matrix.os == 'windows-latest'
 
     - uses: actions-ext/python/test-wheel@5f78fa2cadf4dad2a7cded3c72655bcdd3dda735
