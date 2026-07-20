@@ -70,7 +70,7 @@ jobs:
         fi
       if: matrix.template == 'cpp' || matrix.template == 'cppjswasm'
 
-    - uses: actions-ext/node/setup@f215ffc1fb906c5771e0135698560838e6ef31f0
+    - uses: actions-ext/node/setup@3478453a763ed3c8c6eba05a092ab81a265c5492
       with:
         version: 22.x
         pnpm_version: 11.11.0
