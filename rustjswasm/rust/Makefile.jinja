@@ -1,11 +1,14 @@
+CARGO_NEXTEST_VERSION ?= 0.9.140
+CARGO_LLVM_COV_VERSION ?= 0.8.7
+WASM_BINDGEN_CLI_VERSION ?= 0.2.126
 
 .PHONY: requirements develop build
 requirements:  ## install required dev dependencies
 	rustup component add rustfmt
 	rustup component add clippy
-	cargo install --force --locked cargo-nextest
-	cargo install --force --locked cargo-llvm-cov
-	cargo install --force --locked wasm-bindgen-cli --version 0.2.126
+	command -v cargo-nextest >/dev/null 2>&1 || cargo install --locked cargo-nextest --version =$(CARGO_NEXTEST_VERSION)
+	command -v cargo-llvm-cov >/dev/null 2>&1 || cargo install --locked cargo-llvm-cov --version =$(CARGO_LLVM_COV_VERSION)
+	command -v wasm-bindgen >/dev/null 2>&1 || cargo install --locked wasm-bindgen-cli --version =$(WASM_BINDGEN_CLI_VERSION)
 	rustup target add wasm32-unknown-unknown
 
 develop: requirements  ## install required dev dependencies

@@ -41,7 +41,12 @@ jobs:
       with:
         version: {% raw %}${{ matrix.python-version }}{% endraw %}
 
-    - uses: actions-ext/rust/setup@c9cdbe5cc8a2485bf2eb22644302559c741ca763
+    - uses: actions-ext/rust/setup@7d919b14e08dc1155a267dffbcc58260bdfdd63b
+      with:
+        targets: {% raw %}${{ runner.os == 'macOS' && 'aarch64-apple-darwin' || '' }}{% endraw %}
+        tools: |
+          cargo-nextest@0.9.140
+          cargo-llvm-cov@0.8.7
 
     - name: Install dependencies
       run: make develop
