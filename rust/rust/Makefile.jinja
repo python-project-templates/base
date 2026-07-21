@@ -1,10 +1,12 @@
+CARGO_NEXTEST_VERSION ?= 0.9.140
+CARGO_LLVM_COV_VERSION ?= 0.8.7
 
 .PHONY: requirements develop build
 requirements:  ## install required dev dependencies
 	rustup component add rustfmt
 	rustup component add clippy
-	cargo install --locked --force cargo-nextest
-	cargo install --force cargo-llvm-cov
+	command -v cargo-nextest >/dev/null 2>&1 || cargo install --locked cargo-nextest --version =$(CARGO_NEXTEST_VERSION)
+	command -v cargo-llvm-cov >/dev/null 2>&1 || cargo install --locked cargo-llvm-cov --version =$(CARGO_LLVM_COV_VERSION)
 
 develop: requirements  ## install required dev dependencies
 
