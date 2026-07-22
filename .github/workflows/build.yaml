@@ -36,7 +36,7 @@ jobs:
           - macos-latest
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
         persist-credentials: false
 
@@ -54,7 +54,7 @@ jobs:
         mkdir -p src
         printf 'fn main() {\n    println!("Hello, world!");\n}\n' > src/main.rs
 
-    - uses: actions-ext/python/setup@5f78fa2cadf4dad2a7cded3c72655bcdd3dda735
+    - uses: actions-ext/python/setup@6e1b91a408ea89f49bc8aff8724f83826f7b5446
       with:
         version: '3.11'
 
@@ -70,7 +70,7 @@ jobs:
         fi
       if: matrix.template == 'cpp' || matrix.template == 'cppjswasm'
 
-    - uses: actions-ext/node/setup@3478453a763ed3c8c6eba05a092ab81a265c5492
+    - uses: actions-ext/node/setup@0ea5bdcd24d2488b28e16bf611b446a2f8e1e12f
       with:
         version: 22.x
         pnpm_version: 11.11.0
