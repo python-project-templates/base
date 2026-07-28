@@ -83,6 +83,13 @@ jobs:
         platforms: all
       if: runner.os == 'Linux' && runner.arch == 'X64'
 
+    - name: Free disk space
+      run: |
+        sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /usr/local/.ghcup /usr/share/swift
+        df -h /
+      shell: bash
+      if: matrix.os == 'ubuntu-latest'
+
     - name: Make dist (Linux)
       run: |
         rm -rf dist
