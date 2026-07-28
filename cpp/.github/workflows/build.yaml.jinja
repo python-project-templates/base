@@ -61,6 +61,10 @@ jobs:
 
     - uses: actions-ext/cpp/setup@51c484ef64088c62434226039d0e3359f5fc8df6
 
+    {% if add_vcpkg -%}
+    - uses: actions-ext/cpp/setup-vcpkg-cache@6ded4958b7e13d73428138a01d53c33cb941121d
+
+    {% endif -%}
     - name: Install dependencies
       run: make develop
 

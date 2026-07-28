@@ -54,6 +54,12 @@ add_extension:
 
 _subdirectory: "{{ add_extension }}"
 
+add_vcpkg:
+  type: bool
+  default: false
+  help: Add vcpkg dependency management
+  when: "{{ add_extension in ['cpp', 'cppjswasm'] }}"
+
 python_version_primary:
   type: str
   default: 3.11

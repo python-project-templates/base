@@ -13,6 +13,12 @@ __pycache__/
 *.exp
 *.lib
 
+{% if add_vcpkg -%}
+# vcpkg
+vcpkg/
+vcpkg_installed/
+
+{% endif -%}
 # Rust
 target
 target-capi
