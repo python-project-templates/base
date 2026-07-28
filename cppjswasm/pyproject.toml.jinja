@@ -153,6 +153,11 @@ packages = [
     "cpp",
     "js",
 ]
+{% if add_vcpkg %}
+[tool.hatch.build.targets.sdist.force-include]
+"vcpkg.json" = "vcpkg.json"
+"vcpkg-overlays" = "vcpkg-overlays"
+{% endif %}
 
 [tool.hatch.build.targets.wheel]
 packages = [
