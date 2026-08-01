@@ -62,7 +62,7 @@ jobs:
           version: {% raw %}${{ matrix.python.version }}{% endraw %}
 
       - name: Setup C++
-        uses: actions-ext/cpp/setup@51c484ef64088c62434226039d0e3359f5fc8df6
+        uses: actions-ext/cpp/setup@c2b1e90366b3a1c628a1df0748135f5e345ab26f
 
       {% if add_vcpkg -%}
       - name: Setup vcpkg cache
