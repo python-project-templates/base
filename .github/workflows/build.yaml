@@ -6,7 +6,7 @@ on:
       - main
   pull_request:
     branches:
-        - main
+      - main
   workflow_dispatch:
 
 concurrency:
@@ -36,56 +36,64 @@ jobs:
           - macos-latest
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      with:
-        persist-credentials: false
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
 
-    - name: Prework
-      run: |
-        # python
-        touch pyproject.toml
+      - name: Create fixture files
+        run: |
+          # python
+          touch pyproject.toml
 
-        # node
-        echo '{"name": "a", "version": "0.0.0", "scripts": {}}' > package.json
-        printf 'lockfileVersion: '9.0'\nsettings:\n\tautoInstallPeers: true\n\texcludeLinksFromLockfile: false\nimporters:\n.: {}' > pnpm-lock.yaml
+          # node
+          echo '{"name": "a", "version": "0.0.0", "scripts": {}}' > package.json
+          printf 'lockfileVersion: '9.0'\nsettings:\n\tautoInstallPeers: true\n\texcludeLinksFromLockfile: false\nimporters:\n.: {}' > pnpm-lock.yaml
 
-        # rust
-        printf '[package]\nname = "rust"\nversion = "0.1.0"\nedition = "2021"\n[dependencies]\n' > Cargo.toml
-        mkdir -p src
-        printf 'fn main() {\n    println!("Hello, world!");\n}\n' > src/main.rs
+          # rust
+          printf '[package]\nname = "rust"\nversion = "0.1.0"\nedition = "2021"\n[dependencies]\n' > Cargo.toml
+          mkdir -p src
+          printf 'fn main() {\n    println!("Hello, world!");\n}\n' > src/main.rs
 
-    - uses: actions-ext/python/setup@6e1b91a408ea89f49bc8aff8724f83826f7b5446
-      with:
-        version: '3.11'
+      - name: Setup Python
+        uses: actions-ext/python/setup@6e1b91a408ea89f49bc8aff8724f83826f7b5446
+        with:
+          version: '3.11'
 
-    - run: uv pip install copier
+      - name: Install Copier
+        run: uv pip install copier
 
-    - name: Install clang-format
-      run: |
-        if [[ "$RUNNER_OS" == "Linux" ]]; then
-          sudo apt-get install -y clang-format-14
-          sudo ln -sf /usr/bin/clang-format-14 /usr/bin/clang-format
-        elif [[ "$RUNNER_OS" == "macOS" ]]; then
-          brew install clang-format
-        fi
-      if: matrix.template == 'cpp' || matrix.template == 'cppjswasm'
+      - name: Install clang-format
+        run: |
+          if [[ "$RUNNER_OS" == "Linux" ]]; then
+            sudo apt-get install -y clang-format-14
+            sudo ln -sf /usr/bin/clang-format-14 /usr/bin/clang-format
+          elif [[ "$RUNNER_OS" == "macOS" ]]; then
+            brew install clang-format
+          fi
+        if: matrix.template == 'cpp' || matrix.template == 'cppjswasm'
 
-    - uses: actions-ext/node/setup@0ea5bdcd24d2488b28e16bf611b446a2f8e1e12f
-      with:
-        version: 22.x
-        pnpm_version: 11.11.0
-        js_folder: "."
-      if: matrix.template == 'js' || matrix.template == 'jupyter' || matrix.template == 'cppjswasm' || matrix.template == 'rustjswasm'
+      - name: Setup Node.js
+        uses: actions-ext/node/setup@0ea5bdcd24d2488b28e16bf611b446a2f8e1e12f
+        with:
+          version: 22.x
+          pnpm_version: 11.11.0
+          js_folder: "."
+        if: matrix.template == 'js' || matrix.template == 'jupyter' || matrix.template == 'cppjswasm' || matrix.template == 'rustjswasm'
 
-    - uses: actions-ext/rust/setup@c9cdbe5cc8a2485bf2eb22644302559c741ca763
-      if: matrix.template == 'rust' || matrix.template == 'rustjswasm'
+      - name: Setup Rust
+        uses: actions-ext/rust/setup@c9cdbe5cc8a2485bf2eb22644302559c741ca763
+        if: matrix.template == 'rust' || matrix.template == 'rustjswasm'
 
-    - run: pnpm install
-      if: matrix.template == 'js' || matrix.template == 'jupyter' || matrix.template == 'cppjswasm' || matrix.template == 'rustjswasm'
+      - name: Install JavaScript dependencies
+        run: pnpm install
+        if: matrix.template == 'js' || matrix.template == 'jupyter' || matrix.template == 'cppjswasm' || matrix.template == 'rustjswasm'
 
-    - run: cargo build
-      if: matrix.template == 'rust' || matrix.template == 'rustjswasm'
+      - name: Build Rust fixture
+        run: cargo build
+        if: matrix.template == 'rust' || matrix.template == 'rustjswasm'
 
-    - run: |
-        make gen-${{matrix.template}}
-        make test-${{matrix.template}}
+      - name: Generate and test template
+        run: |
+          make gen-${{matrix.template}}
+          make test-${{matrix.template}}
