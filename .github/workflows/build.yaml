@@ -82,7 +82,7 @@ jobs:
         if: matrix.template == 'js' || matrix.template == 'jupyter' || matrix.template == 'cppjswasm' || matrix.template == 'rustjswasm'
 
       - name: Setup Rust
-        uses: actions-ext/rust/setup@c9cdbe5cc8a2485bf2eb22644302559c741ca763
+        uses: actions-ext/rust/setup@2db8e3e4c56beb7320c7d730bd2c2d6a6447bf6b
         if: matrix.template == 'rust' || matrix.template == 'rustjswasm'
 
       - name: Install JavaScript dependencies
