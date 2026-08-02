@@ -30,9 +30,6 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: ["{{ python_version_primary }}"]
-        cibuildwheel: ["cp{{python_version_primary.replace('.', '')}}"]
-        node-version: [22.x]
 
     steps:
       - name: Checkout
@@ -43,12 +40,12 @@ jobs:
       - name: Setup Python
         uses: actions-ext/python/setup@6e1b91a408ea89f49bc8aff8724f83826f7b5446
         with:
-          version: {% raw %}${{ matrix.python-version }}{% endraw %}
+          version: "{{ python_version_primary }}"
 
       - name: Setup Node.js
         uses: actions-ext/node/setup@0ea5bdcd24d2488b28e16bf611b446a2f8e1e12f
         with:
-          version: {% raw %}${{ matrix.node-version }}{% endraw %}
+          version: 22.x
 
       - name: Setup C++
         uses: actions-ext/cpp/setup@c2b1e90366b3a1c628a1df0748135f5e345ab26f
@@ -78,7 +75,7 @@ jobs:
       - name: Upload test results (Python)
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
         with:
-          name: {% raw %}test-results-${{ matrix.os }}-${{ matrix.python-version }}{% endraw %}
+          name: {% raw %}test-results-${{ matrix.os }}{% endraw %}
           path: junit.xml
         if: matrix.os == 'ubuntu-latest'
 
@@ -103,7 +100,7 @@ jobs:
           make dist-py-wheel
           make dist-check
         env:
-          CIBW_BUILD: {% raw %}"${{ matrix.cibuildwheel }}-manylinux*"{% endraw %}
+          CIBW_BUILD: "cp{{ python_version_primary.replace('.', '') }}-manylinux*"
           CIBW_BUILD_VERBOSITY: 3
         if: matrix.os == 'ubuntu-latest'
 
@@ -112,7 +109,7 @@ jobs:
           rm -rf dist
           make dist-py-wheel
         env:
-          CIBW_BUILD: {% raw %}"${{ matrix.cibuildwheel }}-macos*"{% endraw %}
+          CIBW_BUILD: "cp{{ python_version_primary.replace('.', '') }}-macos*"
           CIBW_BUILD_VERBOSITY: 3
         if: matrix.os == 'macos-latest'
 
@@ -121,7 +118,7 @@ jobs:
           if (Test-Path dist) { Remove-Item dist -Recurse -Force }
           make dist-py-wheel
         env:
-          CIBW_BUILD: {% raw %}"${{ matrix.cibuildwheel }}-win_amd64"{% endraw %}
+          CIBW_BUILD: "cp{{ python_version_primary.replace('.', '') }}-win_amd64"
         if: matrix.os == 'windows-latest'
 
       - name: Test wheel
@@ -139,5 +136,5 @@ jobs:
       - name: Upload distributions
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
         with:
-          name: {% raw %}dist-${{matrix.os}}-${{matrix.python-version}}{% endraw %}
+          name: {% raw %}dist-${{ matrix.os }}{% endraw %}
           path: dist
