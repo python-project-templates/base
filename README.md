@@ -11,3 +11,5 @@ pip install copier
 copier copy https://github.com/python-project-templates/base.git path/to/new/project
 ```
 
+> [!NOTE]
+> Install the [Python Templates Copier Update GitHub App](https://github.com/apps/python-templates-copier-update) on repositories generated from this template to receive weekly template update pull requests.
