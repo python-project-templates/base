@@ -95,5 +95,5 @@ jobs:
 
       - name: Generate and test template
         run: |
-          make gen-${{matrix.template}}
-          make test-${{matrix.template}}
+          make gen-${{ matrix.template }}
+          make test-${{ matrix.template }}
