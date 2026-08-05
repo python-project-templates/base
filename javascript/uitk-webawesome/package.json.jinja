@@ -1,0 +1,59 @@
+{
+  "name": "{{ package_name }}",
+  "version": "0.1.0",
+  "description": "{{ project_description }}",
+  "license": "Apache-2.0",
+  "private": true,
+  "packageManager": "pnpm@11.9.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "type": "module",
+  "files": [
+    "dist",
+    "!dist/**/*.test.*",
+    "!dist/**/*.spec.*"
+  ],
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./tokens.css": "./dist/tokens.css",
+    "./package.json": "./package.json"
+  },
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build && tsc -p tsconfig.build.json --emitDeclarationOnly && publint",
+    "check": "tsc --noEmit",
+    "preview": "vite preview",
+    "lint": "prettier --check .",
+    "fix": "prettier --write .",
+    "test": "pnpm test:unit && pnpm test:e2e",
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test",
+    "test:e2e:update": "playwright test --update-snapshots"
+  },
+  "peerDependencies": {
+    "@awesome.me/webawesome": "^3.11.0",
+    "lit": "^3.3.3"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.12.1",
+    "@playwright/test": "^1.60.0",
+    "@awesome.me/webawesome": "^3.11.0",
+    "lit": "^3.3.3",
+    "@types/node": "^24.0.0",
+    "jsdom": "^29.0.0",
+    "prettier": "^3.8.4",
+    "publint": "^0.3.21",
+    "typescript": "^5.9.3",
+    "vite": "^8.1.5",
+    "vitest": "^4.1.8"
+  }
+}

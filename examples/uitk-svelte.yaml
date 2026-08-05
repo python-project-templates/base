@@ -1,0 +1,8 @@
+---
+add_extension: uitk-svelte
+brand_name: Example
+css_prefix: example
+github: example
+package_name: '@example/branding'
+project_description: Shared brand identity, design tokens, and reusable Svelte components.
+project_name: example-branding

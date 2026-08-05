@@ -29,30 +29,37 @@ github:
 team:
     type: str
     help: What is your name or your team's name?
+    when: "{{ add_extension not in ['uitk-svelte', 'uitk-webawesome'] }}"
 
 email:
     type: str
     help: What is your email?
+    when: "{{ add_extension not in ['uitk-svelte', 'uitk-webawesome'] }}"
 
 add_extension:
   type: str
+  help: Which project template should Copier use?
   choices:
-    none:
+    Python / Pure:
       value: python
-    "C++":
+    Python / C++:
       value: cpp
-    JavaScript:
+    Python / JavaScript:
       value: js
-    Rust:
+    Python / Rust:
       value: rust
-    Jupyter Widget:
+    Python / Jupyter Widget:
       value: jupyter
-    Rust JavaScript WebAssembly:
+    Python / Rust + JavaScript + WebAssembly:
       value: rustjswasm
-    "C++ JavaScript WebAssembly":
+    Python / C++ + JavaScript + WebAssembly:
       value: cppjswasm
+    JavaScript / UI Toolkit / Svelte:
+      value: uitk-svelte
+    JavaScript / UI Toolkit / Lit + Web Awesome:
+      value: uitk-webawesome
 
-_subdirectory: "{{ add_extension }}"
+_subdirectory: "{% if add_extension == 'python' %}python/pure{% elif add_extension in ['uitk-svelte', 'uitk-webawesome'] %}javascript/{{ add_extension }}{% else %}python/{{ add_extension }}{% endif %}"
 
 add_vcpkg:
   type: bool
@@ -73,13 +80,40 @@ python_version_primary:
     "3.13":
       value: "3.13"
   help: Primary version of Python to use in CI/CD
+  when: "{{ add_extension not in ['uitk-svelte', 'uitk-webawesome'] }}"
 
 add_docs:
   type: bool
   default: false
   help: Add documentation using Yardang/Sphinx
+  when: "{{ add_extension not in ['uitk-svelte', 'uitk-webawesome'] }}"
 
 add_wiki:
   type: bool
   default: false
   help: Add documentation using GitHub wiki
+  when: "{{ add_extension not in ['uitk-svelte', 'uitk-webawesome'] }}"
+
+package_name:
+  type: str
+  help: What is the npm package name?
+  default: "@example/branding"
+  when: "{{ add_extension in ['uitk-svelte', 'uitk-webawesome'] }}"
+
+brand_name:
+  type: str
+  help: What is the human-readable brand name?
+  default: "{{ project_name }}"
+  when: "{{ add_extension in ['uitk-svelte', 'uitk-webawesome'] }}"
+
+css_prefix:
+  type: str
+  help: What prefix should global CSS custom properties use?
+  default: brand
+  when: "{{ add_extension in ['uitk-svelte', 'uitk-webawesome'] }}"
+
+element_prefix:
+  type: str
+  help: What prefix should custom elements use?
+  default: brand
+  when: "{{ add_extension == 'uitk-webawesome' }}"

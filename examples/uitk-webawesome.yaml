@@ -1,0 +1,9 @@
+---
+add_extension: uitk-webawesome
+brand_name: Example
+css_prefix: example
+element_prefix: example
+github: example
+package_name: '@example/branding'
+project_description: Shared brand identity, design tokens, and reusable Lit and Web Awesome components.
+project_name: example-branding

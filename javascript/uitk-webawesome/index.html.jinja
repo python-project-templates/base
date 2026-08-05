@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ brand_name }} brand kit</title>
+    <script>
+      try {
+        const saved = localStorage.getItem('{{ project_name }}.theme');
+        const theme =
+          saved === 'light' || saved === 'dark'
+            ? saved
+            : matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light';
+        document.documentElement.dataset.theme = theme;
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">Brand toolkit</p>
+      <{{ element_prefix }}-brand-mark></{{ element_prefix }}-brand-mark>
+      <p>{{ project_description }}</p>
+      <{{ element_prefix }}-theme-toggle data-testid="theme-toggle"></{{ element_prefix }}-theme-toggle>
+    </main>
+    <script type="module" src="/src/demo.ts"></script>
+  </body>
+</html>
