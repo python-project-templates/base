@@ -1,0 +1,45 @@
+:root {
+  --{{ css_prefix }}-color-paper: #f5f5f0;
+  --{{ css_prefix }}-color-ink: #151515;
+  --{{ css_prefix }}-color-muted: #666660;
+  --{{ css_prefix }}-color-line: #d0d0c8;
+  --{{ css_prefix }}-color-accent: #6cff8f;
+  --{{ css_prefix }}-font-sans: ui-sans-serif, system-ui, sans-serif;
+  --{{ css_prefix }}-font-mono: ui-monospace, monospace;
+  --wa-color-surface-default: var(--{{ css_prefix }}-color-paper);
+  --wa-color-text-normal: var(--{{ css_prefix }}-color-ink);
+  --wa-color-brand-fill-loud: var(--{{ css_prefix }}-color-accent);
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --{{ css_prefix }}-color-paper: #151515;
+  --{{ css_prefix }}-color-ink: #f5f5f0;
+  --{{ css_prefix }}-color-muted: #aaa9a0;
+  --{{ css_prefix }}-color-line: #3a3a36;
+  color-scheme: dark;
+}
+
+:root {
+  color: var(--{{ css_prefix }}-color-ink);
+  font-family: var(--{{ css_prefix }}-font-sans);
+  background: var(--{{ css_prefix }}-color-paper);
+}
+
+body {
+  margin: 0;
+}
+
+main {
+  width: min(calc(100% - 3rem), 72rem);
+  margin: 0 auto;
+  padding: 6rem 0;
+}
+
+.eyebrow {
+  color: var(--{{ css_prefix }}-color-muted);
+  font-family: var(--{{ css_prefix }}-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}

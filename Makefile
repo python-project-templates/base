@@ -24,7 +24,7 @@ fix:  ## fix formatting in this repo
 format: fix
 test:  ## run tests for this repo
 
-.PHONY: gen-python gen-cpp gen-js gen-jupyter gen-rust gen-rustjswasm
+.PHONY: gen-python gen-cpp gen-js gen-jupyter gen-rust gen-rustjswasm gen-cppjswasm gen-uitk-svelte gen-uitk-webawesome
 gen-python:  ## regenerate the python template from scratch
 	mkdir -p ../python-template && cd ../python-template && rm -rf ./* && rm -rf .copier-answers.yaml .gitignore .github .gitattributes
 	copier copy -w . ../python-template --data-file examples/python.yaml
@@ -60,7 +60,15 @@ gen-cppjswasm:  ## regenerate the cppjswasm template from scratch
 	copier copy -w . ../python-template-cppjswasm --data-file examples/cppjswasm.yaml
 	cd ../python-template-cppjswasm && $(SED) 's#_src_path: .#_src_path: https://github.com/python-project-templates/base.git#g' ./.copier-answers.yaml
 
-.PHONY: test-python test-cpp test-js test-jupyter test-rust test-rustjswasm
+gen-uitk-svelte:  ## regenerate the Svelte UI toolkit template from scratch
+	mkdir -p ../javascript-template-uitk-svelte && cd ../javascript-template-uitk-svelte && rm -rf ./* && rm -rf .copier-answers.yaml .github .gitignore .prettierignore .prettierrc
+	copier copy -w . ../javascript-template-uitk-svelte --data-file examples/uitk-svelte.yaml
+
+gen-uitk-webawesome:  ## regenerate the Lit and Web Awesome UI toolkit template from scratch
+	mkdir -p ../javascript-template-uitk-webawesome && cd ../javascript-template-uitk-webawesome && rm -rf ./* && rm -rf .copier-answers.yaml .github .gitignore .prettierignore .prettierrc
+	copier copy -w . ../javascript-template-uitk-webawesome --data-file examples/uitk-webawesome.yaml
+
+.PHONY: test-python test-cpp test-js test-jupyter test-rust test-rustjswasm test-cppjswasm test-uitk-svelte test-uitk-webawesome
 test-python:
 	cd ../python-template && git config --global user.name "github-actions" && git config --global user.email "41898282+github-actions[bot]@users.noreply.github.c@example.com" && git init && git add . && git commit -m "initial commit"
 	cd ../python-template && make develop
@@ -115,3 +123,21 @@ test-cppjswasm:
 	cd ../python-template-cppjswasm && make lint
 	cd ../python-template-cppjswasm && make checks
 	cd ../python-template-cppjswasm && make test
+
+test-uitk-svelte:
+	cd ../javascript-template-uitk-svelte && pnpm install
+	cd ../javascript-template-uitk-svelte && pnpm exec playwright install chromium
+	cd ../javascript-template-uitk-svelte && pnpm lint
+	cd ../javascript-template-uitk-svelte && pnpm check
+	cd ../javascript-template-uitk-svelte && pnpm build
+	cd ../javascript-template-uitk-svelte && pnpm test:unit
+	cd ../javascript-template-uitk-svelte && CI=1 pnpm test:e2e
+
+test-uitk-webawesome:
+	cd ../javascript-template-uitk-webawesome && pnpm install
+	cd ../javascript-template-uitk-webawesome && pnpm exec playwright install chromium
+	cd ../javascript-template-uitk-webawesome && pnpm lint
+	cd ../javascript-template-uitk-webawesome && pnpm check
+	cd ../javascript-template-uitk-webawesome && pnpm build
+	cd ../javascript-template-uitk-webawesome && pnpm test:unit
+	cd ../javascript-template-uitk-webawesome && CI=1 pnpm test:e2e
