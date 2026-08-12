@@ -37,22 +37,17 @@ classifiers = [
 
 dependencies = []
 
-[project.optional-dependencies]
-develop = [
-    "build",
+[dependency-groups]
+dev = [
     "bump-my-version",
     "check-dist",
     "codespell",
-    "hatchling",
     "mdformat",
     "mdformat-tables>=1",
     "pytest",
     "pytest-cov",
     "ruff",
-    "twine",
     "ty",
-    "uv",
-    "wheel",
 ]
 
 [project.scripts]
