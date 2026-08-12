@@ -61,19 +61,19 @@ gen-cppjswasm:  ## regenerate the cppjswasm template from scratch
 	cd ../python-template-cppjswasm && $(SED) 's#_src_path: .#_src_path: https://github.com/python-project-templates/base.git#g' ./.copier-answers.yaml
 
 gen-uitk-svelte:  ## regenerate the Svelte UI toolkit template from scratch
-	mkdir -p ../javascript-template-uitk-svelte && cd ../javascript-template-uitk-svelte && rm -rf ./* && rm -rf .copier-answers.yaml .github .gitignore .prettierignore .prettierrc
+	mkdir -p ../javascript-template-uitk-svelte && cd ../javascript-template-uitk-svelte && rm -rf ./* && rm -rf .copier-answers.yaml .github .gitignore .prettierignore .prettierrc .oxfmtrc.json .oxlintrc.json
 	copier copy -w . ../javascript-template-uitk-svelte --data-file examples/uitk-svelte.yaml
 
 gen-uitk-webawesome:  ## regenerate the Lit and Web Awesome UI toolkit template from scratch
-	mkdir -p ../javascript-template-uitk-webawesome && cd ../javascript-template-uitk-webawesome && rm -rf ./* && rm -rf .copier-answers.yaml .github .gitignore .prettierignore .prettierrc
+	mkdir -p ../javascript-template-uitk-webawesome && cd ../javascript-template-uitk-webawesome && rm -rf ./* && rm -rf .copier-answers.yaml .github .gitignore .prettierignore .prettierrc .oxfmtrc.json .oxlintrc.json
 	copier copy -w . ../javascript-template-uitk-webawesome --data-file examples/uitk-webawesome.yaml
 
 gen-site-sveltekit:  ## regenerate the SvelteKit site template from scratch
-	mkdir -p ../javascript-template-site-sveltekit && cd ../javascript-template-site-sveltekit && rm -rf ./* && rm -rf .copier-answers.yaml .github .gitignore .prettierignore .prettierrc
+	mkdir -p ../javascript-template-site-sveltekit && cd ../javascript-template-site-sveltekit && rm -rf ./* && rm -rf .copier-answers.yaml .github .gitignore .prettierignore .prettierrc .oxfmtrc.json .oxlintrc.json
 	copier copy -w . ../javascript-template-site-sveltekit --data-file examples/site-sveltekit.yaml
 
 gen-site-webawesome:  ## regenerate the Web Awesome site template from scratch
-	mkdir -p ../javascript-template-site-webawesome && cd ../javascript-template-site-webawesome && rm -rf ./* && rm -rf .copier-answers.yaml .github .gitignore .prettierignore .prettierrc
+	mkdir -p ../javascript-template-site-webawesome && cd ../javascript-template-site-webawesome && rm -rf ./* && rm -rf .copier-answers.yaml .github .gitignore .prettierignore .prettierrc .oxfmtrc.json .oxlintrc.json
 	copier copy -w . ../javascript-template-site-webawesome --data-file examples/site-webawesome.yaml
 
 .PHONY: test-python test-cpp test-js test-jupyter test-rust test-rustjswasm test-cppjswasm test-uitk-svelte test-uitk-webawesome test-site-sveltekit test-site-webawesome

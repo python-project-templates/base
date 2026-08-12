@@ -34,10 +34,10 @@
     "build": "npm-run-all build:rust build:wasm-bindgen build:prod",
     "clean": "rm -rf dist lib playwright-report ../{{ module }}/extension",
     "dev": "npm-run-all -p start watch",
-    "lint:js": "prettier --check \"src/**/*.{js,ts,jsx,tsx,css}\" \"tests/**/*.{js,ts,jsx,tsx}\" \"*.mjs\" \"*.json\"",
+    "lint:js": "oxlint . && oxfmt --check \"src/**/*.{js,ts,jsx,tsx,css}\" \"tests/**/*.{js,ts,jsx,tsx}\" \"*.mjs\" \"*.json\"",
     "lint:rust": "cargo clippy --all-features && cargo fmt --all -- --check",
     "lint": "npm-run-all lint:*",
-    "fix:js": "prettier  --write \"src/**/*.{js,ts,jsx,tsx,css}\" \"tests/**/*.{js,ts,jsx,tsx}\" \"*.mjs\" \"*.json\"",
+    "fix:js": "oxlint --fix . && oxfmt --write \"src/**/*.{js,ts,jsx,tsx,css}\" \"tests/**/*.{js,ts,jsx,tsx}\" \"*.mjs\" \"*.json\"",
     "fix:rust": "cargo fmt --all",
     "fix": "npm-run-all fix:*",
     "preinstall": "npx only-allow pnpm",
@@ -58,7 +58,8 @@
     "http-server": "^14.1.1",
     "nodemon": "^3.1.14",
     "npm-run-all": "^4.1.5",
-    "prettier": "^3.9.6",
+    "oxfmt": "^0.63.0",
+    "oxlint": "^1.78.0",
     "typescript": "^7.0.2"
   }
 }

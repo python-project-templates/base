@@ -71,7 +71,7 @@ make build
 | Python     | `ruff`         | `ruff`         | Style       |
 | Python     | `ruff`         | `ruff`         | Imports     |
 | C++        | `clang-format` | `clang-format` | Style       |
-| JavaScript | `prettier`     | `prettier`     | Style       |
+| JavaScript | `oxlint`       | `oxfmt`        | Style       |
 | Markdown   | `mdformat`     | `mdformat`     | Style       |
 | Markdown   | `codespell`    |                | Spelling    |
 
