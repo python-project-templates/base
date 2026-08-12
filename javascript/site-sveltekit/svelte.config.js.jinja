@@ -1,0 +1,11 @@
+import adapter from '@sveltejs/adapter-{{ site_adapter }}';
+
+/** @type {import('@sveltejs/kit').Config} */
+const config = {
+  kit: {
+    adapter: adapter({{ "{ fallback: '404.html', precompress: true, strict: true }" if site_adapter == 'static' else '' }}){% if site_adapter == 'static' %},
+    prerender: { entries: ['*'] }{% endif %}
+  }
+};
+
+export default config;

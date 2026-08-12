@@ -1,0 +1,16 @@
+<script lang="ts">
+  import '../app.css';
+
+  let { children } = $props();
+</script>
+
+<svelte:head>
+  <meta name="description" content="{{ project_description }}" />
+  <meta property="og:site_name" content="{{ brand_name }}" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="{{ brand_name }}" />
+  <meta property="og:description" content="{{ project_description }}" />
+  <meta property="og:url" content="{{ site_url }}" />
+</svelte:head>
+
+{@render children()}

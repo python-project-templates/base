@@ -1,0 +1,8 @@
+---
+add_extension: site-sveltekit
+brand_name: Example
+github: example
+project_description: A fast, accessible SvelteKit website.
+project_name: example-site
+site_adapter: static
+site_url: https://example.com

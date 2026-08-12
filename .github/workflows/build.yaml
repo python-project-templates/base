@@ -33,6 +33,8 @@ jobs:
           - cppjswasm
           - uitk-svelte
           - uitk-webawesome
+          - site-sveltekit
+          - site-webawesome
         os:
           - ubuntu-latest
           - macos-latest
@@ -40,6 +42,10 @@ jobs:
           - template: uitk-svelte
             os: macos-latest
           - template: uitk-webawesome
+            os: macos-latest
+          - template: site-sveltekit
+            os: macos-latest
+          - template: site-webawesome
             os: macos-latest
     runs-on: ${{ matrix.os }}
     steps:
@@ -86,7 +92,7 @@ jobs:
           version: 22.x
           pnpm_version: 11.11.0
           js_folder: "."
-        if: matrix.template == 'js' || matrix.template == 'jupyter' || matrix.template == 'cppjswasm' || matrix.template == 'rustjswasm' || matrix.template == 'uitk-svelte' || matrix.template == 'uitk-webawesome'
+        if: matrix.template == 'js' || matrix.template == 'jupyter' || matrix.template == 'cppjswasm' || matrix.template == 'rustjswasm' || matrix.template == 'uitk-svelte' || matrix.template == 'uitk-webawesome' || matrix.template == 'site-sveltekit' || matrix.template == 'site-webawesome'
 
       - name: Setup Rust
         uses: actions-ext/rust/setup@2db8e3e4c56beb7320c7d730bd2c2d6a6447bf6b
@@ -103,12 +109,12 @@ jobs:
       - name: Generate template
         run: make gen-${{ matrix.template }}
 
-      - name: Install UI toolkit dependencies and browser
+      - name: Install JavaScript template dependencies and browser
         run: |
           cd ../javascript-template-${{ matrix.template }}
           pnpm install
           pnpm exec playwright install --with-deps chromium
-        if: matrix.template == 'uitk-svelte' || matrix.template == 'uitk-webawesome'
+        if: matrix.template == 'uitk-svelte' || matrix.template == 'uitk-webawesome' || matrix.template == 'site-sveltekit' || matrix.template == 'site-webawesome'
 
       - name: Test template
         run: make test-${{ matrix.template }}

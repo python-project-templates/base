@@ -1,0 +1,35 @@
+:root {
+  color: #171717;
+  background: #ffffff;
+  font-family: system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+}
+
+main {
+  width: min(calc(100% - 3rem), 64rem);
+  margin: 0 auto;
+  padding: 6rem 0;
+}
+
+.eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 2rem 0 1rem;
+  font-size: clamp(3rem, 10vw, 8rem);
+  line-height: 0.9;
+  letter-spacing: -0.06em;
+}
+
+main > p:not(.eyebrow) {
+  max-width: 42rem;
+  margin-bottom: 2rem;
+  font-size: 1.25rem;
+  line-height: 1.6;
+}
