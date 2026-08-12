@@ -13,8 +13,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "check": "tsc --noEmit",
-    "lint": "prettier --check .",
-    "fix": "prettier --write .",
+    "lint": "oxlint . && oxfmt --check .",
+    "fix": "oxlint --fix . && oxfmt --write .",
     "test": "pnpm test:e2e",
     "test:e2e": "playwright test",
     "test:e2e:update": "playwright test --update-snapshots"
@@ -26,7 +26,8 @@
     "@axe-core/playwright": "^4.12.1",
     "@playwright/test": "^1.60.0",
     "@types/node": "^24.0.0",
-    "prettier": "^3.8.4",
+    "oxfmt": "^0.63.0",
+    "oxlint": "^1.78.0",
     "typescript": "^5.9.3",
     "vite": "^8.1.5"
   }
