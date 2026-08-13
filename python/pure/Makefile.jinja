@@ -4,10 +4,10 @@
 .PHONY: develop build install
 
 develop:  ## install dependencies and build library
-	uv pip install --group dev -e .
+	uv pip install -e ".[develop]"
 
 requirements:  ## install development dependencies
-	uv pip install --group dev
+	uv pip install -r pyproject.toml --extra develop
 
 build:  ## build the python library
 	uv build

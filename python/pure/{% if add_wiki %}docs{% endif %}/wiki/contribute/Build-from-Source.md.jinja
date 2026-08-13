@@ -38,7 +38,7 @@ cd {{ project_name_formatted }}
 
 ## Install Python dependencies
 
-Python development dependencies are specified in the `dev` dependency group in `pyproject.toml`. Install them with `uv`:
+Python development and test dependencies are published in the `develop` extra in `pyproject.toml`. Install them with `uv`:
 
 ```bash
 make requirements

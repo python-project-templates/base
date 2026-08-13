@@ -44,7 +44,7 @@ jobs:
 
       - name: Install from source (manual trigger)
         run: |
-          uv pip install --group dev -e .
+          uv pip install -e ".[develop]"
           uv pip install "yardang[themes]"
         if: github.event_name == 'workflow_dispatch'
 
