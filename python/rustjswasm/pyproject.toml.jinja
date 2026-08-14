@@ -72,6 +72,11 @@ current_version = "0.1.0"
 commit = true
 tag = true
 commit_args = "-s"
+pre_commit_hooks = [
+    "cargo update --workspace",
+    "pnpm --dir js install --lockfile-only --no-frozen-lockfile --ignore-scripts",
+    "git add Cargo.lock js/pnpm-lock.yaml",
+]
 
 [[tool.bumpversion.files]]
 filename = "{{ module }}/__init__.py"

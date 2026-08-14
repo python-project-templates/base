@@ -70,6 +70,10 @@ current_version = "0.1.0"
 commit = true
 tag = true
 commit_args = "-s"
+pre_commit_hooks = [
+    "cargo update --workspace",
+    "git add Cargo.lock",
+]
 
 [[tool.bumpversion.files]]
 filename = "{{ module }}/__init__.py"
