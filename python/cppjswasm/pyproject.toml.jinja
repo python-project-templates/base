@@ -1,7 +1,7 @@
 [build-system]
 requires = [
     "hatchling",
-    "hatch-cpp",
+    "hatch-cpp{% if add_pyodide %}>=0.5.0{% endif %}",
     "hatch-js",
     "pybind11",
 ]
@@ -48,7 +48,7 @@ develop = [
     "check-dist",
     "cibuildwheel",
     "codespell",
-    "hatch-cpp",
+    "hatch-cpp{% if add_pyodide %}>=0.5.0{% endif %}",
     "hatch-js",
     "hatchling",
     "pybind11",
@@ -110,6 +110,14 @@ archs = "arm64"
 [tool.cibuildwheel.windows]
 environment = {SKIP_HATCH_JS="1"}
 skip = "*win32 *arm_64"
+
+{% if add_pyodide -%}
+[tool.cibuildwheel.pyodide]
+environment = {SKIP_HATCH_JS="1"}
+test-command = "python -m pytest -vvv --pyargs {{ module }}.tests"
+test-extras = []
+test-requires = ["pytest"]
+{% endif -%}
 
 [tool.coverage.run]
 branch = true
