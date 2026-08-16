@@ -25,11 +25,39 @@ permissions:
 
 jobs:
   build:
+    name: build ({% raw %}${{ matrix.name }}{% endraw %})
     runs-on: {% raw %}${{ matrix.os }}{% endraw %}
 
     strategy:
       matrix:
-        os: [ubuntu-latest, ubuntu-24.04-arm, macos-latest, windows-latest]
+        include:
+          - name: ubuntu-latest
+            dist_path: dist
+            os: ubuntu-latest
+            python: "{{ python_version_primary }}"
+            target: native
+          - name: ubuntu-24.04-arm
+            dist_path: dist
+            os: ubuntu-24.04-arm
+            python: "{{ python_version_primary }}"
+            target: native
+          - name: macos-latest
+            dist_path: dist
+            os: macos-latest
+            python: "{{ python_version_primary }}"
+            target: native
+          - name: windows-latest
+            dist_path: dist
+            os: windows-latest
+            python: "{{ python_version_primary }}"
+            target: native
+          {% if add_pyodide -%}
+          - name: pyodide
+            dist_path: dist/pyodide
+            os: ubuntu-latest
+            python: "3.14"
+            target: pyodide
+          {% endif %}
 
     steps:
       - name: Checkout
@@ -40,12 +68,13 @@ jobs:
       - name: Setup Python
         uses: actions-ext/python/setup@6e1b91a408ea89f49bc8aff8724f83826f7b5446
         with:
-          version: "{{ python_version_primary }}"
+          version: {% raw %}${{ matrix.python }}{% endraw %}
 
       - name: Setup Node.js
         uses: actions-ext/node/setup@0ea5bdcd24d2488b28e16bf611b446a2f8e1e12f
         with:
           version: 22.x
+        if: matrix.target == 'native'
 
       - name: Setup C++
         uses: actions-ext/cpp/setup@c2b1e90366b3a1c628a1df0748135f5e345ab26f
@@ -57,41 +86,50 @@ jobs:
       {% endif -%}
       - name: Setup Emscripten
         uses: mymindstorm/setup-emsdk@4528d102f7230f0e7b276855c01ea1159be0e984  # v16
+        if: matrix.target == 'native'
 
       - name: Install dependencies
         run: make develop
+        if: matrix.target == 'native'
 
       - name: Lint
         run: make lint
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.name == 'ubuntu-latest'
 
       - name: Checks
         run: make checks
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.name == 'ubuntu-latest'
 
       - name: Test
         run: make coverage
+        if: matrix.target == 'native'
+
+      - name: Build and test Pyodide wheel
+        run: make test-pyodide
+        if: matrix.target == 'pyodide'
 
       - name: Upload test results (Python)
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
         with:
-          name: {% raw %}test-results-${{ matrix.os }}{% endraw %}
+          name: {% raw %}test-results-${{ matrix.name }}{% endraw %}
           path: junit.xml
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.name == 'ubuntu-latest'
 
       - name: Publish test results
         uses: EnricoMi/publish-unit-test-result-action@d0a4676d0e0b938bc201470d88276b7c74c712b3  # v2.24.0
         with:
           files: '**/junit.xml'
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.name == 'ubuntu-latest'
 
       - name: Upload coverage
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f  # v7.0.0
         with:
           token: {% raw %}${{ secrets.CODECOV_TOKEN }}{% endraw %}
+        if: matrix.target == 'native'
 
       - name: Install build dependencies
         run: pip install cibuildwheel
+        if: matrix.target == 'native'
 
       - name: Build distributions (Linux x86_64)
         run: |
@@ -103,7 +141,7 @@ jobs:
           CIBW_BUILD: "cp{{ python_version_primary.replace('.', '') }}-manylinux*"
           CIBW_ARCHS_LINUX: native
           CIBW_BUILD_VERBOSITY: 3
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.name == 'ubuntu-latest'
 
       - name: Build distributions (Linux ARM64)
         run: |
@@ -114,7 +152,7 @@ jobs:
           CIBW_BUILD: "cp{{ python_version_primary.replace('.', '') }}-manylinux*"
           CIBW_ARCHS_LINUX: native
           CIBW_BUILD_VERBOSITY: 3
-        if: matrix.os == 'ubuntu-24.04-arm'
+        if: matrix.name == 'ubuntu-24.04-arm'
 
       - name: Build distributions (macOS)
         run: |
@@ -123,7 +161,7 @@ jobs:
         env:
           CIBW_BUILD: "cp{{ python_version_primary.replace('.', '') }}-macos*"
           CIBW_BUILD_VERBOSITY: 3
-        if: matrix.os == 'macos-latest'
+        if: matrix.name == 'macos-latest'
 
       - name: Build distributions (Windows)
         run: |
@@ -131,22 +169,22 @@ jobs:
           make dist-py-wheel
         env:
           CIBW_BUILD: "cp{{ python_version_primary.replace('.', '') }}-win_amd64"
-        if: matrix.os == 'windows-latest'
+        if: matrix.name == 'windows-latest'
 
       - name: Test wheel
         uses: actions-ext/python/test-wheel@6e1b91a408ea89f49bc8aff8724f83826f7b5446
         with:
           module: {{module}}
-        if: runner.os == 'Linux'
+        if: matrix.target == 'native' && runner.os == 'Linux'
 
       - name: Test source distribution
         uses: actions-ext/python/test-sdist@6e1b91a408ea89f49bc8aff8724f83826f7b5446
         with:
           module: {{module}}
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.name == 'ubuntu-latest'
 
       - name: Upload distributions
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
         with:
-          name: {% raw %}dist-${{ matrix.os }}{% endraw %}
-          path: dist
+          name: {% raw %}dist-${{ matrix.name }}{% endraw %}
+          path: {% raw %}${{ matrix.dist_path }}{% endraw %}

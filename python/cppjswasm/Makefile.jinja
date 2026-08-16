@@ -136,8 +136,12 @@ tests-cpp: test-cpp
 coverage-cpp:  ## run C++ tests and collect test coverage
 	make -C cpp coverage
 
-.PHONY: test coverage tests
+.PHONY: test{% if add_pyodide %} test-pyodide{% endif %} coverage tests
 test: test-py test-js test-cpp  ## run all tests
+{% if add_pyodide %}
+test-pyodide:  ## build and test the Python package in Pyodide
+	uvx --from cibuildwheel==4.2.0 cibuildwheel --only cp314-pyodide_wasm32 --output-dir dist/pyodide .
+{% endif %}
 coverage: coverage-py coverage-js coverage-cpp  ## run all tests and collect test coverage
 
 # alias

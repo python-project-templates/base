@@ -1,5 +1,5 @@
-from {{ module }} import *
+from {{ module }}{% if add_pyodide %}.{{ module }} import Example{% else %} import *{% endif %}
 
 
 def test_all():
-    assert True
+    assert {% if add_pyodide %}str(Example("test")) == "test"{% else %}True{% endif %}
