@@ -29,7 +29,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, ubuntu-24.04-arm, macos-latest, windows-latest]
 
     steps:
       - name: Checkout
@@ -85,20 +85,14 @@ jobs:
         with:
           token: {% raw %}${{ secrets.CODECOV_TOKEN }}{% endraw %}
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@96fe6ef7f33517b61c61be40b68a1882f3264fb8  # v4.2.0
-        with:
-          platforms: all
-        if: runner.os == 'Linux' && runner.arch == 'X64'
-
       - name: Free disk space
         run: |
           sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /usr/local/.ghcup /usr/share/swift
           df -h /
         shell: bash
-        if: matrix.os == 'ubuntu-latest'
+        if: runner.os == 'Linux'
 
-      - name: Build distributions (Linux)
+      - name: Build distributions (Linux x86_64)
         run: |
           rm -rf dist
           make dist-rs
@@ -106,7 +100,19 @@ jobs:
           make dist-py-wheel
           make dist-check
         shell: bash
+        env:
+          CIBW_ARCHS_LINUX: native
         if: matrix.os == 'ubuntu-latest'
+
+      - name: Build distributions (Linux ARM64)
+        run: |
+          rm -rf dist
+          make dist-py-wheel
+          make dist-check
+        shell: bash
+        env:
+          CIBW_ARCHS_LINUX: native
+        if: matrix.os == 'ubuntu-24.04-arm'
 
       - name: Build distributions (macOS/Windows)
         run: |
@@ -116,13 +122,13 @@ jobs:
         shell: bash
         env:
           CIBW_ENVIRONMENT_MACOS: MACOSX_DEPLOYMENT_TARGET=11.0
-        if: matrix.os != 'ubuntu-latest'
+        if: runner.os != 'Linux'
 
       - name: Test wheel
         uses: actions-ext/python/test-wheel@6e1b91a408ea89f49bc8aff8724f83826f7b5446
         with:
           module: {{module}}
-        if: matrix.os == 'ubuntu-latest'
+        if: runner.os == 'Linux'
 
       - name: Test source distribution
         uses: actions-ext/python/test-sdist@6e1b91a408ea89f49bc8aff8724f83826f7b5446
