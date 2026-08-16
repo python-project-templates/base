@@ -18,8 +18,7 @@
     "./package.json": "./package.json"
   },
   "files": [
-    "dist/**/*",
-    "index.d.ts"
+    "dist/**/*"
   ],
   "types": "./dist/esm/index.d.ts",
   "publishConfig": {
@@ -27,11 +26,13 @@
   },
   "scripts": {
     "setup": "cargo install -f wasm-bindgen-cli --version 0.2.126 --locked",
+    "build:clean": "node -e \"const fs=require('fs'); fs.rmSync('dist',{recursive:true,force:true}); fs.rmSync('../{{ module }}/extension',{recursive:true,force:true})\"",
     "build:debug": "node build.mjs --debug",
     "build:rust": "cargo build --release --all-features --target wasm32-unknown-unknown --target-dir ../target",
     "build:wasm-bindgen": "wasm-bindgen ../target/wasm32-unknown-unknown/release/{{ module }}.wasm --out-dir ./dist/pkg --target web",
     "build:prod": "node build.mjs",
-    "build": "npm-run-all build:rust build:wasm-bindgen build:prod",
+    "build:types": "tsc",
+    "build": "npm-run-all build:clean build:rust build:wasm-bindgen build:prod build:types",
     "clean": "rm -rf dist lib playwright-report ../{{ module }}/extension",
     "dev": "npm-run-all -p start watch",
     "lint:js": "oxlint . && oxfmt --check \"src/**/*.{js,ts,jsx,tsx,css}\" \"tests/**/*.{js,ts,jsx,tsx}\" \"*.mjs\" \"*.json\"",

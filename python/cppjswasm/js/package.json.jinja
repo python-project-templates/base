@@ -18,18 +18,19 @@
     "./package.json": "./package.json"
   },
   "files": [
-    "dist/**/*",
-    "index.d.ts"
+    "dist/**/*"
   ],
   "types": "./dist/esm/index.d.ts",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
+    "build:clean": "node -e \"const fs=require('fs'); fs.rmSync('dist',{recursive:true,force:true}); fs.rmSync('../{{ module }}/extension',{recursive:true,force:true})\"",
     "build:cpp": "node -e \"require('fs').mkdirSync('dist/pkg',{recursive:true})\" && em++ -O2 -std=c++17 -s WASM=1 -s MODULARIZE=1 -s EXPORT_ES6=1 -s SINGLE_FILE=1 -s ALLOW_MEMORY_GROWTH=1 -s ENVIRONMENT=web,worker --bind -I ../cpp ../cpp/{{ project_name_formatted }}/example.cpp src/cpp/bindings.cpp -o dist/pkg/{{ module }}.js",
     "build:debug": "node build.mjs --debug",
     "build:prod": "node build.mjs",
-    "build": "npm-run-all build:cpp build:prod",
+    "build:types": "tsc",
+    "build": "npm-run-all build:clean build:cpp build:prod build:types",
     "clean": "rm -rf dist lib playwright-report ../{{ module }}/extension",
     "dev": "npm-run-all -p start watch",
     "lint:js": "oxlint . && oxfmt --check \"src/**/*.{js,ts,jsx,tsx,css}\" \"tests/**/*.{js,ts,jsx,tsx}\" \"*.mjs\" \"*.json\"",
