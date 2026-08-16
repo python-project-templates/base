@@ -137,8 +137,7 @@ test-command = "python -m pytest -vvv --pyargs {{ module }}.tests"
 test-extras = []
 test-requires = ["pytest"]
 xbuild-tools = ["cargo", "rustc", "rustup"]
-{% endif -%}
-
+{% endif %}
 [tool.coverage.run]
 branch = true
 omit = [
