@@ -142,6 +142,9 @@ Untitled*.ipynb
 
 # Emscripten SDK (locally installed)
 emsdk
+{% if add_pyodide -%}
+.pyodide_build/
+{% endif %}
 
 # Mac
 .DS_Store

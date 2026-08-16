@@ -135,3 +135,31 @@ jobs:
         with:
           name: {% raw %}dist-${{ matrix.os }}{% endraw %}
           path: dist
+
+{% if add_pyodide %}
+  pyodide:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Python
+        uses: actions-ext/python/setup@6e1b91a408ea89f49bc8aff8724f83826f7b5446
+        with:
+          version: "3.14"
+
+      - name: Setup Rust
+        uses: actions-ext/rust/setup@2db8e3e4c56beb7320c7d730bd2c2d6a6447bf6b
+
+      - name: Build and test Pyodide wheel
+        run: make test-pyodide
+
+      - name: Upload Pyodide distribution
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
+        with:
+          name: dist-pyodide
+          path: dist/pyodide
+{% endif %}

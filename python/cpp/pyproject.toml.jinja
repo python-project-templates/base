@@ -1,7 +1,7 @@
 [build-system]
 requires = [
     "hatchling",
-    "hatch-cpp",
+    "hatch-cpp{% if add_pyodide %}>=0.5.0{% endif %}",
     "pybind11",
 ]
 build-backend = "hatchling.build"
@@ -46,7 +46,7 @@ develop = [
     "check-dist",
     "cibuildwheel",
     "codespell",
-    "hatch-cpp",
+    "hatch-cpp{% if add_pyodide %}>=0.5.0{% endif %}",
     "hatchling",
     "mdformat",
     "mdformat-tables>=1",
@@ -99,6 +99,13 @@ archs = "arm64"
 [tool.cibuildwheel.windows]
 archs = "AMD64"
 skip = "*win32 *arm_64"
+
+{% if add_pyodide -%}
+[tool.cibuildwheel.pyodide]
+test-command = "python -m pytest -vvv --pyargs {{ module }}.tests"
+test-extras = []
+test-requires = ["pytest"]
+{% endif -%}
 
 [tool.coverage.run]
 branch = true
