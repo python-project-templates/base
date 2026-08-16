@@ -84,8 +84,12 @@ tests-py: test-py
 coverage-py:  ## run python tests and collect test coverage
 	python -m pytest -v {{ module }}/tests --cov={{ module }} --cov-report term-missing --cov-report xml
 
-.PHONY: test coverage tests
+.PHONY: test{% if add_pyodide %} test-pyodide{% endif %} coverage tests
 test: test-py  ## run all tests
+{% if add_pyodide %}
+test-pyodide:  ## build and test the Python package in Pyodide
+	uvx --from cibuildwheel==4.2.0 cibuildwheel --only cp314-pyodide_wasm32 --output-dir dist/pyodide .
+{% endif %}
 coverage: coverage-py  ## run all tests and collect test coverage
 
 # alias

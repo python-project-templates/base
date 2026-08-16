@@ -1,7 +1,7 @@
 [build-system]
 requires = [
     "hatchling",
-    "hatch-rs>=0.1.4",
+    "hatch-rs>={% if add_pyodide %}0.3.0{% else %}0.1.4{% endif %}",
 ]
 build-backend = "hatchling.build"
 
@@ -46,7 +46,7 @@ develop = [
     "check-dist",
     "cibuildwheel",
     "codespell",
-    "hatch-rs",
+    "hatch-rs{% if add_pyodide %}>=0.3.0{% endif %}",
     "hatchling",
     "mdformat",
     "mdformat-tables>=1",
@@ -117,6 +117,14 @@ archs = "arm64"
 [tool.cibuildwheel.windows]
 environment = {PATH="$UserProfile\\.cargo\bin;$PATH", CARGO_TERM_COLOR="always"}
 skip = "*win32 *arm_64"
+
+{% if add_pyodide -%}
+[tool.cibuildwheel.pyodide]
+test-command = "python -m pytest -vvv --pyargs {{ module }}.tests"
+test-extras = []
+test-requires = ["pytest"]
+xbuild-tools = ["cargo", "rustc", "rustup"]
+{% endif -%}
 
 [tool.coverage.run]
 branch = true

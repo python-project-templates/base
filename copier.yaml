@@ -71,6 +71,12 @@ add_vcpkg:
   help: Add vcpkg dependency management
   when: "{{ add_extension in ['cpp', 'cppjswasm'] }}"
 
+add_pyodide:
+  type: bool
+  default: false
+  help: Build and test Pyodide wheels
+  when: "{{ add_extension in ['cpp', 'rust'] }}"
+
 python_version_primary:
   type: str
   default: 3.11

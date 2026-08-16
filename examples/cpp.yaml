@@ -1,5 +1,6 @@
 ---
 add_docs: true
+add_pyodide: false
 add_vcpkg: true
 add_wiki: true
 add_extension: cpp
