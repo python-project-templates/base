@@ -38,13 +38,13 @@ cd {{ project_name_formatted }}
 
 ## Install Python dependencies
 
-Python build and develop dependencies are specified in the `pyproject.toml`, but you can manually install them:
+Python development and test dependencies are published in the `develop` extra in `pyproject.toml`. Install them with `uv`:
 
 ```bash
 make requirements
 ```
 
-Note that these dependencies would otherwise be installed normally as part of [PEP517](https://peps.python.org/pep-0517/) / [PEP518](https://peps.python.org/pep-0518/).
+Build dependencies are installed separately in an isolated environment as part of [PEP517](https://peps.python.org/pep-0517/) / [PEP518](https://peps.python.org/pep-0518/).
 
 ## Build
 
