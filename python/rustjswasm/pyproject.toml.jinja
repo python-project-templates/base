@@ -119,6 +119,7 @@ curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain=stable --profile=m
 rustup target add aarch64-unknown-linux-gnu
 rustup target add x86_64-unknown-linux-gnu
 """
+before-build = "cargo clean --manifest-path {package}/Cargo.toml && rm -f {package}/{{ module }}/*.so"
 environment = {PATH="$HOME/.cargo/bin:$PATH", CARGO_TERM_COLOR="always", SKIP_HATCH_JS="1" }
 skip = "*i686* *musllinux*"
 
