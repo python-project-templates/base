@@ -117,8 +117,7 @@ environment = {SKIP_HATCH_JS="1"}
 test-command = "python -m pytest -vvv --pyargs {{ module }}.tests"
 test-extras = []
 test-requires = ["pytest"]
-{% endif -%}
-
+{% endif %}
 [tool.coverage.run]
 branch = true
 omit = [
