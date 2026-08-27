@@ -1,0 +1,35 @@
+name: Build Status
+
+on:
+  push:
+    branches: [main]
+    tags: [v*]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions-ext/node/setup@b0536d87c5e92c924bc8667f566f620758280825
+        with:
+          version: 22.x
+          js_folder: .
+      - run: pnpm install
+      - run: pnpm build
+      - run: pnpm check
+      - run: pnpm lint
+      - run: pnpm test:unit
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm test:e2e
+        env:
+          CI: '1'

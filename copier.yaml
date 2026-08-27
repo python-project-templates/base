@@ -29,12 +29,12 @@ github:
 team:
     type: str
     help: What is your name or your team's name?
-    when: "{{ add_extension not in ['uitk-svelte', 'uitk-webawesome', 'site-sveltekit', 'site-webawesome'] }}"
+    when: "{{ add_extension not in ['uitk-svelte', 'uitk-webawesome', 'site-react', 'site-sveltekit', 'site-webawesome'] }}"
 
 email:
     type: str
     help: What is your email?
-    when: "{{ add_extension not in ['uitk-svelte', 'uitk-webawesome', 'site-sveltekit', 'site-webawesome'] }}"
+    when: "{{ add_extension not in ['uitk-svelte', 'uitk-webawesome', 'site-react', 'site-sveltekit', 'site-webawesome'] }}"
 
 add_extension:
   type: str
@@ -60,10 +60,12 @@ add_extension:
       value: uitk-webawesome
     JavaScript / Site / SvelteKit:
       value: site-sveltekit
+    JavaScript / Site / React:
+      value: site-react
     JavaScript / Site / Web Awesome:
       value: site-webawesome
 
-_subdirectory: "{% if add_extension == 'python' %}python/pure{% elif add_extension in ['uitk-svelte', 'uitk-webawesome', 'site-sveltekit', 'site-webawesome'] %}javascript/{{ add_extension }}{% else %}python/{{ add_extension }}{% endif %}"
+_subdirectory: "{% if add_extension == 'python' %}python/pure{% elif add_extension in ['uitk-svelte', 'uitk-webawesome', 'site-react', 'site-sveltekit', 'site-webawesome'] %}javascript/{{ add_extension }}{% else %}python/{{ add_extension }}{% endif %}"
 
 add_vcpkg:
   type: bool
@@ -90,19 +92,19 @@ python_version_primary:
     "3.13":
       value: "3.13"
   help: Primary version of Python to use in CI/CD
-  when: "{{ add_extension not in ['uitk-svelte', 'uitk-webawesome', 'site-sveltekit', 'site-webawesome'] }}"
+  when: "{{ add_extension not in ['uitk-svelte', 'uitk-webawesome', 'site-react', 'site-sveltekit', 'site-webawesome'] }}"
 
 add_docs:
   type: bool
   default: false
   help: Add documentation using Yardang/Sphinx
-  when: "{{ add_extension not in ['uitk-svelte', 'uitk-webawesome', 'site-sveltekit', 'site-webawesome'] }}"
+  when: "{{ add_extension not in ['uitk-svelte', 'uitk-webawesome', 'site-react', 'site-sveltekit', 'site-webawesome'] }}"
 
 add_wiki:
   type: bool
   default: false
   help: Add documentation using GitHub wiki
-  when: "{{ add_extension not in ['uitk-svelte', 'uitk-webawesome', 'site-sveltekit', 'site-webawesome'] }}"
+  when: "{{ add_extension not in ['uitk-svelte', 'uitk-webawesome', 'site-react', 'site-sveltekit', 'site-webawesome'] }}"
 
 package_name:
   type: str
@@ -114,7 +116,7 @@ brand_name:
   type: str
   help: What is the human-readable brand name?
   default: "{{ project_name }}"
-  when: "{{ add_extension in ['uitk-svelte', 'uitk-webawesome', 'site-sveltekit', 'site-webawesome'] }}"
+  when: "{{ add_extension in ['uitk-svelte', 'uitk-webawesome', 'site-react', 'site-sveltekit', 'site-webawesome'] }}"
 
 css_prefix:
   type: str
@@ -132,7 +134,7 @@ site_url:
   type: str
   help: What is the site's canonical URL?
   default: https://example.com
-  when: "{{ add_extension in ['site-sveltekit', 'site-webawesome'] }}"
+  when: "{{ add_extension in ['site-react', 'site-sveltekit', 'site-webawesome'] }}"
 
 site_adapter:
   type: str

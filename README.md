@@ -19,5 +19,6 @@ One selector chooses a template:
 - `Python / …` options generate pure Python, C++, JavaScript, Jupyter, Rust, and WebAssembly-backed Python packages from `python/`.
 - `JavaScript / UI Toolkit / Svelte` generates a Svelte package and showcase from `javascript/uitk-svelte/`.
 - `JavaScript / UI Toolkit / Lit + Web Awesome` generates custom elements and a showcase from `javascript/uitk-webawesome/`.
+- `JavaScript / Site / React` generates a React site with Vite, Vitest, and Playwright from `javascript/site-react/`.
 - `JavaScript / Site / SvelteKit` generates a SvelteKit site with static or Node deployment from `javascript/site-sveltekit/`.
 - `JavaScript / Site / Web Awesome` generates a Vite site built with Web Awesome components from `javascript/site-webawesome/`.
