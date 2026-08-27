@@ -24,7 +24,7 @@ fix:  ## fix formatting in this repo
 format: fix
 test:  ## run tests for this repo
 
-.PHONY: gen-python gen-cpp gen-js gen-jupyter gen-rust gen-rustjswasm gen-cppjswasm gen-uitk-svelte gen-uitk-webawesome gen-site-sveltekit gen-site-webawesome
+.PHONY: gen-python gen-cpp gen-js gen-jupyter gen-rust gen-rustjswasm gen-cppjswasm gen-uitk-svelte gen-uitk-webawesome gen-site-react gen-site-sveltekit gen-site-webawesome
 gen-python:  ## regenerate the python template from scratch
 	mkdir -p ../python-template && cd ../python-template && rm -rf ./* && rm -rf .copier-answers.yaml .gitignore .github .gitattributes
 	copier copy -w . ../python-template --data-file examples/python.yaml
@@ -68,6 +68,10 @@ gen-uitk-webawesome:  ## regenerate the Lit and Web Awesome UI toolkit template 
 	mkdir -p ../javascript-template-uitk-webawesome && cd ../javascript-template-uitk-webawesome && rm -rf ./* && rm -rf .copier-answers.yaml .github .gitignore .prettierignore .prettierrc .oxfmtrc.json .oxlintrc.json
 	copier copy -w . ../javascript-template-uitk-webawesome --data-file examples/uitk-webawesome.yaml
 
+gen-site-react:  ## regenerate the React site template from scratch
+	mkdir -p ../javascript-template-site-react && cd ../javascript-template-site-react && rm -rf ./* && rm -rf .copier-answers.yaml .github .gitignore .oxfmtrc.json .oxlintrc.json
+	copier copy -w . ../javascript-template-site-react --data-file examples/site-react.yaml
+
 gen-site-sveltekit:  ## regenerate the SvelteKit site template from scratch
 	mkdir -p ../javascript-template-site-sveltekit && cd ../javascript-template-site-sveltekit && rm -rf ./* && rm -rf .copier-answers.yaml .github .gitignore .prettierignore .prettierrc .oxfmtrc.json .oxlintrc.json
 	copier copy -w . ../javascript-template-site-sveltekit --data-file examples/site-sveltekit.yaml
@@ -76,7 +80,7 @@ gen-site-webawesome:  ## regenerate the Web Awesome site template from scratch
 	mkdir -p ../javascript-template-site-webawesome && cd ../javascript-template-site-webawesome && rm -rf ./* && rm -rf .copier-answers.yaml .github .gitignore .prettierignore .prettierrc .oxfmtrc.json .oxlintrc.json
 	copier copy -w . ../javascript-template-site-webawesome --data-file examples/site-webawesome.yaml
 
-.PHONY: test-python test-cpp test-js test-jupyter test-rust test-rustjswasm test-cppjswasm test-uitk-svelte test-uitk-webawesome test-site-sveltekit test-site-webawesome
+.PHONY: test-python test-cpp test-js test-jupyter test-rust test-rustjswasm test-cppjswasm test-uitk-svelte test-uitk-webawesome test-site-react test-site-sveltekit test-site-webawesome
 test-python:
 	cd ../python-template && git config --global user.name "github-actions" && git config --global user.email "41898282+github-actions[bot]@users.noreply.github.c@example.com" && git init && git add . && git commit -m "initial commit"
 	cd ../python-template && make develop
@@ -149,6 +153,15 @@ test-uitk-webawesome:
 	cd ../javascript-template-uitk-webawesome && pnpm build
 	cd ../javascript-template-uitk-webawesome && pnpm test:unit
 	cd ../javascript-template-uitk-webawesome && CI=1 pnpm test:e2e
+
+test-site-react:
+	cd ../javascript-template-site-react && pnpm install
+	cd ../javascript-template-site-react && pnpm exec playwright install chromium
+	cd ../javascript-template-site-react && pnpm lint
+	cd ../javascript-template-site-react && pnpm check
+	cd ../javascript-template-site-react && pnpm build
+	cd ../javascript-template-site-react && pnpm test:unit
+	cd ../javascript-template-site-react && CI=1 pnpm test:e2e
 
 test-site-sveltekit:
 	cd ../javascript-template-site-sveltekit && pnpm install
