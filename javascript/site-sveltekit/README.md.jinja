@@ -18,4 +18,7 @@ pnpm test
 pnpm build
 ```
 
+Visual regression snapshots live beside `tests/visual/` and are skipped when `CI` is set. Record or
+refresh them locally with `pnpm test:e2e:update`.
+
 This site uses SvelteKit's `adapter-{{ site_adapter }}` deployment adapter.
