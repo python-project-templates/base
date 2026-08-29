@@ -1,1 +1,4 @@
 export const prerender = {{ 'true' if site_adapter == 'static' else 'false' }};
+{%- if site_adapter == 'static' %}
+export const trailingSlash = 'always';
+{%- endif %}

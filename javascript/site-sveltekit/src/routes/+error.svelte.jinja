@@ -1,0 +1,18 @@
+<script lang="ts">
+  import { page } from '$app/state';
+</script>
+
+<svelte:head>
+  <title>{page.status} — {{ brand_name }}</title>
+</svelte:head>
+
+<main class="mx-auto grid min-h-[70vh] max-w-5xl place-items-center px-6 py-24 text-center">
+  <div>
+    <p class="text-sm uppercase tracking-widest text-muted">Error / {page.status}</p>
+    <h1 class="mt-6 text-5xl font-semibold tracking-tight sm:text-7xl">This path went quiet.</h1>
+    <p class="mx-auto mt-6 max-w-md leading-relaxed text-muted">
+      {page.error?.message ?? 'The page could not be found.'}
+    </p>
+    <a class="mt-9 inline-block text-sm font-semibold underline" href="/">Return home →</a>
+  </div>
+</main>
