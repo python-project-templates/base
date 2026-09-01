@@ -5,32 +5,68 @@
 <svelte:head><title>{{ brand_name }} brand kit</title></svelte:head>
 
 <main>
-  <p class="eyebrow">Brand toolkit</p>
-  <BrandMark />
+  <header>
+    <BrandMark />
+    <ThemeToggle />
+  </header>
+
   <h1>{{ brand_name }}</h1>
-  <p>{{ project_description }}</p>
-  <ThemeToggle />
+  <p class="lede">{{ project_description }}</p>
+
+  <section aria-labelledby="tokens">
+    <h2 id="tokens">Tokens</h2>
+    <p>
+      Colors, type, and spacing live in <code>src/lib/styles/tokens.css</code>. The values there are neutral
+      placeholders — replace them with the brand's own.
+    </p>
+  </section>
 </main>
 
 <style>
   main {
-    width: min(calc(100% - 3rem), 72rem);
+    width: min(calc(100% - 3rem), 64rem);
     margin: 0 auto;
-    padding: 6rem 0;
+    padding: 3rem 0 6rem;
   }
 
-  .eyebrow {
-    color: var(--{{ css_prefix }}-color-muted);
-    font-family: var(--{{ css_prefix }}-font-mono);
-    font-size: 0.75rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--{{ css_prefix }}-border);
   }
 
   h1 {
-    margin: 4rem 0 1rem;
-    font-size: clamp(4rem, 12vw, 10rem);
-    line-height: 0.85;
-    letter-spacing: -0.06em;
+    margin: 2.5rem 0 0.5rem;
+    font-size: 1.75rem;
+    font-weight: 600;
+  }
+
+  h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .lede {
+    margin: 0;
+    max-width: 60ch;
+    color: var(--{{ css_prefix }}-fg-muted);
+  }
+
+  section {
+    margin-top: 2.5rem;
+    max-width: 60ch;
+  }
+
+  section p {
+    margin: 0;
+    color: var(--{{ css_prefix }}-fg-muted);
+  }
+
+  code {
+    font-family: var(--{{ css_prefix }}-font-mono);
   }
 </style>

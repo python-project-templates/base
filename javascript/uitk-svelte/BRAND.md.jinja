@@ -1,24 +1,42 @@
 # {{ brand_name }} Brand Guide
 
-Canonical source for the {{ brand_name }} identity. Replace each placeholder before publishing the first consumer.
+Canonical source for the {{ brand_name }} identity. Every section below is a
+placeholder — fill it in before publishing the first consumer.
 
 ## Identity
 
-Describe what {{ brand_name }} is, who it serves, and what it must not be confused with.
+Describe what {{ brand_name }} is, who it serves, and what it must not be
+confused with.
 
 ## Mark
 
-Document primary mark, clear space, minimum size, and approved variants.
+Document the primary mark, clear space, minimum size, and approved variants.
 
 ## Color
 
-| Role   | Light     | Dark      | Usage              |
-| ------ | --------- | --------- | ------------------ |
-| Paper  | `#f5f5f0` | `#151515` | Page surfaces      |
-| Ink    | `#151515` | `#f5f5f0` | Primary content    |
-| Muted  | `#666660` | `#aaa9a0` | Supporting content |
-| Line   | `#d0d0c8` | `#3a3a36` | Borders and rules  |
-| Accent | `#6cff8f` | `#6cff8f` | Focus and emphasis |
+The shipped tokens are neutral greys plus a functional focus color. They exist
+so the toolkit renders legibly out of the box, not because they are the brand.
+Replace the values in `tokens.css`, then record them here.
+
+| Token       | Light | Dark | Usage             |
+| ----------- | ----- | ---- | ----------------- |
+| `bg`        |       |      | Page background   |
+| `bg-raised` |       |      | Raised surfaces   |
+| `fg`        |       |      | Primary text      |
+| `fg-muted`  |       |      | Supporting text   |
+| `border`    |       |      | Borders and rules |
+| `focus`     |       |      | Focus rings       |
+
+Two rules worth keeping whatever the palette becomes:
+
+- Name tokens for the role a color plays, not a material it imitates. Roles
+  survive a redesign; metaphors have to be renamed or quietly start lying.
+- Give every color a job. A single decorative accent applied wherever a page
+  looks flat is how unrelated products end up looking identical.
+
+Verify each foreground against the surfaces behind it — WCAG AA is 4.5:1 for
+normal text, and a focus ring needs 3:1. Assert it in a test so the palette
+cannot drift.
 
 ## Typography
 
