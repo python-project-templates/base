@@ -80,7 +80,7 @@ jobs:
           persist-credentials: false
 
       - name: Setup Python
-        uses: actions-ext/python/setup@6e1b91a408ea89f49bc8aff8724f83826f7b5446
+        uses: actions-ext/python/setup@a3f3953ef26a519ab7b6a56b94d06fa1b31ab3f3
         with:
           version: {% raw %}${{ matrix.python.version }}{% endraw %}
 
@@ -176,13 +176,13 @@ jobs:
         if: matrix.platform.name == 'windows-latest'
 
       - name: Test wheel
-        uses: actions-ext/python/test-wheel@6e1b91a408ea89f49bc8aff8724f83826f7b5446
+        uses: actions-ext/python/test-wheel@a3f3953ef26a519ab7b6a56b94d06fa1b31ab3f3
         with:
           module: {{module}}
         if: matrix.target == 'native' && runner.os == 'Linux'
 
       - name: Test source distribution
-        uses: actions-ext/python/test-sdist@6e1b91a408ea89f49bc8aff8724f83826f7b5446
+        uses: actions-ext/python/test-sdist@a3f3953ef26a519ab7b6a56b94d06fa1b31ab3f3
         with:
           module: {{module}}
         if: matrix.platform.name == 'ubuntu-latest'

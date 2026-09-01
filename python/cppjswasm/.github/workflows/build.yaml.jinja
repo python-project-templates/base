@@ -66,12 +66,12 @@ jobs:
           persist-credentials: false
 
       - name: Setup Python
-        uses: actions-ext/python/setup@6e1b91a408ea89f49bc8aff8724f83826f7b5446
+        uses: actions-ext/python/setup@a3f3953ef26a519ab7b6a56b94d06fa1b31ab3f3
         with:
           version: {% raw %}${{ matrix.python }}{% endraw %}
 
       - name: Setup Node.js
-        uses: actions-ext/node/setup@0ea5bdcd24d2488b28e16bf611b446a2f8e1e12f
+        uses: actions-ext/node/setup@b0536d87c5e92c924bc8667f566f620758280825
         with:
           version: 22.x
         if: matrix.target == 'native'
@@ -172,13 +172,13 @@ jobs:
         if: matrix.name == 'windows-latest'
 
       - name: Test wheel
-        uses: actions-ext/python/test-wheel@6e1b91a408ea89f49bc8aff8724f83826f7b5446
+        uses: actions-ext/python/test-wheel@a3f3953ef26a519ab7b6a56b94d06fa1b31ab3f3
         with:
           module: {{module}}
         if: matrix.target == 'native' && runner.os == 'Linux'
 
       - name: Test source distribution
-        uses: actions-ext/python/test-sdist@6e1b91a408ea89f49bc8aff8724f83826f7b5446
+        uses: actions-ext/python/test-sdist@a3f3953ef26a519ab7b6a56b94d06fa1b31ab3f3
         with:
           module: {{module}}
         if: matrix.name == 'ubuntu-latest'
