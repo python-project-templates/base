@@ -66,22 +66,22 @@ jobs:
           persist-credentials: false
 
       - name: Setup Python
-        uses: actions-ext/python/setup@a3f3953ef26a519ab7b6a56b94d06fa1b31ab3f3
+        uses: actions-ext/python/setup@ec67f82b3bd863948308a41ecb9e70547cbb19c7
         with:
           version: {% raw %}${{ matrix.python }}{% endraw %}
 
       - name: Setup Node.js
-        uses: actions-ext/node/setup@b0536d87c5e92c924bc8667f566f620758280825
+        uses: actions-ext/node/setup@34d0fdbdca883e4d0a2da0bcd0fa460fd40b80e7
         with:
           version: 22.x
         if: matrix.target == 'native'
 
       - name: Setup C++
-        uses: actions-ext/cpp/setup@c2b1e90366b3a1c628a1df0748135f5e345ab26f
+        uses: actions-ext/cpp/setup@22ebafc6f57971978e964f9977333ac98a7c49d9
 
       {% if add_vcpkg -%}
       - name: Setup vcpkg cache
-        uses: actions-ext/cpp/setup-vcpkg-cache@c2b1e90366b3a1c628a1df0748135f5e345ab26f
+        uses: actions-ext/cpp/setup-vcpkg-cache@22ebafc6f57971978e964f9977333ac98a7c49d9
 
       {% endif -%}
       - name: Setup Emscripten
@@ -172,13 +172,13 @@ jobs:
         if: matrix.name == 'windows-latest'
 
       - name: Test wheel
-        uses: actions-ext/python/test-wheel@a3f3953ef26a519ab7b6a56b94d06fa1b31ab3f3
+        uses: actions-ext/python/test-wheel@ec67f82b3bd863948308a41ecb9e70547cbb19c7
         with:
           module: {{module}}
         if: matrix.target == 'native' && runner.os == 'Linux'
 
       - name: Test source distribution
-        uses: actions-ext/python/test-sdist@a3f3953ef26a519ab7b6a56b94d06fa1b31ab3f3
+        uses: actions-ext/python/test-sdist@ec67f82b3bd863948308a41ecb9e70547cbb19c7
         with:
           module: {{module}}
         if: matrix.name == 'ubuntu-latest'

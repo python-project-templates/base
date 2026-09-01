@@ -72,7 +72,7 @@ jobs:
           printf 'fn main() {\n    println!("Hello, world!");\n}\n' > src/main.rs
 
       - name: Setup Python
-        uses: actions-ext/python/setup@a3f3953ef26a519ab7b6a56b94d06fa1b31ab3f3
+        uses: actions-ext/python/setup@ec67f82b3bd863948308a41ecb9e70547cbb19c7
         with:
           version: '3.11'
 
@@ -90,7 +90,7 @@ jobs:
         if: matrix.template == 'cpp' || matrix.template == 'cppjswasm'
 
       - name: Setup Node.js
-        uses: actions-ext/node/setup@b0536d87c5e92c924bc8667f566f620758280825
+        uses: actions-ext/node/setup@34d0fdbdca883e4d0a2da0bcd0fa460fd40b80e7
         with:
           version: 22.x
           pnpm_version: 11.11.0
@@ -98,7 +98,7 @@ jobs:
         if: matrix.template == 'js' || matrix.template == 'jupyter' || matrix.template == 'cppjswasm' || matrix.template == 'rustjswasm' || matrix.template == 'uitk-svelte' || matrix.template == 'uitk-webawesome' || matrix.template == 'site-react' || matrix.template == 'site-sveltekit' || matrix.template == 'site-webawesome'
 
       - name: Setup Rust
-        uses: actions-ext/rust/setup@3de300f3071e758a1dd8545b884288a35e5d7f81
+        uses: actions-ext/rust/setup@0f0b7c9ab3cdb6e9a1f79e2147974d6762ddafea
         if: matrix.template == 'rust' || matrix.template == 'rustjswasm'
 
       - name: Install JavaScript dependencies
