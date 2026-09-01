@@ -24,6 +24,13 @@ fix:  ## fix formatting in this repo
 format: fix
 test:  ## run tests for this repo
 
+.PHONY: update-action-pins check-action-pins
+update-action-pins:  ## re-pin actions-ext references to each action repo's current main
+	python3 .github/scripts/update_action_pins.py
+
+check-action-pins:  ## check whether any actions-ext pin is out of date
+	python3 .github/scripts/update_action_pins.py --check
+
 .PHONY: gen-python gen-cpp gen-js gen-jupyter gen-rust gen-rustjswasm gen-cppjswasm gen-uitk-svelte gen-uitk-webawesome gen-site-react gen-site-sveltekit gen-site-webawesome
 gen-python:  ## regenerate the python template from scratch
 	mkdir -p ../python-template && cd ../python-template && rm -rf ./* && rm -rf .copier-answers.yaml .gitignore .github .gitattributes

@@ -1,0 +1,48 @@
+name: Update Action Pins
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  repository_dispatch:
+    types:
+      - actions-ext-updated
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Re-pin actions-ext references
+        run: python3 .github/scripts/update_action_pins.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Open pull request
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if git diff --quiet; then
+            echo "nothing to update"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c bot/update-action-pins
+          git commit -am "Update actions-ext pins"
+          git push -f origin bot/update-action-pins
+          gh pr view bot/update-action-pins >/dev/null 2>&1 || gh pr create \
+            --base main \
+            --head bot/update-action-pins \
+            --title "Update actions-ext pins" \
+            --body "Re-pins the actions-ext references in the templates and in this repo's own workflow to the current main commit of each action repo."
