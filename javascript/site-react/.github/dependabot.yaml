@@ -11,22 +11,8 @@ updates:
     labels:
       - "part: github_actions"
 
-  - package-ecosystem: "pip"
-    directory: "/"
-    schedule:
-      interval: "monthly"
-    cooldown:
-      default-days: 7
-    groups:
-      python:
-        patterns:
-          - "*"
-    labels:
-      - "lang: python"
-      - "part: dependencies"
-
   - package-ecosystem: "npm"
-    directory: "/js"
+    directory: "/"
     schedule:
       interval: "monthly"
     cooldown:
