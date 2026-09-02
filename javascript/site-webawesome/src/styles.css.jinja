@@ -1,7 +1,14 @@
 :root {
-  color: #171717;
-  background: #ffffff;
+  --{{ css_prefix }}-bg: #ffffff;
+  --{{ css_prefix }}-fg: #171717;
+  --{{ css_prefix }}-fg-muted: #5c5c5c;
+  --{{ css_prefix }}-border: #e0e0e0;
+  --{{ css_prefix }}-focus: #1a56c4;
+
+  color: var(--{{ css_prefix }}-fg);
+  background: var(--{{ css_prefix }}-bg);
   font-family: system-ui, sans-serif;
+  color-scheme: light;
 }
 
 body {
@@ -11,25 +18,24 @@ body {
 main {
   width: min(calc(100% - 3rem), 64rem);
   margin: 0 auto;
-  padding: 6rem 0;
-}
-
-.eyebrow {
-  font-size: 0.75rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  padding: 3rem 0 6rem;
 }
 
 h1 {
-  margin: 2rem 0 1rem;
-  font-size: clamp(3rem, 10vw, 8rem);
-  line-height: 0.9;
-  letter-spacing: -0.06em;
+  margin: 0 0 1rem;
+  font-size: 1.75rem;
+  font-weight: 600;
 }
 
-main > p:not(.eyebrow) {
-  max-width: 42rem;
+main > p {
+  max-width: 60ch;
   margin-bottom: 2rem;
-  font-size: 1.25rem;
+  color: var(--{{ css_prefix }}-fg-muted);
   line-height: 1.6;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--{{ css_prefix }}-focus);
+  outline-offset: 4px;
 }
