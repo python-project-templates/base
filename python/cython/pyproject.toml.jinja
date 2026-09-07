@@ -1,8 +1,9 @@
 [build-system]
 requires = [
     "hatchling",
-    "hatch-js",
-    "jupyter-builder>=1.2.3,<2",
+    "hatch-cython",
+    "Cython>=3",
+    "setuptools",
 ]
 build-backend = "hatchling.build"
 
@@ -20,14 +21,8 @@ keywords = []
 
 classifiers = [
     "Development Status :: 3 - Alpha",
-    "Framework :: Jupyter",
-    "Framework :: Jupyter :: JupyterLab",
-    "Framework :: Jupyter :: JupyterLab :: 4",
-    "Framework :: Jupyter :: JupyterLab :: Extensions",
-    "Framework :: Jupyter :: JupyterLab :: Extensions :: Prebuilt",
     "Programming Language :: Python",
     "Programming Language :: Python :: Implementation :: CPython",
-    "Programming Language :: Python :: Implementation :: PyPy",
     "Programming Language :: Python :: 3",
     {% if python_version_primary == "3.10" -%}
     "Programming Language :: Python :: 3.10",
@@ -49,16 +44,18 @@ develop = [
     "build",
     "bump-my-version",
     "check-dist",
+    "cibuildwheel",
     "codespell",
-    "hatch-js",
+    "Cython>=3",
+    "hatch-cython",
     "hatchling",
-    "jupyter-builder>=1.2.3,<2",
     "mdformat",
     "mdformat-tables>=1",
-    "jupyterlab>=4,<5",
+    "packaging",
     "pytest",
     "pytest-cov",
     "ruff",
+    "setuptools",
     "twine",
     "ty",
     "uv",
@@ -76,10 +73,6 @@ current_version = "0.1.0"
 commit = true
 tag = true
 commit_args = "-s"
-pre_commit_hooks = [
-    "pnpm --dir js install --lockfile-only --no-frozen-lockfile --ignore-scripts",
-    "git add js/pnpm-lock.yaml",
-]
 
 [[tool.bumpversion.files]]
 filename = "{{ module }}/__init__.py"
@@ -91,15 +84,11 @@ filename = "pyproject.toml"
 search = 'version = "{current_version}"'
 replace = 'version = "{new_version}"'
 
-[[tool.bumpversion.files]]
-filename = "js/package.json"
-search = '"version": "{current_version}"'
-replace = '"version": "{new_version}"'
-
 [tool.coverage.run]
 branch = true
 omit = [
     "{{ module }}/tests/integration/",
+    "{{ module }}/_compiled.py",
 ]
 
 [tool.coverage.report]
@@ -111,46 +100,49 @@ exclude_also = [
 ignore_errors = true
 fail_under = 50
 
-[tool.hatch.build]
-artifacts = [
-    "{{ module }}/nbextension",
-    "{{ module }}/labextension",
-]
-
-[tool.hatch.build.sources]
-src = "/"
-
 [tool.hatch.build.targets.sdist]
-packages = [
-    "{{ module }}",
-    "js",
-]
-exclude = [
-    "js/dist",
-    "js/node_modules",
-]
+packages = ["{{ module }}"]
+exclude = ["*.so", "*.pyd", "*.dylib", "{{ module }}/_compiled.c", "{{ module }}/_native.c"]
 
 [tool.hatch.build.targets.wheel]
 packages = [
     "{{ module }}",
 ]
-exclude = [
-    "js"
-]
+artifacts = ["{{ module }}/*.so", "{{ module }}/*.pyd", "{{ module }}/*.dylib"]
 
-[tool.hatch.build.targets.wheel.shared-data]
-"{{ module }}/labextension" = "share/jupyter/labextensions/{{ project_name_formatted }}"
-"{{ module }}/extension/install.json" = "share/jupyter/labextensions/{{ project_name_formatted }}/install.json"
-"{{ module }}/extension/{{ module }}.json" = "etc/jupyter/jupyter_server_config.d/{{ module }}.json"
+[tool.hatch.build.targets.wheel.hooks.cython.options]
+src = "{{ module }}"
 
-[tool.hatch.build.hooks.hatch-js]
-path = "js"
-build_cmd = "build"
-tool = "pnpm"
-targets = [
-    "{{ module }}/nbextension/static/notebook.js",
-    "{{ module }}/labextension/package.json",
-]
+[tool.hatch.build.targets.wheel.hooks.cython.options.files]
+targets = ["*/_compiled.py", "*/_native.pyx"]
+
+[tool.setuptools]
+packages = ["{{ module }}"]
+
+[tool.check-dist.sdist]
+present = ["{{ module }}/_compiled.py", "{{ module }}/_native.pyx", "LICENSE", "README.md", "pyproject.toml"]
+absent = ["{{ module }}/*.so", "{{ module }}/*.pyd", "{{ module }}/*.dylib"]
+
+[tool.check-dist.wheel]
+present = ["{{ module }}/_compiled*.so", "{{ module }}/_native*.so"]
+
+[tool.cibuildwheel]
+test-command = "python -m pytest --pyargs {{ module }}.tests"
+test-requires = ["pytest"]
+
+[tool.cibuildwheel.linux]
+manylinux-aarch64-image = "manylinux_2_28"
+manylinux-x86_64-image = "manylinux_2_28"
+archs = "native"
+skip = "*i686* *musllinux*"
+
+[tool.cibuildwheel.macos]
+environment = {MACOSX_DEPLOYMENT_TARGET="11.0"}
+archs = "arm64"
+
+[tool.cibuildwheel.windows]
+archs = "AMD64"
+skip = "*win32 *arm64"
 
 [tool.pytest.ini_options]
 addopts = [
@@ -192,6 +184,6 @@ section-order = [
 [tool.yardang]
 title = "{{ project_name }}"
 root = "README.md"
-pages = []
+pages = ["docs/development.md"]
 use-autoapi = true
-{% endif %}
+{%- endif %}

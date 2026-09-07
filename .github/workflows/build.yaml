@@ -25,6 +25,7 @@ jobs:
       matrix:
         template:
           - python
+          - cython
           - cpp
           - js
           - jupyter

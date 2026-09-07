@@ -42,6 +42,8 @@ add_extension:
   choices:
     Python / Pure:
       value: python
+    Python / Cython:
+      value: cython
     Python / C++:
       value: cpp
     Python / JavaScript:

@@ -16,7 +16,7 @@ copier copy https://github.com/python-project-templates/base.git path/to/new/pro
 
 One selector chooses a template:
 
-- `Python / …` options generate pure Python, C++, JavaScript, Jupyter, Rust, and WebAssembly-backed Python packages from `python/`.
+- `Python / …` options generate pure Python, Cython, C++, JavaScript, Jupyter, Rust, and WebAssembly-backed Python packages from `python/`.
 - `JavaScript / UI Toolkit / Svelte` generates a Svelte package and showcase from `javascript/uitk-svelte/`.
 - `JavaScript / UI Toolkit / Lit + Web Awesome` generates custom elements and a showcase from `javascript/uitk-webawesome/`.
 - `JavaScript / Site / React` generates a React site with Vite, Vitest, and Playwright from `javascript/site-react/`.

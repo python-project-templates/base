@@ -1,0 +1,40 @@
+# How to build and test extensions
+
+Install a C compiler, Python {{ python_version_primary }}, and [uv](https://docs.astral.sh/uv/).
+Use Xcode Command Line Tools on macOS or Visual Studio Build Tools on Windows.
+
+```bash
+uv venv --python {{ python_version_primary }}
+source .venv/bin/activate
+make develop
+make lint
+make checks
+make coverage
+make dist
+make test-dist
+```
+
+On Windows, activate with `.venv\Scripts\activate` instead. `make test-dist` installs
+compatible wheels in fresh environments and verifies compiled imports outside the
+checkout. It also rebuilds each sdist into a wheel and repeats those checks.
+
+To compile another `.py` or `.pyx` module, add its path to
+`[tool.hatch.build.targets.wheel.hooks.cython.options.files].targets` in
+`pyproject.toml`, then run `make develop` again. Only explicitly selected modules
+are compiled. Keep package initialization and tests as Python sources.
+
+Run `make test` after changing an extension. Tests check that both example modules
+load native binaries. Coverage measures Python code; the compiled `_compiled.py`
+is excluded because builds do not enable Cython line tracing.
+
+For portable wheels, run `make dist-py-wheel` on the target platform. Linux wheel
+builds require Docker. Run `make dist-py-sdist` to build an sdist without compiling
+extensions. CI runs tests against each installed wheel through cibuildwheel.
+
+To update the template from a clean branch:
+
+```bash
+copier update --answers-file .copier-answers.yaml --trust
+```
+
+Review the diff and rerun the checks above before committing.
