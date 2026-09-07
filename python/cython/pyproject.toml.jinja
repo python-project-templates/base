@@ -101,8 +101,8 @@ ignore_errors = true
 fail_under = 50
 
 [tool.hatch.build.targets.sdist]
-include = ["/{{ module }}", "/LICENSE", "/README.md", "/pyproject.toml"]
-exclude = ["*.so", "*.pyd", "*.dylib", "*.c", "*.cpp"]
+packages = ["{{ module }}"]
+exclude = ["*.so", "*.pyd", "*.dylib", "{{ module }}/_compiled.c", "{{ module }}/_native.c"]
 
 [tool.hatch.build.targets.wheel]
 packages = [

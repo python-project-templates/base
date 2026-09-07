@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := help
-.PHONY: develop requirements build install lint-py lint-docs lint lints fix-py fix-docs fix format check-dist check-types checks check test tests coverage show-version patch minor major dist dist-build dist-py-wheel dist-py-sdist dist-check test-dist publish clean help
+.PHONY: develop requirements build install lint-py lint-docs lint lints fix-py fix-docs fix format check-dist check-types checks check test tests coverage show-version patch minor major dist dist-build dist-py-wheel dist-py-sdist dist-check test-dist publish deep-clean clean help
 
 develop:  ## install dependencies and build library
 	uv pip install -e '.[develop]'
@@ -18,16 +18,16 @@ lint-py:  ## lint Python with ruff
 	python -m ruff format --check {{ module }} .github/scripts
 
 lint-docs:  ## lint documentation
-	python -m mdformat --check README.md docs/development.md
-	python -m codespell_lib README.md docs/development.md
+	python -m mdformat --check README.md docs/development.md{% if add_wiki %} docs/wiki/{% endif %}
+	python -m codespell_lib README.md docs/development.md{% if add_wiki %} docs/wiki/{% endif %}
 
 fix-py:  ## autoformat Python code
 	python -m ruff check --fix {{ module }} .github/scripts
 	python -m ruff format {{ module }} .github/scripts
 
 fix-docs:  ## autoformat documentation
-	python -m mdformat README.md docs/development.md
-	python -m codespell_lib --write README.md docs/development.md
+	python -m mdformat README.md docs/development.md{% if add_wiki %} docs/wiki/{% endif %}
+	python -m codespell_lib --write README.md docs/development.md{% if add_wiki %} docs/wiki/{% endif %}
 
 lint: lint-py lint-docs  ## run all linters
 lints: lint
@@ -85,8 +85,14 @@ dist:  ## build and check local distributions
 
 publish: dist
 
+deep-clean: ## clean everything from the repository
+	git clean -fdx
+
 clean:  ## remove distribution build output
 	rm -rf build dist {{ module }}.egg-info
 
 help:
-	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "%-24s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
+print-%:
+	@echo '$*=$($*)'
