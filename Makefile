@@ -37,6 +37,16 @@ gen-python:  ## regenerate the python template from scratch
 	copier copy -w . ../python-template --data-file examples/python.yaml
 	cd ../python-template && $(SED) 's#_src_path: .#_src_path: https://github.com/python-project-templates/base.git#g' ./.copier-answers.yaml
 
+.PHONY: gen-cython test-cython
+gen-cython:  ## regenerate the Cython template
+	copier copy --defaults --overwrite --vcs-ref=HEAD . ../python-template-cython --data-file examples/cython.yaml
+	cd ../python-template-cython && $(SED) 's#_src_path: .#_src_path: https://github.com/python-project-templates/base.git#g' ./.copier-answers.yaml
+
+test-cython:  ## test the generated Cython project
+	git -C ../python-template-cython init
+	git -C ../python-template-cython add .
+	$(MAKE) -C ../python-template-cython develop lint checks coverage dist test-dist
+
 gen-cpp:  ## regenerate the c++ template from scratch
 	mkdir -p ../python-template-cpp && cd ../python-template-cpp && rm -rf ./* && rm -rf .copier-answers.yaml .gitignore .github .gitattributes
 	copier copy -w . ../python-template-cpp --data-file examples/cpp.yaml

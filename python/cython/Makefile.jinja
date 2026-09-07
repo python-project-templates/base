@@ -1,0 +1,92 @@
+.DEFAULT_GOAL := help
+.PHONY: develop requirements build install lint-py lint-docs lint lints fix-py fix-docs fix format check-dist check-types checks check test tests coverage show-version patch minor major dist dist-build dist-py-wheel dist-py-sdist dist-check test-dist publish clean help
+
+develop:  ## install dependencies and build library
+	uv pip install -e '.[develop]'
+
+requirements:  ## install prerequisite Python build requirements
+	uv pip install -r pyproject.toml --extra develop
+
+build:  ## build the Python library
+	python -m build -n
+
+install:  ## install library
+	uv pip install .
+
+lint-py:  ## lint Python with ruff
+	python -m ruff check {{ module }} .github/scripts
+	python -m ruff format --check {{ module }} .github/scripts
+
+lint-docs:  ## lint documentation
+	python -m mdformat --check README.md docs/development.md
+	python -m codespell_lib README.md docs/development.md
+
+fix-py:  ## autoformat Python code
+	python -m ruff check --fix {{ module }} .github/scripts
+	python -m ruff format {{ module }} .github/scripts
+
+fix-docs:  ## autoformat documentation
+	python -m mdformat README.md docs/development.md
+	python -m codespell_lib --write README.md docs/development.md
+
+lint: lint-py lint-docs  ## run all linters
+lints: lint
+fix: fix-py fix-docs  ## run all autoformatters
+format: fix
+
+check-dist:  ## check sdist and wheel contents
+	check-dist -v --rebuild
+
+check-types:  ## check Python types (advisory)
+	ty check {{ module }}
+
+checks: check-dist  ## run distribution checks
+check: checks
+
+test:  ## run Python tests
+	python -m pytest {{ module }}/tests
+
+tests: test
+
+coverage:  ## run tests with coverage
+	python -m pytest {{ module }}/tests --cov={{ module }} --cov-report term-missing --cov-report xml
+
+show-version:  ## show current library version
+	@bump-my-version show current_version
+
+patch:  ## bump a patch version
+	@bump-my-version bump patch
+
+minor:  ## bump a minor version
+	@bump-my-version bump minor
+
+major:  ## bump a major version
+	@bump-my-version bump major
+
+dist-build:  ## build local Python distributions
+	python -m build -w -s
+
+dist-py-wheel: dist-py-sdist  ## build portable native wheels from the sdist
+	python -m cibuildwheel --output-dir dist dist/*.tar.gz
+
+dist-py-sdist:  ## build a source distribution
+	python -m build --sdist --outdir dist
+
+dist-check:  ## check distribution metadata
+	python -m twine check dist/*
+
+test-dist:  ## test installed wheels and rebuild source distributions
+	python .github/scripts/test-distributions.py
+
+dist:  ## build and check local distributions
+	$(MAKE) clean
+	$(MAKE) dist-build
+	$(MAKE) dist-check
+
+publish: dist
+
+clean:  ## remove distribution build output
+	rm -rf build dist {{ module }}.egg-info
+
+help:
+	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "%-24s %s\n", $$1, $$2}' $(MAKEFILE_LIST)

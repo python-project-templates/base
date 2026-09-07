@@ -1,0 +1,189 @@
+[build-system]
+requires = [
+    "hatchling",
+    "hatch-cython",
+    "Cython>=3",
+    "setuptools",
+]
+build-backend = "hatchling.build"
+
+[project]
+name = "{{ project_name_formatted }}"
+authors = [
+    {name = "{{ team }}", email = "{{ email }}"},
+]
+description = "{{ project_description }}"
+readme = "README.md"
+license = { text = "Apache-2.0" }
+version = "0.1.0"
+requires-python = ">={{ python_version_primary }}"
+keywords = []
+
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: 3",
+    {% if python_version_primary == "3.10" -%}
+    "Programming Language :: Python :: 3.10",
+    {% endif -%}
+    {% if python_version_primary in ["3.10", "3.11"] -%}
+    "Programming Language :: Python :: 3.11",
+    {% endif -%}
+    {% if python_version_primary in ["3.10", "3.11", "3.12"] -%}
+    "Programming Language :: Python :: 3.12",
+    {% endif -%}
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+
+dependencies = []
+
+[project.optional-dependencies]
+develop = [
+    "build",
+    "bump-my-version",
+    "check-dist",
+    "cibuildwheel",
+    "codespell",
+    "Cython>=3",
+    "hatch-cython",
+    "hatchling",
+    "mdformat",
+    "mdformat-tables>=1",
+    "packaging",
+    "pytest",
+    "pytest-cov",
+    "ruff",
+    "setuptools",
+    "twine",
+    "ty",
+    "uv",
+    "wheel",
+]
+
+[project.scripts]
+
+[project.urls]
+Repository = "https://github.com/{{ github }}/{{ project_name_formatted }}"
+Homepage = "https://github.com/{{ github }}/{{ project_name_formatted }}"
+
+[tool.bumpversion]
+current_version = "0.1.0"
+commit = true
+tag = true
+commit_args = "-s"
+
+[[tool.bumpversion.files]]
+filename = "{{ module }}/__init__.py"
+search = '__version__ = "{current_version}"'
+replace = '__version__ = "{new_version}"'
+
+[[tool.bumpversion.files]]
+filename = "pyproject.toml"
+search = 'version = "{current_version}"'
+replace = 'version = "{new_version}"'
+
+[tool.coverage.run]
+branch = true
+omit = [
+    "{{ module }}/tests/integration/",
+    "{{ module }}/_compiled.py",
+]
+
+[tool.coverage.report]
+exclude_also = [
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "@(abc\\.)?abstractmethod",
+]
+ignore_errors = true
+fail_under = 50
+
+[tool.hatch.build.targets.sdist]
+include = ["/{{ module }}", "/LICENSE", "/README.md", "/pyproject.toml"]
+exclude = ["*.so", "*.pyd", "*.dylib", "*.c", "*.cpp"]
+
+[tool.hatch.build.targets.wheel]
+packages = [
+    "{{ module }}",
+]
+artifacts = ["{{ module }}/*.so", "{{ module }}/*.pyd", "{{ module }}/*.dylib"]
+
+[tool.hatch.build.targets.wheel.hooks.cython.options]
+src = "{{ module }}"
+
+[tool.hatch.build.targets.wheel.hooks.cython.options.files]
+targets = ["*/_compiled.py", "*/_native.pyx"]
+
+[tool.setuptools]
+packages = ["{{ module }}"]
+
+[tool.check-dist.sdist]
+present = ["{{ module }}/_compiled.py", "{{ module }}/_native.pyx", "LICENSE", "README.md", "pyproject.toml"]
+absent = ["{{ module }}/*.so", "{{ module }}/*.pyd", "{{ module }}/*.dylib"]
+
+[tool.check-dist.wheel]
+present = ["{{ module }}/_compiled*.so", "{{ module }}/_native*.so"]
+
+[tool.cibuildwheel]
+test-command = "python -m pytest --pyargs {{ module }}.tests"
+test-requires = ["pytest"]
+
+[tool.cibuildwheel.linux]
+manylinux-aarch64-image = "manylinux_2_28"
+manylinux-x86_64-image = "manylinux_2_28"
+archs = "native"
+skip = "*i686* *musllinux*"
+
+[tool.cibuildwheel.macos]
+environment = {MACOSX_DEPLOYMENT_TARGET="11.0"}
+archs = "arm64"
+
+[tool.cibuildwheel.windows]
+archs = "AMD64"
+skip = "*win32 *arm64"
+
+[tool.pytest.ini_options]
+addopts = [
+    "-vvv",
+    "--junitxml=junit.xml",
+]
+testpaths = "{{ module }}/tests"
+
+[tool.ruff]
+line-length = 150
+
+[tool.ruff.lint]
+extend-select = [
+    "I",
+]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+default-section = "third-party"
+known-first-party = [
+    "{{ module }}",
+]
+section-order = [
+    "future",
+    "standard-library",
+    "third-party",
+    "first-party",
+    "local-folder",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = [
+    "F401",
+    "F403",
+]
+
+{%- if add_docs %}
+
+[tool.yardang]
+title = "{{ project_name }}"
+root = "README.md"
+pages = ["docs/development.md"]
+use-autoapi = true
+{%- endif %}
