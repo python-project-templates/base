@@ -1,6 +1,6 @@
 ---
 add_docs: true
-add_wiki: true
+add_wiki: false
 add_extension: cython
 email: 3105306+timkpaine@users.noreply.github.com
 github: python-project-templates

@@ -14,9 +14,10 @@ from packaging.utils import parse_wheel_filename
 
 def test_wheel(wheel):
     with ZipFile(wheel) as archive:
-        modules = [
-            name.split(".", 1)[0].replace("/", ".") for name in archive.namelist() if name.endswith((".so", ".pyd")) and ".dist-info/" not in name
-        ]
+        modules = []
+        for name in archive.namelist():
+            if name.endswith((".so", ".pyd")) and ".dist-info/" not in name:
+                modules.append(name.split(".", 1)[0].replace("/", "."))
     if not modules:
         raise RuntimeError(f"No compiled extensions in {wheel.name}")
     with TemporaryDirectory() as directory:
