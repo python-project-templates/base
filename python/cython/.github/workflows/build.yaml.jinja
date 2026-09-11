@@ -32,7 +32,7 @@ jobs:
       matrix:
         platform:
           - ubuntu-latest
-          - ubuntu-24.04-arm
+          - ubuntu-latest-arm
           - macos-latest
           - windows-latest
         python:
@@ -106,16 +106,54 @@ jobs:
         with:
           token: {% raw %}${{ secrets.CODECOV_TOKEN }}{% endraw %}
 
-      - name: Build distributions
+      - name: Build distributions (Linux x86_64)
         run: |
-          make clean
+          rm -rf dist
+          make dist-py-sdist
           make dist-py-wheel
           make dist-check
         env:
-          CIBW_BUILD: {% raw %}"${{ matrix.python.cibuildwheel }}-*"{% endraw %}
+          CIBW_BUILD: {% raw %}"${{ matrix.python.cibuildwheel }}-manylinux*"{% endraw %}
+        if: matrix.platform == 'ubuntu-latest'
 
-      - name: Test distributions
-        run: make test-dist
+      - name: Build distributions (Linux ARM64)
+        run: |
+          rm -rf dist
+          make dist-py-wheel
+          make dist-check
+        env:
+          CIBW_BUILD: {% raw %}"${{ matrix.python.cibuildwheel }}-manylinux*"{% endraw %}
+        if: matrix.platform == 'ubuntu-latest-arm'
+
+      - name: Build distributions (macOS)
+        run: |
+          rm -rf dist
+          make dist-py-wheel
+          make dist-check
+        env:
+          CIBW_BUILD: {% raw %}"${{ matrix.python.cibuildwheel }}-macos*"{% endraw %}
+        if: matrix.platform == 'macos-latest'
+
+      - name: Build distributions (Windows)
+        run: |
+          if (Test-Path dist) { Remove-Item dist -Recurse -Force }
+          make dist-py-wheel
+          make dist-check
+        env:
+          CIBW_BUILD: {% raw %}"${{ matrix.python.cibuildwheel }}-win_amd64"{% endraw %}
+        if: matrix.platform == 'windows-latest'
+
+      - name: Test wheel
+        uses: actions-ext/python/test-wheel@ec67f82b3bd863948308a41ecb9e70547cbb19c7
+        with:
+          module: {{module}}
+        if: runner.os == 'Linux'
+
+      - name: Test source distribution
+        uses: actions-ext/python/test-sdist@ec67f82b3bd863948308a41ecb9e70547cbb19c7
+        with:
+          module: {{module}}
+        if: matrix.platform == 'ubuntu-latest'
 
       - name: Upload distributions
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1

@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := help
-.PHONY: develop requirements build install lint-py lint-docs lint lints fix-py fix-docs fix format check-dist check-types checks check test tests coverage show-version patch minor major dist dist-build dist-py-wheel dist-py-sdist dist-check test-dist publish deep-clean clean help
+.PHONY: develop requirements build install lint-py lint-docs lint lints fix-py fix-docs fix format check-dist check-types checks check test tests coverage show-version patch minor major dist dist-build dist-py-wheel dist-py-sdist dist-check publish deep-clean clean help
 
 develop:  ## install dependencies and build library
 	uv pip install -e '.[develop]'
@@ -14,16 +14,16 @@ install:  ## install library
 	uv pip install .
 
 lint-py:  ## lint Python with ruff
-	python -m ruff check {{ module }} .github/scripts
-	python -m ruff format --check {{ module }} .github/scripts
+	python -m ruff check {{ module }}
+	python -m ruff format --check {{ module }}
 
 lint-docs:  ## lint documentation
 	python -m mdformat --check README.md docs/development.md{% if add_wiki %} docs/wiki/{% endif %}
 	python -m codespell_lib README.md docs/development.md{% if add_wiki %} docs/wiki/{% endif %}
 
 fix-py:  ## autoformat Python code
-	python -m ruff check --fix {{ module }} .github/scripts
-	python -m ruff format {{ module }} .github/scripts
+	python -m ruff check --fix {{ module }}
+	python -m ruff format {{ module }}
 
 fix-docs:  ## autoformat documentation
 	python -m mdformat README.md docs/development.md{% if add_wiki %} docs/wiki/{% endif %}
@@ -34,8 +34,8 @@ lints: lint
 fix: fix-py fix-docs  ## run all autoformatters
 format: fix
 
-check-dist:  ## check sdist and wheel contents
-	check-dist -v --rebuild
+check-dist:  ## check python sdist and wheel with check-dist
+	check-dist -v
 
 check-types:  ## check Python types (advisory)
 	ty check {{ module }}
@@ -66,17 +66,14 @@ major:  ## bump a major version
 dist-build:  ## build local Python distributions
 	python -m build -w -s
 
-dist-py-wheel: dist-py-sdist  ## build portable native wheels from the sdist
-	python -m cibuildwheel --output-dir dist dist/*.tar.gz
+dist-py-wheel:  ## build python wheel
+	python -m cibuildwheel --output-dir dist
 
-dist-py-sdist:  ## build a source distribution
-	python -m build --sdist --outdir dist
+dist-py-sdist:  ## build python sdist
+	python -m build --sdist -o dist
 
-dist-check:  ## check distribution metadata
+dist-check:  ## run python dist checker with twine
 	python -m twine check dist/*
-
-test-dist:  ## test installed wheels and rebuild source distributions
-	python .github/scripts/test-distributions.py
 
 dist:  ## build and check local distributions
 	$(MAKE) clean
