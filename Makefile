@@ -45,7 +45,7 @@ gen-cython:  ## regenerate the Cython template
 test-cython:  ## test the generated Cython project
 	git -C ../python-template-cython init
 	git -C ../python-template-cython add .
-	$(MAKE) -C ../python-template-cython develop lint checks coverage dist test-dist
+	$(MAKE) -C ../python-template-cython develop lint checks coverage dist
 
 gen-cpp:  ## regenerate the c++ template from scratch
 	mkdir -p ../python-template-cpp && cd ../python-template-cpp && rm -rf ./* && rm -rf .copier-answers.yaml .gitignore .github .gitattributes

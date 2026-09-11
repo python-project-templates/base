@@ -33,8 +33,8 @@ jobs:
         platform:
           - name: ubuntu-latest
             os: ubuntu-latest
-          - name: ubuntu-24.04-arm
-            os: ubuntu-24.04-arm
+          - name: ubuntu-latest-arm
+            os: ubuntu-latest-arm
           - name: macos-latest
             os: macos-latest
           - name: windows-latest
@@ -156,7 +156,7 @@ jobs:
           CIBW_BUILD: {% raw %}"${{ matrix.python.cibuildwheel }}-manylinux*"{% endraw %}
           CIBW_ARCHS_LINUX: native
           CIBW_BUILD_VERBOSITY: 3
-        if: matrix.platform.name == 'ubuntu-24.04-arm'
+        if: matrix.platform.name == 'ubuntu-latest-arm'
 
       - name: Build distributions (macOS)
         run: |

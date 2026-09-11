@@ -36,9 +36,9 @@ jobs:
             os: ubuntu-latest
             python: "{{ python_version_primary }}"
             target: native
-          - name: ubuntu-24.04-arm
+          - name: ubuntu-latest-arm
             dist_path: dist
-            os: ubuntu-24.04-arm
+            os: ubuntu-latest-arm
             python: "{{ python_version_primary }}"
             target: native
           - name: macos-latest
@@ -143,7 +143,7 @@ jobs:
         shell: bash
         env:
           CIBW_ARCHS_LINUX: native
-        if: matrix.name == 'ubuntu-24.04-arm'
+        if: matrix.name == 'ubuntu-latest-arm'
 
       - name: Build distributions (macOS/Windows)
         run: |

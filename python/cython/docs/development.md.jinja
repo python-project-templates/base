@@ -11,12 +11,9 @@ make lint
 make checks
 make coverage
 make dist
-make test-dist
 ```
 
-On Windows, activate with `.venv\Scripts\activate` instead. `make test-dist` installs
-compatible wheels in fresh environments and verifies compiled imports outside the
-checkout. It also rebuilds each sdist into a wheel and repeats those checks.
+On Windows, activate with `.venv\Scripts\activate` instead.
 
 To compile another `.py` or `.pyx` module, add its path to
 `[tool.hatch.build.targets.wheel.hooks.cython.options.files].targets` in
@@ -29,7 +26,8 @@ is excluded because builds do not enable Cython line tracing.
 
 For portable wheels, run `make dist-py-wheel` on the target platform. Linux wheel
 builds require Docker. Run `make dist-py-sdist` to build an sdist without compiling
-extensions. CI runs tests against each installed wheel through cibuildwheel.
+extensions. CI runs tests against each installed wheel through cibuildwheel, then
+installs the built wheel and sdist in fresh environments to verify they import.
 
 To update the template from a clean branch:
 
