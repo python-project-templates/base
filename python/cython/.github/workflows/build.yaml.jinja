@@ -31,10 +31,10 @@ jobs:
       fail-fast: false
       matrix:
         platform:
-          - ubuntu-latest
-          - ubuntu-latest-arm
-          - macos-latest
-          - windows-latest
+          - ubuntu-24.04
+          - ubuntu-24.04-arm
+          - macos-26
+          - windows-2025
         python:
           {% if python_version_primary == "3.10" -%}
           - version: "3.10"
@@ -79,11 +79,11 @@ jobs:
 
       - name: Lint
         run: make lint
-        if: matrix.platform == 'ubuntu-latest' && matrix.python.primary
+        if: matrix.platform == 'ubuntu-24.04' && matrix.python.primary
 
       - name: Checks
         run: make checks
-        if: matrix.platform == 'ubuntu-latest' && matrix.python.primary
+        if: matrix.platform == 'ubuntu-24.04' && matrix.python.primary
 
       - name: Test
         run: make coverage
@@ -99,7 +99,7 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@d0a4676d0e0b938bc201470d88276b7c74c712b3  # v2.24.0
         with:
           files: '**/junit.xml'
-        if: matrix.platform == 'ubuntu-latest' && matrix.python.primary && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+        if: matrix.platform == 'ubuntu-24.04' && matrix.python.primary && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
 
       - name: Upload coverage
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f  # v7.0.0
@@ -114,7 +114,7 @@ jobs:
           make dist-check
         env:
           CIBW_BUILD: {% raw %}"${{ matrix.python.cibuildwheel }}-manylinux*"{% endraw %}
-        if: matrix.platform == 'ubuntu-latest'
+        if: matrix.platform == 'ubuntu-24.04'
 
       - name: Build distributions (Linux ARM64)
         run: |
@@ -123,7 +123,7 @@ jobs:
           make dist-check
         env:
           CIBW_BUILD: {% raw %}"${{ matrix.python.cibuildwheel }}-manylinux*"{% endraw %}
-        if: matrix.platform == 'ubuntu-latest-arm'
+        if: matrix.platform == 'ubuntu-24.04-arm'
 
       - name: Build distributions (macOS)
         run: |
@@ -132,7 +132,7 @@ jobs:
           make dist-check
         env:
           CIBW_BUILD: {% raw %}"${{ matrix.python.cibuildwheel }}-macos*"{% endraw %}
-        if: matrix.platform == 'macos-latest'
+        if: matrix.platform == 'macos-26'
 
       - name: Build distributions (Windows)
         run: |
@@ -141,7 +141,7 @@ jobs:
           make dist-check
         env:
           CIBW_BUILD: {% raw %}"${{ matrix.python.cibuildwheel }}-win_amd64"{% endraw %}
-        if: matrix.platform == 'windows-latest'
+        if: matrix.platform == 'windows-2025'
 
       - name: Test wheel
         uses: actions-ext/python/test-wheel@ec67f82b3bd863948308a41ecb9e70547cbb19c7
@@ -153,7 +153,7 @@ jobs:
         uses: actions-ext/python/test-sdist@ec67f82b3bd863948308a41ecb9e70547cbb19c7
         with:
           module: {{module}}
-        if: matrix.platform == 'ubuntu-latest'
+        if: matrix.platform == 'ubuntu-24.04'
 
       - name: Upload distributions
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
