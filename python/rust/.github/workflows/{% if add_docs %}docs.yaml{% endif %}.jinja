@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   docs:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch'
     steps:
       - name: Checkout
@@ -27,7 +27,7 @@ jobs:
       - name: Download distributions
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c  # v8
         with:
-          pattern: dist-ubuntu-latest*
+          pattern: dist-ubuntu-24.04*
           merge-multiple: true
           path: dist
           run-id: {% raw %}${{ github.event.workflow_run.id }}{% endraw %}
