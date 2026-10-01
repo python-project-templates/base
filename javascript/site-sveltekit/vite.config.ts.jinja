@@ -1,7 +1,14 @@
+import adapter from '@sveltejs/adapter-{{ site_adapter }}';
 import tailwindcss from '@tailwindcss/vite';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  plugins: [tailwindcss(), sveltekit()]
+  plugins: [
+    tailwindcss(),
+    sveltekit({
+      adapter: adapter({{ "{ fallback: '404.html', precompress: true, strict: true }" if site_adapter == 'static' else '' }}){% if site_adapter == 'static' %},
+      prerender: { entries: ['*'] }{% endif %}
+    })
+  ]
 });
