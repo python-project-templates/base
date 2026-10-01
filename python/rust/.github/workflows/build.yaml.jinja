@@ -66,12 +66,12 @@ jobs:
           persist-credentials: false
 
       - name: Setup Python
-        uses: actions-ext/python/setup@ec67f82b3bd863948308a41ecb9e70547cbb19c7
+        uses: actions-ext/python/setup@c8228d827a81b9f8c808825328af361c45461ba3
         with:
           version: {% raw %}${{ matrix.python }}{% endraw %}
 
       - name: Setup Rust
-        uses: actions-ext/rust/setup@0f0b7c9ab3cdb6e9a1f79e2147974d6762ddafea
+        uses: actions-ext/rust/setup@b856666a461df15c75d1acc030955ad612ff337a
 
       - name: Install dependencies
         run: make develop
@@ -156,13 +156,13 @@ jobs:
         if: matrix.target == 'native' && runner.os != 'Linux'
 
       - name: Test wheel
-        uses: actions-ext/python/test-wheel@ec67f82b3bd863948308a41ecb9e70547cbb19c7
+        uses: actions-ext/python/test-wheel@c8228d827a81b9f8c808825328af361c45461ba3
         with:
           module: {{module}}
         if: matrix.target == 'native' && runner.os == 'Linux'
 
       - name: Test source distribution
-        uses: actions-ext/python/test-sdist@ec67f82b3bd863948308a41ecb9e70547cbb19c7
+        uses: actions-ext/python/test-sdist@c8228d827a81b9f8c808825328af361c45461ba3
         with:
           module: {{module}}
         if: matrix.name == 'ubuntu-24.04'
