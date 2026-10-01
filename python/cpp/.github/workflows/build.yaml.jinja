@@ -85,11 +85,11 @@ jobs:
           version: {% raw %}${{ matrix.python.version }}{% endraw %}
 
       - name: Setup C++
-        uses: actions-ext/cpp/setup@22ebafc6f57971978e964f9977333ac98a7c49d9
+        uses: actions-ext/cpp/setup@714ade4ac5622e0a0bdd2c36487e5490787c85b6
 
       {% if add_vcpkg -%}
       - name: Setup vcpkg cache
-        uses: actions-ext/cpp/setup-vcpkg-cache@22ebafc6f57971978e964f9977333ac98a7c49d9
+        uses: actions-ext/cpp/setup-vcpkg-cache@714ade4ac5622e0a0bdd2c36487e5490787c85b6
 
       {% endif -%}
       - name: Install dependencies
@@ -126,7 +126,7 @@ jobs:
         if: matrix.platform.name == 'ubuntu-24.04' && matrix.python.primary
 
       - name: Upload coverage
-        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5  # v7.1.1  # v7.1.0
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5  # v7.1.1
         with:
           token: {% raw %}${{ secrets.CODECOV_TOKEN }}{% endraw %}
         if: matrix.target == 'native'
