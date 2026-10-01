@@ -80,16 +80,16 @@ jobs:
           persist-credentials: false
 
       - name: Setup Python
-        uses: actions-ext/python/setup@ec67f82b3bd863948308a41ecb9e70547cbb19c7
+        uses: actions-ext/python/setup@c8228d827a81b9f8c808825328af361c45461ba3
         with:
           version: {% raw %}${{ matrix.python.version }}{% endraw %}
 
       - name: Setup C++
-        uses: actions-ext/cpp/setup@714ade4ac5622e0a0bdd2c36487e5490787c85b6
+        uses: actions-ext/cpp/setup@7de57593fbcba72d513072bfb4b30b5a344aa547
 
       {% if add_vcpkg -%}
       - name: Setup vcpkg cache
-        uses: actions-ext/cpp/setup-vcpkg-cache@714ade4ac5622e0a0bdd2c36487e5490787c85b6
+        uses: actions-ext/cpp/setup-vcpkg-cache@7de57593fbcba72d513072bfb4b30b5a344aa547
 
       {% endif -%}
       - name: Install dependencies
@@ -176,13 +176,13 @@ jobs:
         if: matrix.platform.name == 'windows-2025'
 
       - name: Test wheel
-        uses: actions-ext/python/test-wheel@ec67f82b3bd863948308a41ecb9e70547cbb19c7
+        uses: actions-ext/python/test-wheel@c8228d827a81b9f8c808825328af361c45461ba3
         with:
           module: {{module}}
         if: matrix.target == 'native' && runner.os == 'Linux'
 
       - name: Test source distribution
-        uses: actions-ext/python/test-sdist@ec67f82b3bd863948308a41ecb9e70547cbb19c7
+        uses: actions-ext/python/test-sdist@c8228d827a81b9f8c808825328af361c45461ba3
         with:
           module: {{module}}
         if: matrix.platform.name == 'ubuntu-24.04'
