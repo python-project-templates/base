@@ -70,7 +70,7 @@ jobs:
           version: {% raw %}${{ matrix.python.version }}{% endraw %}
 
       - name: Setup compiler
-        uses: actions-ext/cpp/setup@22ebafc6f57971978e964f9977333ac98a7c49d9
+        uses: actions-ext/cpp/setup@714ade4ac5622e0a0bdd2c36487e5490787c85b6
         with:
           clang_format: 'false'
 
@@ -102,7 +102,7 @@ jobs:
         if: matrix.platform == 'ubuntu-24.04' && matrix.python.primary && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
 
       - name: Upload coverage
-        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5  # v7.1.1  # v7.1.0
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5  # v7.1.1
         with:
           token: {% raw %}${{ secrets.CODECOV_TOKEN }}{% endraw %}
 

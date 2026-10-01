@@ -117,7 +117,7 @@ jobs:
         if: matrix.name == 'ubuntu-24.04'
 
       - name: Upload coverage
-        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5  # v7.1.1  # v7.1.0
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5  # v7.1.1
         with:
           token: {% raw %}${{ secrets.CODECOV_TOKEN }}{% endraw %}
         if: matrix.target == 'native'
