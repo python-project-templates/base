@@ -58,8 +58,8 @@ lint-cpp:  ## run C++ linter
 	make -C cpp lint
 
 lint-docs:  ## lint docs with mdformat and codespell
-	python -m mdformat --check README.md {% if add_wiki %}docs/wiki/{% endif %}
-	python -m codespell_lib README.md {% if add_wiki %}docs/wiki/{% endif %}
+	python -m mdformat --check README.md $(wildcard docs/src) {% if add_wiki %}docs/wiki/{% endif %}
+	python -m codespell_lib README.md $(wildcard docs/src) {% if add_wiki %}docs/wiki/{% endif %}
 
 lint: lint-cpp lint-js lint-py lint-docs  ## run project linters
 
@@ -78,8 +78,8 @@ fix-cpp:  ## fix C++ formatting
 	make -C cpp fix
 
 fix-docs:  ## autoformat docs with mdformat and codespell
-	python -m mdformat README.md {% if add_wiki %}docs/wiki/{% endif %}
-	python -m codespell_lib --write README.md {% if add_wiki %}docs/wiki/{% endif %}
+	python -m mdformat README.md $(wildcard docs/src) {% if add_wiki %}docs/wiki/{% endif %}
+	python -m codespell_lib --write README.md $(wildcard docs/src) {% if add_wiki %}docs/wiki/{% endif %}
 
 fix: fix-cpp fix-js fix-py fix-docs  ## run project autoformatters
 

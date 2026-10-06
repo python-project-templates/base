@@ -45,8 +45,8 @@ lint-js:  ## run js linter
 	cd js; pnpm lint
 
 lint-docs:  ## lint docs with mdformat and codespell
-	python -m mdformat --check README.md {% if add_wiki %}docs/wiki/{% endif %}
-	python -m codespell_lib README.md {% if add_wiki %}docs/wiki/{% endif %}
+	python -m mdformat --check README.md $(wildcard docs/src) {% if add_wiki %}docs/wiki/{% endif %}
+	python -m codespell_lib README.md $(wildcard docs/src) {% if add_wiki %}docs/wiki/{% endif %}
 
 lint: lint-js lint-py lint-docs  ## run project linters
 
@@ -62,8 +62,8 @@ fix-js:  ## fix js formatting
 	cd js; pnpm fix
 
 fix-docs:  ## autoformat docs with mdformat and codespell
-	python -m mdformat README.md {% if add_wiki %}docs/wiki/{% endif %}
-	python -m codespell_lib --write README.md {% if add_wiki %}docs/wiki/{% endif %}
+	python -m mdformat README.md $(wildcard docs/src) {% if add_wiki %}docs/wiki/{% endif %}
+	python -m codespell_lib --write README.md $(wildcard docs/src) {% if add_wiki %}docs/wiki/{% endif %}
 
 fix: fix-js fix-py fix-docs  ## run project autoformatters
 

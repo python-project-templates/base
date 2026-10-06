@@ -55,8 +55,8 @@ lint-rs:  ## run rust linter
 	make -C rust lint
 
 lint-docs:  ## lint docs with mdformat and codespell
-	python -m mdformat --check README.md {% if add_wiki %}docs/wiki/{% endif %}
-	python -m codespell_lib README.md {% if add_wiki %}docs/wiki/{% endif %}
+	python -m mdformat --check README.md $(wildcard docs/src) {% if add_wiki %}docs/wiki/{% endif %}
+	python -m codespell_lib README.md $(wildcard docs/src) {% if add_wiki %}docs/wiki/{% endif %}
 
 lint: lint-rs lint-js lint-py lint-docs  ## run project linters
 
@@ -75,8 +75,8 @@ fix-rs:  ## fix rust formatting
 	make -C rust fix
 
 fix-docs:  ## autoformat docs with mdformat and codespell
-	python -m mdformat README.md {% if add_wiki %}docs/wiki/{% endif %}
-	python -m codespell_lib --write README.md {% if add_wiki %}docs/wiki/{% endif %}
+	python -m mdformat README.md $(wildcard docs/src) {% if add_wiki %}docs/wiki/{% endif %}
+	python -m codespell_lib --write README.md $(wildcard docs/src) {% if add_wiki %}docs/wiki/{% endif %}
 
 fix: fix-rs fix-js fix-py fix-docs  ## run project autoformatters
 
