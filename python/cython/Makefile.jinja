@@ -18,16 +18,16 @@ lint-py:  ## lint Python with ruff
 	python -m ruff format --check {{ module }}
 
 lint-docs:  ## lint documentation
-	python -m mdformat --check README.md docs/development.md{% if add_wiki %} docs/wiki/{% endif %}
-	python -m codespell_lib README.md docs/development.md{% if add_wiki %} docs/wiki/{% endif %}
+	python -m mdformat --check README.md docs/development.md $(wildcard docs/src){% if add_wiki %} docs/wiki/{% endif %}
+	python -m codespell_lib README.md docs/development.md $(wildcard docs/src){% if add_wiki %} docs/wiki/{% endif %}
 
 fix-py:  ## autoformat Python code
 	python -m ruff check --fix {{ module }}
 	python -m ruff format {{ module }}
 
 fix-docs:  ## autoformat documentation
-	python -m mdformat README.md docs/development.md{% if add_wiki %} docs/wiki/{% endif %}
-	python -m codespell_lib --write README.md docs/development.md{% if add_wiki %} docs/wiki/{% endif %}
+	python -m mdformat README.md docs/development.md $(wildcard docs/src){% if add_wiki %} docs/wiki/{% endif %}
+	python -m codespell_lib --write README.md docs/development.md $(wildcard docs/src){% if add_wiki %} docs/wiki/{% endif %}
 
 lint: lint-py lint-docs  ## run all linters
 lints: lint
