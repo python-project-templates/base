@@ -121,13 +121,6 @@ exclude_also = [
 ignore_errors = true
 fail_under = 50
 
-[tool.hatch.build]
-artifacts = [
-    "{{ module }}/*.dll",
-    "{{ module }}/*.dylib",
-    "{{ module }}/*.so",
-]
-
 [tool.hatch.build.sources]
 src = "/"
 
@@ -138,6 +131,7 @@ libraries = [
 ]
 
 [tool.hatch.build.targets.sdist]
+exclude = ["*.dll", "*.dylib", "*.so", "*.pyd"]
 packages = [
     "{{ module }}",
     "cpp",
@@ -149,6 +143,11 @@ packages = [
 {% endif %}
 
 [tool.hatch.build.targets.wheel]
+artifacts = [
+    "{{ module }}/*.dll",
+    "{{ module }}/*.dylib",
+    "{{ module }}/*.so",
+]
 packages = [
     "{{ module }}",
 ]

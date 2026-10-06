@@ -156,9 +156,6 @@ fail_under = 50
 
 [tool.hatch.build]
 artifacts = [
-    "{{ module }}/*.dll",
-    "{{ module }}/*.dylib",
-    "{{ module }}/*.so",
     "{{ module }}/extension",
 ]
 
@@ -188,9 +185,10 @@ packages = [
     "Cargo.lock",
 ]
 exclude = [
-    "{{ module }}/*.dll",
-    "{{ module }}/*.dylib",
-    "{{ module }}/*.so",
+    "*.dll",
+    "*.dylib",
+    "*.so",
+    "*.pyd",
     "{{ module }}/extension",
     "js/dist",
     "js/node_modules",
@@ -199,6 +197,12 @@ exclude = [
 ]
 
 [tool.hatch.build.targets.wheel]
+artifacts = [
+    "{{ module }}/*.dll",
+    "{{ module }}/*.dylib",
+    "{{ module }}/*.so",
+    "{{ module }}/extension",
+]
 packages = [
     "{{ module }}",
 ]
