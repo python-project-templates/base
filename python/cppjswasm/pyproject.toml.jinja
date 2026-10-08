@@ -122,7 +122,8 @@ test-requires = ["pytest"]
 [tool.coverage.run]
 branch = true
 omit = [
-    "{{ module }}/tests/integration/",
+    # a glob: a bare directory path matches no file
+    "{{ module }}/tests/integration/*",
 ]
 
 [tool.coverage.report]

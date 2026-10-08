@@ -87,7 +87,8 @@ replace = 'version = "{new_version}"'
 [tool.coverage.run]
 branch = true
 omit = [
-    "{{ module }}/tests/integration/",
+    # a glob: a bare directory path matches no file
+    "{{ module }}/tests/integration/*",
     "{{ module }}/_compiled.py",
 ]
 
