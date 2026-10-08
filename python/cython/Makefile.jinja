@@ -40,7 +40,7 @@ check-dist:  ## check python sdist and wheel with check-dist
 check-types:  ## check Python types (advisory)
 	ty check {{ module }}
 
-checks: check-dist  ## run distribution checks
+checks: check-dist check-types  ## run distribution checks
 check: checks
 
 test:  ## run Python tests
