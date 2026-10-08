@@ -94,7 +94,7 @@ check-dist:  ## check python sdist and wheel with check-dist
 check-types:  ## check python types with ty
 	ty check --python $$(which python)
 
-checks: check-dist
+checks: check-dist check-types
 
 # alias
 check: checks
