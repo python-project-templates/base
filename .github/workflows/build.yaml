@@ -99,7 +99,9 @@ jobs:
         if: matrix.template == 'js' || matrix.template == 'jupyter' || matrix.template == 'cppjswasm' || matrix.template == 'rustjswasm' || matrix.template == 'uitk-svelte' || matrix.template == 'uitk-webawesome' || matrix.template == 'site-react' || matrix.template == 'site-sveltekit' || matrix.template == 'site-webawesome'
 
       - name: Setup Rust
-        uses: actions-ext/rust/setup@10df15e12bbd1cc1cf48089f2e232349f98c74e7
+        uses: actions-ext/rust/setup@3b918cc2cb4a231ad3752f8cc129da5f07626ce2
+        with:
+          targets: ${{ matrix.template == 'rustjswasm' && 'wasm32-unknown-unknown' || '' }}
         if: matrix.template == 'rust' || matrix.template == 'rustjswasm'
 
       - name: Install JavaScript dependencies

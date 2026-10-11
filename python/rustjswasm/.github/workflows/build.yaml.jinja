@@ -71,7 +71,9 @@ jobs:
           version: {% raw %}${{ matrix.python }}{% endraw %}
 
       - name: Setup Rust
-        uses: actions-ext/rust/setup@10df15e12bbd1cc1cf48089f2e232349f98c74e7
+        uses: actions-ext/rust/setup@3b918cc2cb4a231ad3752f8cc129da5f07626ce2
+        with:
+          targets: wasm32-unknown-unknown
 
       - name: Setup Node.js
         uses: actions-ext/node/setup@03c9f6b2d9c9fa2c26cfa22d0fa379a69329b319
