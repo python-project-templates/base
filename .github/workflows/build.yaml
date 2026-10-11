@@ -125,7 +125,7 @@ jobs:
 
       - name: Check types with Pyodide enabled
         run: |
-          copier copy --defaults --vcs-ref=HEAD . ../python-template-${{ matrix.template }}-pyodide --data-file examples/${{ matrix.template }}.yaml --data add_pyodide=true
+          copier copy --defaults --vcs-ref=$(git rev-parse HEAD) . ../python-template-${{ matrix.template }}-pyodide --data-file examples/${{ matrix.template }}.yaml --data add_pyodide=true
           make -C ../python-template-${{ matrix.template }}-pyodide check-types
         if: matrix.template == 'rust' || matrix.template == 'rustjswasm'
 
