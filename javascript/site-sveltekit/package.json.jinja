@@ -1,0 +1,38 @@
+{
+  "name": "{{ project_name_formatted }}",
+  "version": "0.1.0",
+  "description": "{{ project_description }}",
+  "private": true,
+  "packageManager": "pnpm@11.28.0",
+  "engines": {
+    "node": ">=22.17"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "lint": "oxlint . && oxfmt --check .",
+    "fix": "oxlint --fix . && oxfmt --write .",
+    "test": "pnpm test:e2e",
+    "test:e2e": "playwright test",
+    "test:e2e:update": "playwright test --update-snapshots"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.63.0",
+    "@sveltejs/adapter-{{ site_adapter }}": "{{ '^4.0.0' if site_adapter == 'static' else '^6.0.0' }}",
+    "@sveltejs/kit": "^3.0.0",
+    "@sveltejs/vite-plugin-svelte": "^7.3.1",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "^26.6.3",
+    "oxfmt": "^0.70.0",
+    "oxlint": "^1.85.0",
+    "svelte": "^5.57.1",
+    "svelte-check": "^4.7.6",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^6.0.3",
+    "vite": "^8.3.1"
+  }
+}

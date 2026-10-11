@@ -24,11 +24,28 @@ fix:  ## fix formatting in this repo
 format: fix
 test:  ## run tests for this repo
 
-.PHONY: gen-python gen-cpp gen-js gen-jupyter gen-rust gen-rustjswasm
+.PHONY: update-action-pins check-action-pins
+update-action-pins:  ## re-pin actions-ext references to each action repo's current main
+	python3 .github/scripts/update_action_pins.py
+
+check-action-pins:  ## check whether any actions-ext pin is out of date
+	python3 .github/scripts/update_action_pins.py --check
+
+.PHONY: gen-python gen-cpp gen-js gen-jupyter gen-rust gen-rustjswasm gen-cppjswasm gen-uitk-svelte gen-uitk-webawesome gen-site-react gen-site-sveltekit gen-site-webawesome
 gen-python:  ## regenerate the python template from scratch
 	mkdir -p ../python-template && cd ../python-template && rm -rf ./* && rm -rf .copier-answers.yaml .gitignore .github .gitattributes
 	copier copy -w . ../python-template --data-file examples/python.yaml
 	cd ../python-template && $(SED) 's#_src_path: .#_src_path: https://github.com/python-project-templates/base.git#g' ./.copier-answers.yaml
+
+.PHONY: gen-cython test-cython
+gen-cython:  ## regenerate the Cython template
+	copier copy --defaults --overwrite --vcs-ref=$$(git rev-parse HEAD) . ../python-template-cython --data-file examples/cython.yaml
+	cd ../python-template-cython && $(SED) 's#_src_path: .#_src_path: https://github.com/python-project-templates/base.git#g' ./.copier-answers.yaml
+
+test-cython:  ## test the generated Cython project
+	git -C ../python-template-cython init
+	git -C ../python-template-cython add .
+	$(MAKE) -C ../python-template-cython develop lint checks coverage dist
 
 gen-cpp:  ## regenerate the c++ template from scratch
 	mkdir -p ../python-template-cpp && cd ../python-template-cpp && rm -rf ./* && rm -rf .copier-answers.yaml .gitignore .github .gitattributes
@@ -60,7 +77,27 @@ gen-cppjswasm:  ## regenerate the cppjswasm template from scratch
 	copier copy -w . ../python-template-cppjswasm --data-file examples/cppjswasm.yaml
 	cd ../python-template-cppjswasm && $(SED) 's#_src_path: .#_src_path: https://github.com/python-project-templates/base.git#g' ./.copier-answers.yaml
 
-.PHONY: test-python test-cpp test-js test-jupyter test-rust test-rustjswasm
+gen-uitk-svelte:  ## regenerate the Svelte UI toolkit template from scratch
+	mkdir -p ../javascript-template-uitk-svelte && cd ../javascript-template-uitk-svelte && rm -rf ./* && rm -rf .copier-answers.yaml .github .gitignore .prettierignore .prettierrc .oxfmtrc.json .oxlintrc.json
+	copier copy -w . ../javascript-template-uitk-svelte --data-file examples/uitk-svelte.yaml
+
+gen-uitk-webawesome:  ## regenerate the Lit and Web Awesome UI toolkit template from scratch
+	mkdir -p ../javascript-template-uitk-webawesome && cd ../javascript-template-uitk-webawesome && rm -rf ./* && rm -rf .copier-answers.yaml .github .gitignore .prettierignore .prettierrc .oxfmtrc.json .oxlintrc.json
+	copier copy -w . ../javascript-template-uitk-webawesome --data-file examples/uitk-webawesome.yaml
+
+gen-site-react:  ## regenerate the React site template from scratch
+	mkdir -p ../javascript-template-site-react && cd ../javascript-template-site-react && rm -rf ./* && rm -rf .copier-answers.yaml .github .gitignore .oxfmtrc.json .oxlintrc.json
+	copier copy -w . ../javascript-template-site-react --data-file examples/site-react.yaml
+
+gen-site-sveltekit:  ## regenerate the SvelteKit site template from scratch
+	mkdir -p ../javascript-template-site-sveltekit && cd ../javascript-template-site-sveltekit && rm -rf ./* && rm -rf .copier-answers.yaml .github .gitignore .prettierignore .prettierrc .oxfmtrc.json .oxlintrc.json
+	copier copy -w . ../javascript-template-site-sveltekit --data-file examples/site-sveltekit.yaml
+
+gen-site-webawesome:  ## regenerate the Web Awesome site template from scratch
+	mkdir -p ../javascript-template-site-webawesome && cd ../javascript-template-site-webawesome && rm -rf ./* && rm -rf .copier-answers.yaml .github .gitignore .prettierignore .prettierrc .oxfmtrc.json .oxlintrc.json
+	copier copy -w . ../javascript-template-site-webawesome --data-file examples/site-webawesome.yaml
+
+.PHONY: test-python test-cpp test-js test-jupyter test-rust test-rustjswasm test-cppjswasm test-uitk-svelte test-uitk-webawesome test-site-react test-site-sveltekit test-site-webawesome
 test-python:
 	cd ../python-template && git config --global user.name "github-actions" && git config --global user.email "41898282+github-actions[bot]@users.noreply.github.c@example.com" && git init && git add . && git commit -m "initial commit"
 	cd ../python-template && make develop
@@ -115,3 +152,46 @@ test-cppjswasm:
 	cd ../python-template-cppjswasm && make lint
 	cd ../python-template-cppjswasm && make checks
 	cd ../python-template-cppjswasm && make test
+
+test-uitk-svelte:
+	cd ../javascript-template-uitk-svelte && pnpm install
+	cd ../javascript-template-uitk-svelte && pnpm exec playwright install chromium
+	cd ../javascript-template-uitk-svelte && pnpm lint
+	cd ../javascript-template-uitk-svelte && pnpm check
+	cd ../javascript-template-uitk-svelte && pnpm build
+	cd ../javascript-template-uitk-svelte && pnpm test:unit
+	cd ../javascript-template-uitk-svelte && CI=1 pnpm test:e2e
+
+test-uitk-webawesome:
+	cd ../javascript-template-uitk-webawesome && pnpm install
+	cd ../javascript-template-uitk-webawesome && pnpm exec playwright install chromium
+	cd ../javascript-template-uitk-webawesome && pnpm lint
+	cd ../javascript-template-uitk-webawesome && pnpm check
+	cd ../javascript-template-uitk-webawesome && pnpm build
+	cd ../javascript-template-uitk-webawesome && pnpm test:unit
+	cd ../javascript-template-uitk-webawesome && CI=1 pnpm test:e2e
+
+test-site-react:
+	cd ../javascript-template-site-react && pnpm install
+	cd ../javascript-template-site-react && pnpm exec playwright install chromium
+	cd ../javascript-template-site-react && pnpm lint
+	cd ../javascript-template-site-react && pnpm check
+	cd ../javascript-template-site-react && pnpm build
+	cd ../javascript-template-site-react && pnpm test:unit
+	cd ../javascript-template-site-react && CI=1 pnpm test:e2e
+
+test-site-sveltekit:
+	cd ../javascript-template-site-sveltekit && pnpm install
+	cd ../javascript-template-site-sveltekit && pnpm exec playwright install chromium
+	cd ../javascript-template-site-sveltekit && pnpm lint
+	cd ../javascript-template-site-sveltekit && pnpm check
+	cd ../javascript-template-site-sveltekit && pnpm build
+	cd ../javascript-template-site-sveltekit && CI=1 pnpm test:e2e
+
+test-site-webawesome:
+	cd ../javascript-template-site-webawesome && pnpm install
+	cd ../javascript-template-site-webawesome && pnpm exec playwright install chromium
+	cd ../javascript-template-site-webawesome && pnpm lint
+	cd ../javascript-template-site-webawesome && pnpm check
+	cd ../javascript-template-site-webawesome && pnpm build
+	cd ../javascript-template-site-webawesome && CI=1 pnpm test:e2e

@@ -1,0 +1,36 @@
+export type Theme = 'dark' | 'light' | 'system';
+export type ResolvedTheme = Exclude<Theme, 'system'>;
+
+export const THEME_STORAGE_KEY = '{{ project_name }}.theme';
+
+export function resolveTheme(theme: Theme): ResolvedTheme {
+  if (theme !== 'system') return theme;
+  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return 'light';
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+export function getTheme(): Theme {
+  if (typeof localStorage === 'undefined') return 'system';
+  const value = localStorage.getItem(THEME_STORAGE_KEY);
+  return value === 'light' || value === 'dark' ? value : 'system';
+}
+
+export function applyTheme(theme: Theme): ResolvedTheme {
+  const resolved = resolveTheme(theme);
+  if (typeof document !== 'undefined') document.documentElement.dataset.theme = resolved;
+  return resolved;
+}
+
+export function setTheme(theme: Theme): ResolvedTheme {
+  if (theme === 'system') localStorage.removeItem(THEME_STORAGE_KEY);
+  else localStorage.setItem(THEME_STORAGE_KEY, theme);
+  return applyTheme(theme);
+}
+
+export function toggleTheme(): ResolvedTheme {
+  return setTheme(resolveTheme(getTheme()) === 'dark' ? 'light' : 'dark');
+}
+
+export function initTheme(): ResolvedTheme {
+  return applyTheme(getTheme());
+}

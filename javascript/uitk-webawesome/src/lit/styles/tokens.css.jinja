@@ -1,0 +1,71 @@
+/* Design tokens for {{ brand_name }}.
+ *
+ * These are deliberately neutral placeholders, not a finished palette. Replace
+ * the values with the brand's own before shipping; the names are the contract
+ * consumers depend on, so prefer changing values over renaming.
+ *
+ * Names describe the role a color plays, not a material it imitates.
+ */
+
+:root {
+  /* surfaces */
+  --{{ css_prefix }}-bg: #ffffff;
+  --{{ css_prefix }}-bg-raised: #f6f6f6;
+
+  /* text */
+  --{{ css_prefix }}-fg: #171717;
+  --{{ css_prefix }}-fg-muted: #5c5c5c;
+
+  /* structure */
+  --{{ css_prefix }}-border: #e0e0e0;
+
+  /* Focus is a functional requirement, not decoration. It needs at least 3:1
+   * against both surfaces above; check it whenever the palette changes. */
+  --{{ css_prefix }}-focus: #1a56c4;
+
+  --{{ css_prefix }}-font-sans: ui-sans-serif, system-ui, sans-serif;
+  --{{ css_prefix }}-font-mono: ui-monospace, monospace;
+
+  /* Bridge into Web Awesome. Only surfaces, text, and borders are mapped:
+   * Web Awesome's brand color is the consumer's to choose, so it is left at
+   * the library default rather than pointed at a placeholder. */
+  --wa-color-surface-default: var(--{{ css_prefix }}-bg);
+  --wa-color-surface-raised: var(--{{ css_prefix }}-bg-raised);
+  --wa-color-text-normal: var(--{{ css_prefix }}-fg);
+  --wa-color-text-quiet: var(--{{ css_prefix }}-fg-muted);
+
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --{{ css_prefix }}-bg: #121212;
+  --{{ css_prefix }}-bg-raised: #1c1c1c;
+  --{{ css_prefix }}-fg: #ededed;
+  --{{ css_prefix }}-fg-muted: #a6a6a6;
+  --{{ css_prefix }}-border: #333333;
+  --{{ css_prefix }}-focus: #8ab4ff;
+
+  color-scheme: dark;
+}
+
+:root {
+  color: var(--{{ css_prefix }}-fg);
+  font-family: var(--{{ css_prefix }}-font-sans);
+  background: var(--{{ css_prefix }}-bg);
+}
+
+body {
+  margin: 0;
+}
+
+main {
+  width: min(calc(100% - 3rem), 64rem);
+  margin: 0 auto;
+  padding: 3rem 0 6rem;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--{{ css_prefix }}-focus);
+  outline-offset: 4px;
+}

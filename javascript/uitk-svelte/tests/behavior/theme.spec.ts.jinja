@@ -1,0 +1,12 @@
+import { expect, test } from '@playwright/test';
+
+test('theme toggle persists the choice', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => localStorage.removeItem('{{ project_name }}.theme'));
+  await page.reload();
+  const initial = await page.locator('html').getAttribute('data-theme');
+  await page.getByTestId('theme-toggle').click();
+  const expected = initial === 'dark' ? 'light' : 'dark';
+  await expect(page.locator('html')).toHaveAttribute('data-theme', expected);
+  expect(await page.evaluate(() => localStorage.getItem('{{ project_name }}.theme'))).toBe(expected);
+});

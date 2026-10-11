@@ -1,0 +1,40 @@
+# {{ package_name }}
+
+{{ project_description }}
+
+See [`BRAND.md`](./BRAND.md) for the canonical brand guide.
+
+## Install
+
+```bash
+pnpm add {{ package_name }}
+```
+
+Import design tokens once at the application root:
+
+```css
+@import '{{ package_name }}/tokens.css';
+```
+
+```svelte
+<script lang="ts">
+  import { BrandMark, ThemeToggle } from '{{ package_name }}';
+</script>
+
+<BrandMark />
+<ThemeToggle />
+```
+
+## Develop
+
+```bash
+pnpm install
+pnpm dev
+pnpm check
+pnpm lint
+pnpm fix
+pnpm test
+pnpm build
+```
+
+After customizing the showcase, run `pnpm test:e2e:update` once to establish its visual baseline.

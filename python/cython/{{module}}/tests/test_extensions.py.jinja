@@ -1,0 +1,19 @@
+from importlib.machinery import EXTENSION_SUFFIXES
+
+import pytest
+
+from {{ module }} import _compiled, _native, add, square
+
+
+@pytest.mark.parametrize("module", [_compiled, _native])
+def test_compiled_extension(module):
+    assert any(module.__file__.endswith(suffix) for suffix in EXTENSION_SUFFIXES)
+
+
+@pytest.mark.parametrize("value", [-3, 0, 4])
+def test_square(value):
+    assert square(value) == value * value
+
+
+def test_add():
+    assert add(2, 3) == 5

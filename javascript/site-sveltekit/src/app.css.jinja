@@ -1,0 +1,51 @@
+@import 'tailwindcss';
+
+/* Neutral placeholders. Replace the values with the brand's own; the names are
+ * the contract the rest of the site depends on. */
+
+:root {
+  --{{ css_prefix }}-bg: #ffffff;
+  --{{ css_prefix }}-bg-raised: #f6f6f6;
+  --{{ css_prefix }}-fg: #171717;
+  --{{ css_prefix }}-fg-muted: #5c5c5c;
+  --{{ css_prefix }}-border: #e0e0e0;
+  --{{ css_prefix }}-focus: #1a56c4;
+
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --{{ css_prefix }}-bg: #121212;
+  --{{ css_prefix }}-bg-raised: #1c1c1c;
+  --{{ css_prefix }}-fg: #ededed;
+  --{{ css_prefix }}-fg-muted: #a6a6a6;
+  --{{ css_prefix }}-border: #333333;
+  --{{ css_prefix }}-focus: #8ab4ff;
+
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--{{ css_prefix }}-bg);
+  --color-bg-raised: var(--{{ css_prefix }}-bg-raised);
+  --color-fg: var(--{{ css_prefix }}-fg);
+  --color-fg-muted: var(--{{ css_prefix }}-fg-muted);
+  --color-border: var(--{{ css_prefix }}-border);
+}
+
+body {
+  margin: 0;
+  color: var(--{{ css_prefix }}-fg);
+  background: var(--{{ css_prefix }}-bg);
+  font-family: system-ui, sans-serif;
+}
+
+a {
+  color: inherit;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--{{ css_prefix }}-focus);
+  outline-offset: 4px;
+}

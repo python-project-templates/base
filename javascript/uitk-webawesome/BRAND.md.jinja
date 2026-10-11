@@ -1,0 +1,55 @@
+# {{ brand_name }} Brand Guide
+
+Canonical source for the {{ brand_name }} identity. Every section below is a
+placeholder — fill it in before publishing the first consumer.
+
+## Identity
+
+Describe what {{ brand_name }} is, who it serves, and what it must not be
+confused with.
+
+## Mark
+
+Document the primary mark, clear space, minimum size, and approved variants.
+
+## Color
+
+The shipped tokens are neutral greys plus a functional focus color. They exist
+so the toolkit renders legibly out of the box, not because they are the brand.
+Replace the values in `tokens.css`, then record them here.
+
+| Token       | Light | Dark | Usage             |
+| ----------- | ----- | ---- | ----------------- |
+| `bg`        |       |      | Page background   |
+| `bg-raised` |       |      | Raised surfaces   |
+| `fg`        |       |      | Primary text      |
+| `fg-muted`  |       |      | Supporting text   |
+| `border`    |       |      | Borders and rules |
+| `focus`     |       |      | Focus rings       |
+
+Two rules worth keeping whatever the palette becomes:
+
+- Name tokens for the role a color plays, not a material it imitates. Roles
+  survive a redesign; metaphors have to be renamed or quietly start lying.
+- Give every color a job. A single decorative accent applied wherever a page
+  looks flat is how unrelated products end up looking identical.
+
+Verify each foreground against the surfaces behind it — WCAG AA is 4.5:1 for
+normal text, and a focus ring needs 3:1. Assert it in a test so the palette
+cannot drift.
+
+## Typography
+
+Document font families, weights, scale, tracking, and fallback behavior.
+
+## Composition
+
+Document spacing, layout, shape, imagery, and data-visualization rules.
+
+## Motion
+
+Document purposeful transitions and reduced-motion behavior.
+
+## Voice
+
+Document preferred vocabulary, sentence style, capitalization, and examples.

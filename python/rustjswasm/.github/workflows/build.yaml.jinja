@@ -1,0 +1,182 @@
+name: Build Status
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - v*
+    paths-ignore:
+      - LICENSE
+      - README.md
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: {% raw %}${{ github.workflow }}-${{ github.ref }}{% endraw %}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+jobs:
+  build:
+    name: build ({% raw %}${{ matrix.name }}{% endraw %})
+    runs-on: {% raw %}${{ matrix.os }}{% endraw %}
+
+    strategy:
+      matrix:
+        include:
+          - name: ubuntu-24.04
+            dist_path: dist
+            os: ubuntu-24.04
+            python: "{{ python_version_primary }}"
+            target: native
+          - name: ubuntu-24.04-arm
+            dist_path: dist
+            os: ubuntu-24.04-arm
+            python: "{{ python_version_primary }}"
+            target: native
+          - name: macos-26
+            dist_path: dist
+            os: macos-26
+            python: "{{ python_version_primary }}"
+            target: native
+          - name: windows-2025
+            dist_path: dist
+            os: windows-2025
+            python: "{{ python_version_primary }}"
+            target: native
+          {% if add_pyodide -%}
+          - name: pyodide
+            dist_path: dist/pyodide
+            os: ubuntu-24.04
+            python: "3.14"
+            target: pyodide
+          {% endif %}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Python
+        uses: actions-ext/python/setup@c8228d827a81b9f8c808825328af361c45461ba3
+        with:
+          version: {% raw %}${{ matrix.python }}{% endraw %}
+
+      - name: Setup Rust
+        uses: actions-ext/rust/setup@3b918cc2cb4a231ad3752f8cc129da5f07626ce2
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Setup Node.js
+        uses: actions-ext/node/setup@03c9f6b2d9c9fa2c26cfa22d0fa379a69329b319
+        with:
+          version: 22.x
+        if: matrix.target == 'native'
+
+      - name: Install dependencies
+        run: make develop
+        if: matrix.target == 'native'
+
+      - name: Lint
+        run: make lint
+        if: matrix.name == 'ubuntu-24.04'
+
+      - name: Checks
+        run: make checks
+        if: matrix.name == 'ubuntu-24.04'
+
+      - name: Build
+        run: make build
+        if: matrix.target == 'native'
+
+      - name: Test
+        run: make coverage
+        if: matrix.target == 'native'
+
+      - name: Build and test Pyodide wheel
+        run: make test-pyodide
+        if: matrix.target == 'pyodide'
+
+      - name: Upload test results (Python)
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7.0.2
+        with:
+          name: {% raw %}test-results-${{ matrix.name }}{% endraw %}
+          path: '**/junit.xml'
+        if: matrix.name == 'ubuntu-24.04'
+
+      - name: Publish test results
+        uses: EnricoMi/publish-unit-test-result-action@d0a4676d0e0b938bc201470d88276b7c74c712b3  # v2.24.0
+        with:
+          files: '**/junit.xml'
+        if: matrix.name == 'ubuntu-24.04'
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5  # v7.1.1
+        with:
+          token: {% raw %}${{ secrets.CODECOV_TOKEN }}{% endraw %}
+        if: matrix.target == 'native'
+
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /usr/local/.ghcup /usr/share/swift
+          df -h /
+        shell: bash
+        if: matrix.target == 'native' && runner.os == 'Linux'
+
+      - name: Build distributions (Linux x86_64)
+        run: |
+          rm -rf dist
+          make dist-rs
+          make dist-py-sdist
+          make dist-py-wheel
+          make dist-check
+        shell: bash
+        env:
+          CIBW_ARCHS_LINUX: native
+        if: matrix.name == 'ubuntu-24.04'
+
+      - name: Build distributions (Linux ARM64)
+        run: |
+          rm -rf dist
+          make dist-py-wheel
+          make dist-check
+        shell: bash
+        env:
+          CIBW_ARCHS_LINUX: native
+        if: matrix.name == 'ubuntu-24.04-arm'
+
+      - name: Build distributions (macOS/Windows)
+        run: |
+          rm -rf dist
+          make dist-py-wheel
+          make dist-check
+        shell: bash
+        env:
+          CIBW_ENVIRONMENT_MACOS: MACOSX_DEPLOYMENT_TARGET=11.0
+        if: matrix.target == 'native' && runner.os != 'Linux'
+
+      - name: Test wheel
+        uses: actions-ext/python/test-wheel@c8228d827a81b9f8c808825328af361c45461ba3
+        with:
+          module: {{module}}
+        if: matrix.target == 'native' && runner.os == 'Linux'
+
+      - name: Test source distribution
+        uses: actions-ext/python/test-sdist@c8228d827a81b9f8c808825328af361c45461ba3
+        with:
+          module: {{module}}
+        if: matrix.name == 'ubuntu-24.04'
+
+      - name: Upload distributions
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7.0.2
+        with:
+          name: {% raw %}dist-${{ matrix.name }}{% endraw %}
+          path: {% raw %}${{ matrix.dist_path }}{% endraw %}

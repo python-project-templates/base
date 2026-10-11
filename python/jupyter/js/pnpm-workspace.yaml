@@ -1,0 +1,7 @@
+allowBuilds:
+  "@fortawesome/fontawesome-free": true
+  "@parcel/watcher": true
+  unrs-resolver: true
+
+overrides:
+  webpack: "5.76.1"
