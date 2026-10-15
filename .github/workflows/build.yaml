@@ -123,6 +123,12 @@ jobs:
       - name: Test template
         run: make test-${{ matrix.template }}
 
+      - name: Check types with Pyodide enabled
+        run: |
+          copier copy --defaults --vcs-ref=$(git rev-parse HEAD) . ../python-template-${{ matrix.template }}-pyodide --data-file examples/${{ matrix.template }}.yaml --data add_pyodide=true
+          make -C ../python-template-${{ matrix.template }}-pyodide check-types
+        if: matrix.template == 'rust' || matrix.template == 'rustjswasm'
+
       - name: Check source distribution artifacts
         run: python .github/scripts/check_sdist_artifacts.py ../python-template-${{ matrix.template }}
         env:
