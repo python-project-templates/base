@@ -6,7 +6,7 @@
   let { href = '/' }: Props = $props();
 </script>
 
-<a {href} aria-label="{{ brand_name }}, home"><span aria-hidden="true">{{ brand_name[0] | upper }}</span>{{ brand_name }}</a>
+<a {href}><span aria-hidden="true">{{ brand_name[0] | upper }}</span>{{ brand_name }}</a>
 
 <style>
   a {
