@@ -16,9 +16,16 @@ copier copy https://github.com/python-project-templates/base.git path/to/new/pro
 
 One selector chooses a template:
 
-- `Python / …` options generate pure Python, Cython, C++, JavaScript, Jupyter, Rust, and WebAssembly-backed Python packages from `python/`.
-- `JavaScript / UI Toolkit / Svelte` generates a Svelte package and showcase from `javascript/uitk-svelte/`.
-- `JavaScript / UI Toolkit / Lit + Web Awesome` generates custom elements and a showcase from `javascript/uitk-webawesome/`.
+- `Python / Pure` generates a pure Python package from `python/pure/`.
+- `Python / Cython` generates a Python package with compiled `.py` and `.pyx` modules from `python/cython/`.
+- `Python / C++` generates a Python/C++ package with pybind11 bindings or standalone C++ code from `python/cpp/`.
+- `Python / JavaScript` generates a Python package with a self-contained JavaScript frontend from `python/js/`.
+- `Python / Rust` generates a Python package with Rust bindings via PyO3 from `python/rust/`.
+- `Python / Jupyter Widget` generates a Python package with a Jupyter extension from `python/jupyter/`.
+- `Python / Rust + JavaScript + WebAssembly` generates a Rust package with Python and WebAssembly bindings from `python/rustjswasm/`.
+- `Python / C++ + JavaScript + WebAssembly` generates a C++ package with Python and WebAssembly bindings from `python/cppjswasm/`.
+- `JavaScript / UI Toolkit / Svelte` generates a Svelte package with shared design tokens, components, and a demo app from `javascript/uitk-svelte/`.
+- `JavaScript / UI Toolkit / Lit + Web Awesome` generates Lit custom elements with Web Awesome, shared design tokens, and a demo app from `javascript/uitk-webawesome/`.
 - `JavaScript / Site / React` generates a React site with Vite, Vitest, and Playwright from `javascript/site-react/`.
 - `JavaScript / Site / SvelteKit` generates a SvelteKit site with static or Node deployment from `javascript/site-sveltekit/`.
-- `JavaScript / Site / Web Awesome` generates a Vite site built with Web Awesome components from `javascript/site-webawesome/`.
+- `JavaScript / Site / Web Awesome` generates a Vite and TypeScript site using Web Awesome components from `javascript/site-webawesome/`.
