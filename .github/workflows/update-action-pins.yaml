@@ -22,6 +22,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          token: ${{ secrets.WORKFLOW_TOKEN }}
 
       - name: Re-pin actions-ext references
         run: python3 .github/scripts/update_action_pins.py
@@ -30,7 +32,7 @@ jobs:
 
       - name: Open pull request
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
         run: |
           if git diff --quiet; then
             echo "nothing to update"
