@@ -16,7 +16,7 @@ requirements-py:  ## install prerequisite python build requirements
 	python -m pip install `python -c 'import toml; c = toml.load("pyproject.toml"); print(" ".join(c["project"]["optional-dependencies"]["develop"]))'`
 
 requirements-js:  ## install prerequisite javascript build requirements
-	cd js; pnpm install && npx playwright install
+	cd js; pnpm install
 
 requirements: requirements-js requirements-py  ## setup project for development
 
