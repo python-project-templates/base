@@ -13,9 +13,11 @@
 ## C ABI
 
 `rust/capi` builds `lib{{ module }}_capi`, a C ABI over the Rust crate with the
-header `rust/capi/include/{{ module }}.h`. Wheels ship the library under
-`{{ module }}/lib` and the header under `{{ module }}/include/{{ module }}`, and the
-Python extension links against it rather than compiling the crate in. Other
+generated header `rust/capi/include/{{ module }}.h` and a hand-written C++ wrapper
+`{{ module }}.hpp` beside it. Wheels ship the library under `{{ module }}/lib` and
+both headers under `{{ module }}/include/{{ module }}`, and the Python extension
+links against it rather than compiling the crate in. The tests compile a C and a
+C++ program against the installed package to prove the wheel is consumable. Other
 projects build against the installed wheel with `{{ module }}.get_include()`,
 `get_library_dirs()`, `get_libraries()`, and `get_prefix()`.
 
