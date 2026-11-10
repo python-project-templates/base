@@ -8,7 +8,8 @@
 [![PyPI](https://img.shields.io/pypi/v/{{ project_name_formatted }}.svg)](https://pypi.python.org/pypi/{{ project_name_formatted }})
 
 ## Overview
-{% if add_c_abi %}
+{%- if add_c_abi %}
+
 ## C ABI
 
 `rust/capi` builds `lib{{ module }}_capi`, a C ABI over the Rust crate with the
@@ -22,7 +23,7 @@ projects build against the installed wheel with `{{ module }}.get_include()`,
 `bundled` (the default, for wheels), `external` (a prebuilt library found
 through `HATCH_RS_LIBRARY_ROOT`, pkg-config, or the conda prefix), or `direct`
 (compile the crate in).
-{% endif %}
+{%- endif %}
 
 > [!NOTE]
 > This library was generated using [copier](https://copier.readthedocs.io/en/stable/) from the [Base Python Project Template repository](https://github.com/python-project-templates/base).
