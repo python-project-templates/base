@@ -217,10 +217,10 @@ artifacts = [
     "{{ module }}/*.dll",
     "{{ module }}/*.dylib",
     "{{ module }}/*.so",
-    {% if add_c_abi -%}
+{%- if add_c_abi %}
     "{{ module }}/include/**/*.h",
     "{{ module }}/lib/*",
-    {% endif -%}
+{%- endif %}
 ]
 packages = [
     "{{ module }}",
