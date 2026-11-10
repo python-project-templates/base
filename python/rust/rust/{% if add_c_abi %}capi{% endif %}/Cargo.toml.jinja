@@ -1,0 +1,21 @@
+[package]
+name = "{{ module }}_capi"
+version = "0.1.0"
+authors = ["{{ team }} <{{ email }}>"]
+edition = "2021"
+license = "Apache-2.0"
+readme = "../../README.md"
+repository = "https://github.com/{{ github }}/{{ project_name }}"
+description = "C ABI for {{ project_name }}"
+build = "build.rs"
+
+[lib]
+name = "{{ module }}_capi"
+path = "src/lib.rs"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+{{ module }} = { path = "..", version = "0.1.0" }
+
+[build-dependencies]
+cbindgen = { version = "0.29", default-features = false }

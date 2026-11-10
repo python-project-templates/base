@@ -1,0 +1,114 @@
+//! C ABI for {{ project_name }}: `lib{{ module }}_capi`.
+//!
+//! Handles are opaque and freed with their matching `_free` function. Strings
+//! are passed in as UTF-8 pointer plus length and returned NUL-terminated.
+//! Every entry point catches panics; a failure is reported as null.
+
+#![allow(clippy::missing_safety_doc)]
+#![allow(non_camel_case_types)]
+
+use std::ffi::{c_char, CString};
+use std::panic::{catch_unwind, AssertUnwindSafe};
+use std::ptr;
+use std::slice;
+
+use {{ module }}::Example;
+
+/// The ABI version of this header and library. A caller built against a
+/// different version must not use the library.
+pub const {{ module | upper }}_ABI_VERSION: u32 = 1;
+
+/// An example value. Create with `{{ module }}_example_new` and free with
+/// `{{ module }}_example_free`.
+pub struct {{ module }}_example {
+    inner: Example,
+}
+
+/// The ABI version this library was built with.
+#[no_mangle]
+pub extern "C" fn {{ module }}_abi_version() -> u32 {
+    {{ module | upper }}_ABI_VERSION
+}
+
+/// Creates an example from a UTF-8 `value` of `len` bytes. Returns null when
+/// the value is not UTF-8.
+#[no_mangle]
+pub unsafe extern "C" fn {{ module }}_example_new(value: *const c_char, len: usize) -> *mut {{ module }}_example {
+    catch_unwind(AssertUnwindSafe(|| {
+        if value.is_null() && len != 0 {
+            return ptr::null_mut();
+        }
+        let bytes = if len == 0 {
+            &[][..]
+        } else {
+            slice::from_raw_parts(value as *const u8, len)
+        };
+        match std::str::from_utf8(bytes) {
+            Ok(value) => Box::into_raw(Box::new({{ module }}_example {
+                inner: Example::new(value.to_string()),
+            })),
+            Err(_) => ptr::null_mut(),
+        }
+    }))
+    .unwrap_or(ptr::null_mut())
+}
+
+/// The example's value as a NUL-terminated string. Free with
+/// `{{ module }}_string_free`. Returns null for a null example.
+#[no_mangle]
+pub unsafe extern "C" fn {{ module }}_example_stuff(example: *const {{ module }}_example) -> *mut c_char {
+    match example.as_ref() {
+        Some(example) => CString::new(example.inner.stuff.clone())
+            .map(CString::into_raw)
+            .unwrap_or(ptr::null_mut()),
+        None => ptr::null_mut(),
+    }
+}
+
+/// Frees an example. Null is ignored.
+#[no_mangle]
+pub unsafe extern "C" fn {{ module }}_example_free(example: *mut {{ module }}_example) {
+    if !example.is_null() {
+        drop(Box::from_raw(example));
+    }
+}
+
+/// Frees a string returned by this library. Null is ignored.
+#[no_mangle]
+pub unsafe extern "C" fn {{ module }}_string_free(string: *mut c_char) {
+    if !string.is_null() {
+        drop(CString::from_raw(string));
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use std::ffi::CStr;
+
+    use super::*;
+
+    #[test]
+    fn example_round_trip() {
+        assert_eq!({{ module }}_abi_version(), {{ module | upper }}_ABI_VERSION);
+        let value = "test";
+        let example = unsafe { {{ module }}_example_new(value.as_ptr() as *const c_char, value.len()) };
+        assert!(!example.is_null());
+        let stuff = unsafe { {{ module }}_example_stuff(example) };
+        assert_eq!(unsafe { CStr::from_ptr(stuff) }.to_str().unwrap(), "test");
+        unsafe {
+            {{ module }}_string_free(stuff);
+            {{ module }}_example_free(example);
+        }
+    }
+
+    #[test]
+    fn invalid_input_is_null() {
+        assert!(unsafe { {{ module }}_example_new(ptr::null(), 1) }.is_null());
+        assert!(unsafe { {{ module }}_example_new(b"\xff".as_ptr() as *const c_char, 1) }.is_null());
+        assert!(unsafe { {{ module }}_example_stuff(ptr::null()) }.is_null());
+        unsafe {
+            {{ module }}_example_free(ptr::null_mut());
+            {{ module }}_string_free(ptr::null_mut());
+        }
+    }
+}

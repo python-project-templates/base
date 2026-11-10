@@ -1,7 +1,7 @@
 [build-system]
 requires = [
     "hatchling",
-    "hatch-rs>={% if add_pyodide %}0.3.0{% else %}0.1.4{% endif %}",
+    "hatch-rs>={% if add_c_abi %}0.5.0{% elif add_pyodide %}0.3.0{% else %}0.1.4{% endif %}",
 ]
 build-backend = "hatchling.build"
 
@@ -46,7 +46,7 @@ develop = [
     "check-dist",
     "cibuildwheel",
     "codespell",
-    "hatch-rs{% if add_pyodide %}>=0.3.0{% endif %}",
+    "hatch-rs{% if add_c_abi %}>=0.5.0{% elif add_pyodide %}>=0.3.0{% endif %}",
     "hatchling",
     "mdformat",
     "mdformat-myst",
@@ -96,7 +96,12 @@ replace = 'version = "{new_version}"'
 filename = "rust/Cargo.toml"
 search = 'version = "{current_version}"'
 replace = 'version = "{new_version}"'
-
+{% if add_c_abi %}
+[[tool.bumpversion.files]]
+filename = "rust/capi/Cargo.toml"
+search = 'version = "{current_version}"'
+replace = 'version = "{new_version}"'
+{% endif %}
 [tool.cibuildwheel]
 build = "cp{{ python_version_primary.replace('.', '') }}-*"
 test-command = "pytest -vvv {project}/{{ module }}/tests"
@@ -112,11 +117,16 @@ rustup show
 before-build = "cargo clean --manifest-path {package}/Cargo.toml && rm -f {package}/{{ module }}/*.so"
 environment = {PATH="$HOME/.cargo/bin:$PATH", CARGO_TERM_COLOR="always"}
 skip = "*i686* *musllinux*"
-
+{% if add_c_abi -%}
+# Keep the bundled C ABI library where the extension's rpath expects it.
+repair-wheel-command = "auditwheel repair --exclude 'lib{{ module }}_capi.so*' -w {dest_dir} {wheel}"
+{% endif %}
 [tool.cibuildwheel.macos]
 environment = {PATH="$HOME/.cargo/bin:$PATH", CARGO_TERM_COLOR="always", MACOS_DEPLOYMENT_TARGET=11.0}
 archs = "arm64"
-
+{% if add_c_abi -%}
+repair-wheel-command = "delocate-wheel --require-archs {delocate_archs} --exclude {{ module }}_capi -w {dest_dir} -v {wheel}"
+{% endif %}
 [tool.cibuildwheel.windows]
 environment = {PATH="$UserProfile\\.cargo\bin;$PATH", CARGO_TERM_COLOR="always"}
 skip = "*win32 *arm64"
@@ -127,6 +137,10 @@ test-command = "python -m pytest -vvv --pyargs {{ module }}.tests"
 test-extras = []
 test-requires = ["pytest"]
 xbuild-tools = ["cargo", "rustc", "rustup"]
+{% if add_c_abi -%}
+# Emscripten has no shared libraries to split; compile the library in.
+environment = {HATCH_RS_LIBRARY_SOURCE="direct"}
+{% endif -%}
 {% endif %}
 [tool.coverage.run]
 branch = true
@@ -151,7 +165,37 @@ verbose = true
 abi3 = true
 module = "{{ module }}"
 path = "."
+{% if add_c_abi -%}
+target-dir = "project"
 
+# lib{{ module }}_capi: the C ABI library, shipped under {{ module }}/lib with its header.
+[[tool.hatch.build.hooks.hatch-rs.artifacts]]
+name = "{{ module }}_capi"
+manifest = "rust/capi/Cargo.toml"
+destination = "{{ module }}/lib/{shared_library}"
+expected-headers = ["rust/capi/include/{{ module }}.h"]
+header-symbol-prefix = "{{ module }}_"
+expected-abi-strings = ["{{ module | upper }}_ABI_VERSION"]
+include-import-lib = true
+
+[[tool.hatch.build.hooks.hatch-rs.artifacts.outputs]]
+source = "rust/capi/include/{{ module }}.h"
+destination = "{{ module }}/include/{{ module }}/{{ module }}.h"
+install-scheme = "package"
+
+# The PyO3 extension, linked against the library by default (library-source = bundled).
+[[tool.hatch.build.hooks.hatch-rs.artifacts]]
+name = "{{ module }}"
+manifest = "Cargo.toml"
+destination = "{{ module }}/{python_extension_name}"
+links = ["{{ module }}_capi"]
+
+[tool.hatch.build.hooks.hatch-rs.artifacts.library-source-features]
+bundled = ["capi"]
+external = ["capi"]
+static = ["direct"]
+direct = ["direct"]
+{% endif %}
 [tool.hatch.build.targets.sdist]
 packages = [
     "{{ module }}",
@@ -173,6 +217,10 @@ artifacts = [
     "{{ module }}/*.dll",
     "{{ module }}/*.dylib",
     "{{ module }}/*.so",
+    {% if add_c_abi -%}
+    "{{ module }}/include/**/*.h",
+    "{{ module }}/lib/*",
+    {% endif -%}
 ]
 packages = [
     "{{ module }}",

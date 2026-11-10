@@ -31,7 +31,7 @@ update-action-pins:  ## re-pin actions-ext references to each action repo's curr
 check-action-pins:  ## check whether any actions-ext pin is out of date
 	python3 .github/scripts/update_action_pins.py --check
 
-.PHONY: gen-python gen-cpp gen-js gen-jupyter gen-rust gen-rustjswasm gen-cppjswasm gen-uitk-svelte gen-uitk-webawesome gen-site-react gen-site-sveltekit gen-site-webawesome
+.PHONY: gen-python gen-cpp gen-js gen-jupyter gen-rust gen-rust-capi gen-rustjswasm gen-cppjswasm gen-uitk-svelte gen-uitk-webawesome gen-site-react gen-site-sveltekit gen-site-webawesome
 gen-python:  ## regenerate the python template from scratch
 	mkdir -p ../python-template && cd ../python-template && rm -rf ./* && rm -rf .copier-answers.yaml .gitignore .github .gitattributes
 	copier copy -w . ../python-template --data-file examples/python.yaml
@@ -67,6 +67,11 @@ gen-rust:  ## regenerate the rust template from scratch
 	copier copy -w . ../python-template-rust --data-file examples/rust.yaml
 	cd ../python-template-rust && $(SED) 's#_src_path: .#_src_path: https://github.com/python-project-templates/base.git#g' ./.copier-answers.yaml
 
+gen-rust-capi:  ## regenerate the rust template with a C ABI library from scratch
+	mkdir -p ../python-template-rust-capi && cd ../python-template-rust-capi && rm -rf ./* && rm -rf .copier-answers.yaml .gitignore .github .gitattributes
+	copier copy -w . ../python-template-rust-capi --data-file examples/rust-capi.yaml
+	cd ../python-template-rust-capi && $(SED) 's#_src_path: .#_src_path: https://github.com/python-project-templates/base.git#g' ./.copier-answers.yaml
+
 gen-rustjswasm:  ## regenerate the rustjswasm template from scratch
 	mkdir -p ../python-template-rustjswasm && cd ../python-template-rustjswasm && rm -rf ./* && rm -rf .copier-answers.yaml .gitignore .github .gitattributes
 	copier copy -w . ../python-template-rustjswasm --data-file examples/rustjswasm.yaml
@@ -97,7 +102,7 @@ gen-site-webawesome:  ## regenerate the Web Awesome site template from scratch
 	mkdir -p ../javascript-template-site-webawesome && cd ../javascript-template-site-webawesome && rm -rf ./* && rm -rf .copier-answers.yaml .github .gitignore .prettierignore .prettierrc .oxfmtrc.json .oxlintrc.json
 	copier copy -w . ../javascript-template-site-webawesome --data-file examples/site-webawesome.yaml
 
-.PHONY: test-python test-cpp test-js test-jupyter test-rust test-rustjswasm test-cppjswasm test-uitk-svelte test-uitk-webawesome test-site-react test-site-sveltekit test-site-webawesome
+.PHONY: test-python test-cpp test-js test-jupyter test-rust test-rust-capi test-rustjswasm test-cppjswasm test-uitk-svelte test-uitk-webawesome test-site-react test-site-sveltekit test-site-webawesome
 test-python:
 	cd ../python-template && git config --global user.name "github-actions" && git config --global user.email "41898282+github-actions[bot]@users.noreply.github.c@example.com" && git init && git add . && git commit -m "initial commit"
 	cd ../python-template && make develop
@@ -135,6 +140,14 @@ test-rust:
 	cd ../python-template-rust && make lint
 	cd ../python-template-rust && make checks
 	cd ../python-template-rust && make test
+
+test-rust-capi:
+	cd ../python-template-rust-capi && git config --global user.name "github-actions" && git config --global user.email "41898282+github-actions[bot]@users.noreply.github.c@example.com" && git init && git add . && git commit -m "initial commit"
+	cd ../python-template-rust-capi && make develop
+	cd ../python-template-rust-capi && git add Cargo.lock rust/Cargo.lock rust/capi/include && git commit -m "lockfile and header"
+	cd ../python-template-rust-capi && make lint
+	cd ../python-template-rust-capi && make checks
+	cd ../python-template-rust-capi && make test
 
 test-rustjswasm:
 	cd ../python-template-rustjswasm && git config --global user.name "github-actions" && git config --global user.email "41898282+github-actions[bot]@users.noreply.github.c@example.com" && git init && git add . && git commit -m "initial commit"

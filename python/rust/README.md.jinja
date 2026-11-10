@@ -8,6 +8,21 @@
 [![PyPI](https://img.shields.io/pypi/v/{{ project_name_formatted }}.svg)](https://pypi.python.org/pypi/{{ project_name_formatted }})
 
 ## Overview
+{% if add_c_abi %}
+## C ABI
+
+`rust/capi` builds `lib{{ module }}_capi`, a C ABI over the Rust crate with the
+header `rust/capi/include/{{ module }}.h`. Wheels ship the library under
+`{{ module }}/lib` and the header under `{{ module }}/include/{{ module }}`, and the
+Python extension links against it rather than compiling the crate in. Other
+projects build against the installed wheel with `{{ module }}.get_include()`,
+`get_library_dirs()`, `get_libraries()`, and `get_prefix()`.
+
+`HATCH_RS_LIBRARY_SOURCE` chooses where the library comes from at build time:
+`bundled` (the default, for wheels), `external` (a prebuilt library found
+through `HATCH_RS_LIBRARY_ROOT`, pkg-config, or the conda prefix), or `direct`
+(compile the crate in).
+{% endif %}
 
 > [!NOTE]
 > This library was generated using [copier](https://copier.readthedocs.io/en/stable/) from the [Base Python Project Template repository](https://github.com/python-project-templates/base).

@@ -1,5 +1,47 @@
 use pyo3::prelude::*;
 
+{% if add_c_abi -%}
+// The resolution switch picks the route at build time: `capi` calls through
+// lib{{ module }}_capi (bundled or external), `direct` compiles the Rust crate in.
+#[cfg(feature = "capi")]
+use crate::capi::Example as BaseExample;
+#[cfg(feature = "direct")]
+use {{ module }}::Example as BaseExample;
+
+#[cfg(feature = "capi")]
+fn stuff(example: &BaseExample) -> String {
+    example.stuff()
+}
+
+#[cfg(feature = "direct")]
+fn stuff(example: &BaseExample) -> String {
+    example.stuff.clone()
+}
+
+
+#[pyclass]
+pub struct Example {
+    pub example: BaseExample,
+}
+
+#[pymethods]
+impl Example {
+    #[new]
+    fn py_new(value: String) -> PyResult<Self> {
+        Ok(Example {
+            example: BaseExample::new(value),
+        })
+    }
+
+    fn __str__(&self) -> PyResult<String> {
+        Ok(stuff(&self.example))
+    }
+
+    fn __repr__(&self) -> PyResult<String> {
+        Ok(format!("Example<{}>", stuff(&self.example)))
+    }
+}
+{%- else -%}
 use {{ module }}::Example as BaseExample;
 
 
@@ -30,3 +72,4 @@ impl Example {
         Ok(format!("Example<{}>", self.example.stuff))
     }
 }
+{%- endif %}

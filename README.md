@@ -20,7 +20,7 @@ One selector chooses a template:
 - `Python / Cython` generates a Python package with compiled `.py` and `.pyx` modules from `python/cython/`.
 - `Python / C++` generates a Python/C++ package with pybind11 bindings or standalone C++ code from `python/cpp/`.
 - `Python / JavaScript` generates a Python package with a self-contained JavaScript frontend from `python/js/`.
-- `Python / Rust` generates a Python package with Rust bindings via PyO3 from `python/rust/`.
+- `Python / Rust` generates a Python package with Rust bindings via PyO3 from `python/rust/`. With `add_c_abi`, it also builds a C ABI library that the extension links against and wheels ship with its header.
 - `Python / Jupyter Widget` generates a Python package with a Jupyter extension from `python/jupyter/`.
 - `Python / Rust + JavaScript + WebAssembly` generates a Rust package with Python and WebAssembly bindings from `python/rustjswasm/`.
 - `Python / C++ + JavaScript + WebAssembly` generates a C++ package with Python and WebAssembly bindings from `python/cppjswasm/`.

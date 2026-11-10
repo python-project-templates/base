@@ -20,7 +20,10 @@ vcpkg_installed/
 # Rust
 target
 target-capi
-
+{% if add_c_abi %}
+# Copied from rust/capi/include by hatch-rs
+{{ module }}/include/
+{% endif %}
 # Distribution / packaging
 .Python
 build/

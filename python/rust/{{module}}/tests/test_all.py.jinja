@@ -1,5 +1,33 @@
+{% if add_c_abi -%}
+from ctypes import CDLL, c_uint32
+from pathlib import Path
+from sys import platform
+
+import pytest
+
+from {{ module }} import get_include, get_libraries, get_library_dirs
+from {{ module }}.{{ module }} import Example
+
+
+def test_example_round_trips_through_the_library():
+    assert str(Example("test")) == "test"
+    assert repr(Example("test")) == "Example<test>"
+
+
+def test_c_library_and_header_are_installed():
+    if platform == "emscripten":
+        pytest.skip("Pyodide wheels compile the library in")
+    header = Path(get_include()) / "{{ module }}" / "{{ module }}.h"
+    assert "#define {{ module | upper }}_ABI_VERSION 1" in header.read_text()
+    (name,) = get_libraries()
+    filename = f"{name}.dll" if platform == "win32" else f"lib{name}.dylib" if platform == "darwin" else f"lib{name}.so"
+    library = CDLL(str(Path(get_library_dirs()[0]) / filename))
+    library.{{ module }}_abi_version.restype = c_uint32
+    assert library.{{ module }}_abi_version() == 1
+{%- else -%}
 from {{ module }}{% if add_pyodide %}.{{ module }} import Example{% else %} import *{% endif %}
 
 
 def test_all():
     assert {% if add_pyodide %}str(Example("test")) == "test"{% else %}True{% endif %}
+{%- endif %}
