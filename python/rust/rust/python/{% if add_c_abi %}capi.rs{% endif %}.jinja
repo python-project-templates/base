@@ -1,0 +1,48 @@
+//! Bindings to `lib{{ module }}_capi`. hatch-rs links the library and sets the
+//! rpath, so no `#[link]` attribute is needed here.
+
+use std::ffi::{c_char, CStr};
+
+#[repr(C)]
+pub struct {{ module }}_example {
+    _private: [u8; 0],
+}
+
+extern "C" {
+    pub fn {{ module }}_abi_version() -> u32;
+    pub fn {{ module }}_example_new(value: *const c_char, len: usize) -> *mut {{ module }}_example;
+    pub fn {{ module }}_example_stuff(example: *const {{ module }}_example) -> *mut c_char;
+    pub fn {{ module }}_example_free(example: *mut {{ module }}_example);
+    pub fn {{ module }}_string_free(string: *mut c_char);
+}
+
+/// An example owned by `lib{{ module }}_capi`.
+pub struct Example {
+    handle: *mut {{ module }}_example,
+}
+
+unsafe impl Send for Example {}
+unsafe impl Sync for Example {}
+
+impl Example {
+    pub fn new(value: String) -> Self {
+        let handle = unsafe { {{ module }}_example_new(value.as_ptr() as *const c_char, value.len()) };
+        assert!(!handle.is_null(), "lib{{ module }}_capi rejected the value");
+        Self { handle }
+    }
+
+    pub fn stuff(&self) -> String {
+        unsafe {
+            let stuff = {{ module }}_example_stuff(self.handle);
+            let value = CStr::from_ptr(stuff).to_string_lossy().into_owned();
+            {{ module }}_string_free(stuff);
+            value
+        }
+    }
+}
+
+impl Drop for Example {
+    fn drop(&mut self) {
+        unsafe { {{ module }}_example_free(self.handle) }
+    }
+}

@@ -1,5 +1,9 @@
 use pyo3::prelude::*;
 
+{% if add_c_abi -%}
+#[cfg(feature = "capi")]
+mod capi;
+{% endif -%}
 mod example;
 
 pub use example::Example;

@@ -42,7 +42,8 @@ lint-py:  ## run python linter with ruff
 
 lint-rs:  ## run rust linter
 	make -C rust lint
-
+{% if add_c_abi %}	git diff --exit-code -- rust/capi/include/{{ module }}.h
+{% endif %}
 lint-docs:  ## lint docs with mdformat and codespell
 	python -m mdformat --check README.md $(wildcard docs/src) {% if add_wiki %}docs/wiki/{% endif %}
 	python -m codespell_lib README.md $(wildcard docs/src) {% if add_wiki %}docs/wiki/{% endif %}

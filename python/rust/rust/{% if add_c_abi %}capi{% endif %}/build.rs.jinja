@@ -1,0 +1,31 @@
+use std::env;
+use std::path::PathBuf;
+
+fn main() {
+    let crate_dir = PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap());
+    let header = crate_dir.join("include").join("{{ module }}.h");
+    println!("cargo:rerun-if-changed=src");
+    println!("cargo:rerun-if-changed=cbindgen.toml");
+
+    // cbindgen reads `cargo metadata`, which is unavailable inside a packaged
+    // crate (`cargo publish`, `cargo install`). Those builds use the checked-in
+    // header, which `make lint-rs` keeps in sync with the source.
+    let generated = cbindgen::Config::from_file(crate_dir.join("cbindgen.toml"))
+        .map_err(|error| error.to_string())
+        .and_then(|config| {
+            cbindgen::Builder::new()
+                .with_crate(&crate_dir)
+                .with_config(config)
+                .generate()
+                .map_err(|error| error.to_string())
+        });
+    match generated {
+        Ok(bindings) => {
+            bindings.write_to_file(&header);
+        }
+        Err(error) if header.is_file() => {
+            println!("cargo:warning=using the checked-in {{ module }}.h; cbindgen could not run: {error}");
+        }
+        Err(error) => panic!("cbindgen failed to generate {{ module }}.h and no checked-in copy exists: {error}"),
+    }
+}

@@ -10,9 +10,14 @@ path = "rust/python/lib.rs"
 crate-type = ["cdylib"]
 
 [dependencies]
-{{ module }} = { path = "./rust", version = "*" }
+{{ module }} = { path = "./rust", version = "*"{% if add_c_abi %}, optional = true{% endif %} }
 pyo3 = { version = "0.29.2", features = ["abi3", "extension-module", "multiple-pymethods"] }
-
+{% if add_c_abi %}
+[features]
+default = ["direct"]
+capi = []
+direct = ["dep:{{ module }}"]
+{% endif %}
 [profile.release]
 panic = 'abort'
 lto = true

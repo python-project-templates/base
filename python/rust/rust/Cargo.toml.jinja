@@ -14,4 +14,10 @@ path = "src/lib.rs"
 crate-type = ["rlib"]
 
 [dependencies]
-
+{% if add_c_abi %}
+[workspace]
+members = [
+    ".",
+    "capi",
+]
+{% endif %}

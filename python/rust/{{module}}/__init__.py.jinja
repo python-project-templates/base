@@ -1,0 +1,30 @@
+__version__ = "0.1.0"
+{%- if add_c_abi %}
+
+import os as _os
+from pathlib import Path as _Path
+
+_PREFIX = _Path(__file__).resolve().parent
+if _os.name == "nt" and (_PREFIX / "lib").is_dir():
+    _DLL_DIRECTORY = _os.add_dll_directory(str(_PREFIX / "lib"))
+
+
+def get_prefix() -> str:
+    """The installed package directory, usable as a CMake prefix for lib{{ module }}_capi."""
+    return str(_PREFIX)
+
+
+def get_include() -> str:
+    """The directory holding ``{{ module }}/{{ module }}.h``."""
+    return str(_PREFIX / "include")
+
+
+def get_library_dirs() -> list[str]:
+    """Directories holding the bundled lib{{ module }}_capi shared library."""
+    return [str(_PREFIX / "lib")]
+
+
+def get_libraries() -> list[str]:
+    """Link names for lib{{ module }}_capi, for ``-l`` or ``target_link_libraries``."""
+    return ["{{ module }}_capi"]
+{%- endif %}
