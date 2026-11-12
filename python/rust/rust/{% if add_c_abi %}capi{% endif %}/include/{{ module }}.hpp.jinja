@@ -1,0 +1,53 @@
+// C++ wrapper over the C ABI in {{ module }}.h. Hand-written; shipped next to
+// the generated header so C++ consumers of the wheel get RAII handles and
+// exceptions instead of status checks.
+#pragma once
+
+#include <stdexcept>
+#include <string>
+#include <string_view>
+#include <utility>
+
+#include "{{ module }}.h"
+
+namespace {{ module }} {
+
+/// The ABI version of the loaded library.
+inline unsigned abi_version() { return {{ module }}_abi_version(); }
+
+/// An example value owned by the library.
+class Example {
+public:
+    explicit Example(std::string_view value) : handle_({{ module }}_example_new(value.data(), value.size())) {
+        if (handle_ == nullptr) {
+            throw std::invalid_argument("{{ module }}_example_new rejected the value");
+        }
+    }
+    ~Example() { {{ module }}_example_free(handle_); }
+    Example(const Example&) = delete;
+    Example& operator=(const Example&) = delete;
+    Example(Example&& other) noexcept : handle_(std::exchange(other.handle_, nullptr)) {}
+    Example& operator=(Example&& other) noexcept {
+        std::swap(handle_, other.handle_);
+        return *this;
+    }
+
+    /// The example's value.
+    std::string stuff() const {
+        char* raw = {{ module }}_example_stuff(handle_);
+        if (raw == nullptr) {
+            throw std::runtime_error("{{ module }}_example_stuff failed");
+        }
+        std::string value(raw);
+        {{ module }}_string_free(raw);
+        return value;
+    }
+
+    /// The underlying handle, still owned by this object.
+    {{ module }}_example* get() const noexcept { return handle_; }
+
+private:
+    {{ module }}_example* handle_;
+};
+
+}  // namespace {{ module }}

@@ -130,7 +130,10 @@ repair-wheel-command = "delocate-wheel --require-archs {delocate_archs} --exclud
 [tool.cibuildwheel.windows]
 environment = {PATH="$UserProfile\\.cargo\bin;$PATH", CARGO_TERM_COLOR="always"}
 skip = "*win32 *arm64"
-
+{% if add_c_abi -%}
+# The C ABI library ships inside the wheel; delvewheel must not look for it on PATH.
+repair-wheel-command = "delvewheel repair --exclude {{ module }}_capi.dll -w {dest_dir} {wheel}"
+{% endif %}
 {% if add_pyodide -%}
 [tool.cibuildwheel.pyodide]
 test-command = "python -m pytest -vvv --pyargs {{ module }}.tests"
@@ -183,6 +186,11 @@ source = "rust/capi/include/{{ module }}.h"
 destination = "{{ module }}/include/{{ module }}/{{ module }}.h"
 install-scheme = "package"
 
+[[tool.hatch.build.hooks.hatch-rs.artifacts.outputs]]
+source = "rust/capi/include/{{ module }}.hpp"
+destination = "{{ module }}/include/{{ module }}/{{ module }}.hpp"
+install-scheme = "package"
+
 # The PyO3 extension, linked against the library by default (library-source = bundled).
 [[tool.hatch.build.hooks.hatch-rs.artifacts]]
 name = "{{ module }}"
@@ -219,6 +227,7 @@ artifacts = [
     "{{ module }}/*.so",
 {%- if add_c_abi %}
     "{{ module }}/include/**/*.h",
+    "{{ module }}/include/**/*.hpp",
     "{{ module }}/lib/*",
 {%- endif %}
 ]

@@ -1,6 +1,9 @@
 {% if add_c_abi -%}
+import os
 from ctypes import CDLL, c_uint32
 from pathlib import Path
+from shutil import which
+from subprocess import run
 from sys import platform
 
 import pytest
@@ -8,22 +11,110 @@ import pytest
 from {{ module }} import get_include, get_libraries, get_library_dirs
 from {{ module }}.{{ module }} import Example
 
+C_CONSUMER = """
+#include <stdio.h>
+#include <{{ module }}/{{ module }}.h>
+
+int main(void) {
+    {{ module }}_example *example = {{ module }}_example_new("consumer", 8);
+    if (example == NULL) {
+        return 1;
+    }
+    char *stuff = {{ module }}_example_stuff(example);
+    printf("%u %s", {{ module }}_abi_version(), stuff);
+    {{ module }}_string_free(stuff);
+    {{ module }}_example_free(example);
+    return 0;
+}
+"""
+
+CPP_CONSUMER = """
+#include <iostream>
+#include <{{ module }}/{{ module }}.hpp>
+
+int main() {
+    {{ module }}::Example example("consumer");
+    std::cout << {{ module }}::abi_version() << " " << example.stuff();
+    return 0;
+}
+"""
+
+
+def _library_filename(name: str) -> str:
+    return f"{name}.dll" if platform == "win32" else f"lib{name}.dylib" if platform == "darwin" else f"lib{name}.so"
+
+
+def _compiler(language: str) -> str | None:
+    names = {"c": ("cc", "gcc", "clang", "cl"), "c++": ("c++", "g++", "clang++", "cl")}[language]
+    return next((path for path in map(which, names) if path), None)
+
+
+def _build_and_run(tmp_path: Path, source: str, language: str) -> str:
+    """Compiles a consumer against the installed package and returns its output."""
+    if platform == "emscripten":
+        pytest.skip("Pyodide wheels compile the library in")
+    compiler = _compiler(language)
+    if compiler is None:
+        pytest.skip(f"no {language} compiler on PATH")
+    (library,) = get_libraries()
+    (library_dir,) = get_library_dirs()
+    source_path = tmp_path / ("consumer.cpp" if language == "c++" else "consumer.c")
+    source_path.write_text(source)
+    executable = tmp_path / ("consumer.exe" if platform == "win32" else "consumer")
+    env = dict(os.environ)
+    if Path(compiler).stem.lower() == "cl":
+        command = [
+            compiler,
+            "/nologo",
+            "/EHsc",
+            f"/I{get_include()}",
+            str(source_path),
+            f"/Fe:{executable}",
+            "/link",
+            f"/LIBPATH:{library_dir}",
+            f"{library}.dll.lib",
+        ]
+        env["PATH"] = library_dir + os.pathsep + env["PATH"]
+    else:
+        standard = ["-std=c++17"] if language == "c++" else []
+        command = [
+            compiler,
+            *standard,
+            f"-I{get_include()}",
+            str(source_path),
+            f"-L{library_dir}",
+            f"-l{library}",
+            f"-Wl,-rpath,{library_dir}",
+            "-o",
+            str(executable),
+        ]
+    run(command, check=True, cwd=tmp_path)
+    return run([str(executable)], check=True, capture_output=True, text=True, env=env).stdout
+
 
 def test_example_round_trips_through_the_library():
     assert str(Example("test")) == "test"
     assert repr(Example("test")) == "Example<test>"
 
 
-def test_c_library_and_header_are_installed():
+def test_c_library_and_headers_are_installed():
     if platform == "emscripten":
         pytest.skip("Pyodide wheels compile the library in")
-    header = Path(get_include()) / "{{ module }}" / "{{ module }}.h"
-    assert "#define {{ module | upper }}_ABI_VERSION 1" in header.read_text()
+    include = Path(get_include()) / "{{ module }}"
+    assert "#define {{ module | upper }}_ABI_VERSION 1" in (include / "{{ module }}.h").read_text()
+    assert "class Example" in (include / "{{ module }}.hpp").read_text()
     (name,) = get_libraries()
-    filename = f"{name}.dll" if platform == "win32" else f"lib{name}.dylib" if platform == "darwin" else f"lib{name}.so"
-    library = CDLL(str(Path(get_library_dirs()[0]) / filename))
+    library = CDLL(str(Path(get_library_dirs()[0]) / _library_filename(name)))
     library.{{ module }}_abi_version.restype = c_uint32
     assert library.{{ module }}_abi_version() == 1
+
+
+def test_c_consumer_builds_against_the_installed_package(tmp_path):
+    assert _build_and_run(tmp_path, C_CONSUMER, "c") == "1 consumer"
+
+
+def test_cpp_consumer_builds_against_the_installed_package(tmp_path):
+    assert _build_and_run(tmp_path, CPP_CONSUMER, "c++") == "1 consumer"
 {%- else -%}
 from {{ module }}{% if add_pyodide %}.{{ module }} import Example{% else %} import *{% endif %}
 
