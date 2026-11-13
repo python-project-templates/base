@@ -8,6 +8,31 @@
 [![PyPI](https://img.shields.io/pypi/v/{{ project_name_formatted }}.svg)](https://pypi.python.org/pypi/{{ project_name_formatted }})
 
 ## Overview
+{%- if add_c_abi %}
+
+## C ABI
+
+`cpp/{{ project_name_formatted }}` builds `lib{{ module }}`, a C ABI over the C++ code, declared in
+`{{ module }}/include/{{ module }}/{{ module }}.h`. Wheels ship the library under `{{ module }}/lib` and
+the header under `{{ module }}/include/{{ module }}`, and the pybind11 extension in `cpp/python` links
+against the library. The tests compile a C program against the installed package. Other
+projects build against the installed wheel with `{{ module }}.get_include()`,
+`get_library_dirs()`, `get_libraries()`, and `get_prefix()`.
+
+`HATCH_CPP_LIBRARY_SOURCE` chooses where the library comes from at build time:
+`bundled` (the default, for wheels), `external` (a prebuilt library found
+through `HATCH_CPP_LIBRARY_ROOT`, pkg-config, or the conda prefix), or `direct`
+(compile the library sources into the extension).
+
+`cpp/CMakeLists.txt` builds and installs the library without Python, with a CMake
+package config and a pkg-config file, for conda, vcpkg, and system packages:
+
+```bash
+cmake -S cpp -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+cmake --install build --prefix /path/to/prefix
+```
+{%- endif %}
 
 > [!NOTE]
 > This library was generated using [copier](https://copier.readthedocs.io/en/stable/) from the [Base Python Project Template repository](https://github.com/python-project-templates/base).

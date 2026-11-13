@@ -1,4 +1,5 @@
 ---
+add_c_abi: false
 add_docs: true
 add_pyodide: false
 add_vcpkg: true

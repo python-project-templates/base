@@ -1,0 +1,28 @@
+/* C ABI of lib{{ module }}. Every exported function is declared here. */
+#pragma once
+
+#include <stdint.h>
+
+#define {{ module | upper }}_ABI_VERSION 1
+
+#if defined(_WIN32) && defined({{ module | upper }}_BUILD)
+#define {{ module | upper }}_API __declspec(dllexport)
+#elif defined(_WIN32)
+#define {{ module | upper }}_API __declspec(dllimport)
+#else
+#define {{ module | upper }}_API __attribute__((visibility("default")))
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* The ABI version the library was built with. Compare it with {{ module | upper }}_ABI_VERSION. */
+{{ module | upper }}_API uint32_t {{ module }}_abi_version(void);
+
+/* Adds two numbers. */
+{{ module | upper }}_API int32_t {{ module }}_add(int32_t i, int32_t j);
+
+#ifdef __cplusplus
+}
+#endif
