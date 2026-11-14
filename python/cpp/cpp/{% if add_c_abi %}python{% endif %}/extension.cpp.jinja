@@ -1,0 +1,9 @@
+#include <pybind11/pybind11.h>
+
+#include "{{ module }}/{{ module }}.h"
+
+PYBIND11_MODULE(extension, m) {
+  m.doc() = "pybind11 example plugin";
+
+  m.def("add", &{{ module }}_add, "A function that adds two numbers");
+}

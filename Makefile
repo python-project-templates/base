@@ -31,7 +31,7 @@ update-action-pins:  ## re-pin actions-ext references to each action repo's curr
 check-action-pins:  ## check whether any actions-ext pin is out of date
 	python3 .github/scripts/update_action_pins.py --check
 
-.PHONY: gen-python gen-cpp gen-js gen-jupyter gen-rust gen-rust-capi gen-rustjswasm gen-cppjswasm gen-uitk-svelte gen-uitk-webawesome gen-site-react gen-site-sveltekit gen-site-webawesome
+.PHONY: gen-python gen-cpp gen-cpp-capi gen-js gen-jupyter gen-rust gen-rust-capi gen-rustjswasm gen-cppjswasm gen-uitk-svelte gen-uitk-webawesome gen-site-react gen-site-sveltekit gen-site-webawesome
 gen-python:  ## regenerate the python template from scratch
 	mkdir -p ../python-template && cd ../python-template && rm -rf ./* && rm -rf .copier-answers.yaml .gitignore .github .gitattributes
 	copier copy -w . ../python-template --data-file examples/python.yaml
@@ -51,6 +51,11 @@ gen-cpp:  ## regenerate the c++ template from scratch
 	mkdir -p ../python-template-cpp && cd ../python-template-cpp && rm -rf ./* && rm -rf .copier-answers.yaml .gitignore .github .gitattributes
 	copier copy -w . ../python-template-cpp --data-file examples/cpp.yaml
 	cd ../python-template-cpp && $(SED) 's#_src_path: .#_src_path: https://github.com/python-project-templates/base.git#g' ./.copier-answers.yaml
+
+gen-cpp-capi:  ## regenerate the c++ template with a C ABI library from scratch
+	mkdir -p ../python-template-cpp-capi && cd ../python-template-cpp-capi && rm -rf ./* && rm -rf .copier-answers.yaml .gitignore .github .gitattributes
+	copier copy -w . ../python-template-cpp-capi --data-file examples/cpp-capi.yaml
+	cd ../python-template-cpp-capi && $(SED) 's#_src_path: .#_src_path: https://github.com/python-project-templates/base.git#g' ./.copier-answers.yaml
 
 gen-js:  ## regenerate the js template from scratch
 	mkdir -p ../python-template-js && cd ../python-template-js && rm -rf ./* && rm -rf .copier-answers.yaml .gitignore .github .gitattributes
@@ -102,7 +107,7 @@ gen-site-webawesome:  ## regenerate the Web Awesome site template from scratch
 	mkdir -p ../javascript-template-site-webawesome && cd ../javascript-template-site-webawesome && rm -rf ./* && rm -rf .copier-answers.yaml .github .gitignore .prettierignore .prettierrc .oxfmtrc.json .oxlintrc.json
 	copier copy -w . ../javascript-template-site-webawesome --data-file examples/site-webawesome.yaml
 
-.PHONY: test-python test-cpp test-js test-jupyter test-rust test-rust-capi test-rustjswasm test-cppjswasm test-uitk-svelte test-uitk-webawesome test-site-react test-site-sveltekit test-site-webawesome
+.PHONY: test-python test-cpp test-cpp-capi test-js test-jupyter test-rust test-rust-capi test-rustjswasm test-cppjswasm test-uitk-svelte test-uitk-webawesome test-site-react test-site-sveltekit test-site-webawesome
 test-python:
 	cd ../python-template && git config --global user.name "github-actions" && git config --global user.email "41898282+github-actions[bot]@users.noreply.github.c@example.com" && git init && git add . && git commit -m "initial commit"
 	cd ../python-template && make develop
@@ -116,6 +121,13 @@ test-cpp:
 	cd ../python-template-cpp && make lint
 	cd ../python-template-cpp && make checks
 	cd ../python-template-cpp && make test
+
+test-cpp-capi:
+	cd ../python-template-cpp-capi && git config --global user.name "github-actions" && git config --global user.email "41898282+github-actions[bot]@users.noreply.github.c@example.com" && git init && git add . && git commit -m "initial commit"
+	cd ../python-template-cpp-capi && make develop
+	cd ../python-template-cpp-capi && make lint
+	cd ../python-template-cpp-capi && make checks
+	cd ../python-template-cpp-capi && make test
 
 test-js:
 	cd ../python-template-js && git config --global user.name "github-actions" && git config --global user.email "41898282+github-actions[bot]@users.noreply.github.c@example.com" && git init && git add . && git commit -m "initial commit"

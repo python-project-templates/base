@@ -1,0 +1,7 @@
+#include "{{ module }}/{{ module }}.h"
+
+#include "{{ project_name_formatted }}/example.hpp"
+
+uint32_t {{ module }}_abi_version(void) { return {{ module | upper }}_ABI_VERSION; }
+
+int32_t {{ module }}_add(int32_t i, int32_t j) { return {{ module }}::add(i, j); }
