@@ -1,7 +1,7 @@
 [build-system]
 requires = [
     "hatchling",
-    "hatch-cpp{% if add_pyodide %}>=0.5.0{% endif %}",
+    "hatch-cpp{% if add_c_abi %}>=0.6.0{% elif add_pyodide %}>=0.5.0{% endif %}",
     "hatch-js",
     "pybind11",
 ]
@@ -48,7 +48,7 @@ develop = [
     "check-dist",
     "cibuildwheel",
     "codespell",
-    "hatch-cpp{% if add_pyodide %}>=0.5.0{% endif %}",
+    "hatch-cpp{% if add_c_abi %}>=0.6.0{% elif add_pyodide %}>=0.5.0{% endif %}",
     "hatch-js",
     "hatchling",
     "pybind11",
@@ -94,7 +94,12 @@ replace = 'version = "{new_version}"'
 filename = "js/package.json"
 search = '"version": "{current_version}"'
 replace = '"version": "{new_version}"'
-
+{% if add_c_abi %}
+[[tool.bumpversion.files]]
+filename = "cpp/CMakeLists.txt"
+search = "VERSION {current_version}"
+replace = "VERSION {new_version}"
+{% endif %}
 [tool.cibuildwheel]
 build = "cp{{ python_version_primary.replace('.', '') }}-*"
 test-command = "pytest -vvv {project}/{{ module }}/tests"
@@ -103,18 +108,28 @@ test-extras = "develop"
 [tool.cibuildwheel.linux]
 environment = {SKIP_HATCH_JS="1"}
 skip = "*i686* *musllinux*"
-
+{% if add_c_abi -%}
+# Keep the bundled C ABI library where the extension's rpath expects it.
+repair-wheel-command = "auditwheel repair --exclude 'lib{{ module }}.so' -w {dest_dir} {wheel}"
+{% endif %}
 [tool.cibuildwheel.macos]
 environment = {MACOSX_DEPLOYMENT_TARGET="11.0", SKIP_HATCH_JS="1"}
 archs = "arm64"
-
+{% if add_c_abi -%}
+repair-wheel-command = "delocate-wheel --require-archs {delocate_archs} --exclude lib{{ module }}.dylib -w {dest_dir} -v {wheel}"
+{% endif %}
 [tool.cibuildwheel.windows]
 environment = {SKIP_HATCH_JS="1"}
 skip = "*win32 *arm64"
 
 {% if add_pyodide -%}
 [tool.cibuildwheel.pyodide]
+{% if add_c_abi -%}
+# Emscripten has no shared libraries to split; compile the library in.
+environment = {SKIP_HATCH_JS="1", HATCH_CPP_LIBRARY_SOURCE="direct"}
+{% else -%}
 environment = {SKIP_HATCH_JS="1"}
+{% endif -%}
 test-command = "python -m pytest -vvv --pyargs {{ module }}.tests"
 test-extras = []
 test-requires = ["pytest"]
@@ -152,9 +167,33 @@ targets = [
 
 [tool.hatch.build.hooks.hatch-cpp]
 verbose = true
+{%- if add_c_abi %}
+
+# lib{{ module }}: the C ABI library, shipped under {{ module }}/lib. Its header is in {{ module }}/include.
+[[tool.hatch.build.hooks.hatch-cpp.libraries]]
+name = "{{ module }}/lib/lib{{ module }}"
+sources = ["cpp/{{ project_name_formatted }}/c_api.cpp", "cpp/{{ project_name_formatted }}/example.cpp"]
+include-dirs = ["cpp", "{{ module }}/include"]
+binding = "generic"
+define-macros = ["{{ module | upper }}_BUILD"]
+extra-compile-args-linux = ["-fvisibility=hidden"]
+extra-compile-args-darwin = ["-fvisibility=hidden"]
+expected-headers = ["{{ module }}/include/{{ module }}/{{ module }}.h"]
+header-symbol-prefix = "{{ module }}_"
+expected-abi-strings = ["{{ module | upper }}_ABI_VERSION 1"]
+
+# The pybind11 extension, linked against the library by default (library-source = bundled).
+[[tool.hatch.build.hooks.hatch-cpp.libraries]]
+name = "{{ module }}/extension_cpp"
+sources = ["cpp/python/extension.cpp"]
+include-dirs = ["{{ module }}/include"]
+binding = "pybind11"
+depends = ["{{ module }}/lib/lib{{ module }}"]
+{%- else %}
 libraries = [
     {name = "{{ module }}/extension_cpp", sources = ["cpp/{{ project_name_formatted }}/example.cpp", "cpp/{{ project_name_formatted }}/extension.cpp"], include-dirs = ["cpp"], binding="pybind11"}
 ]
+{%- endif %}
 
 [tool.hatch.build.targets.sdist]
 exclude = ["*.dll", "*.dylib", "*.so", "*.pyd"]
@@ -175,6 +214,9 @@ artifacts = [
     "{{ module }}/*.dylib",
     "{{ module }}/*.so",
     "{{ module }}/extension",
+{%- if add_c_abi %}
+    "{{ module }}/lib/*",
+{%- endif %}
 ]
 packages = [
     "{{ module }}",

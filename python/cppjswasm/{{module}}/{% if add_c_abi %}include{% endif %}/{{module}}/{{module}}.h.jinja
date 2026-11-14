@@ -1,0 +1,44 @@
+/* C ABI of lib{{ module }}. Every exported function is declared here. */
+#pragma once
+
+#include <stdint.h>
+
+#define {{ module | upper }}_ABI_VERSION 1
+
+#if defined(_WIN32) && defined({{ module | upper }}_BUILD)
+#define {{ module | upper }}_API __declspec(dllexport)
+#elif defined(_WIN32)
+#define {{ module | upper }}_API __declspec(dllimport)
+#else
+#define {{ module | upper }}_API __attribute__((visibility("default")))
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* An example value owned by the library. */
+typedef struct {{ module }}_example {{ module }}_example;
+
+/* The ABI version the library was built with. Compare it with {{ module | upper }}_ABI_VERSION. */
+{{ module | upper }}_API uint32_t {{ module }}_abi_version(void);
+
+/* Adds two numbers. */
+{{ module | upper }}_API int32_t {{ module }}_add(int32_t i, int32_t j);
+
+/* Creates an example holding a copy of value. Returns NULL if value is NULL or allocation fails.
+   Free the result with {{ module }}_example_free. */
+{{ module | upper }}_API {{ module }}_example* {{ module }}_example_new(const char* value);
+
+/* Frees an example. NULL is ignored. */
+{{ module | upper }}_API void {{ module }}_example_free({{ module }}_example* example);
+
+/* The example's value. The pointer is valid until the example is changed or freed. */
+{{ module | upper }}_API const char* {{ module }}_example_stuff(const {{ module }}_example* example);
+
+/* Replaces the example's value with a copy of value. Returns 0 on success and -1 on failure. */
+{{ module | upper }}_API int32_t {{ module }}_example_set_stuff({{ module }}_example* example, const char* value);
+
+#ifdef __cplusplus
+}
+#endif

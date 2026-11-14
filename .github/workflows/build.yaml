@@ -34,6 +34,7 @@ jobs:
           - rust-capi
           - rustjswasm
           - cppjswasm
+          - cppjswasm-capi
           - uitk-svelte
           - uitk-webawesome
           - site-react
@@ -89,7 +90,7 @@ jobs:
           elif [[ "$RUNNER_OS" == "macOS" ]]; then
             brew install clang-format
           fi
-        if: matrix.template == 'cpp' || matrix.template == 'cpp-capi' || matrix.template == 'cppjswasm'
+        if: matrix.template == 'cpp' || matrix.template == 'cpp-capi' || matrix.template == 'cppjswasm' || matrix.template == 'cppjswasm-capi'
 
       - name: Setup Node.js
         uses: actions-ext/node/setup@8bcebee998923fcc26f5854b4fd05ea378b58262
@@ -97,7 +98,7 @@ jobs:
           version: 22.x
           pnpm_version: 11.11.0
           js_folder: "."
-        if: matrix.template == 'js' || matrix.template == 'jupyter' || matrix.template == 'cppjswasm' || matrix.template == 'rustjswasm' || matrix.template == 'uitk-svelte' || matrix.template == 'uitk-webawesome' || matrix.template == 'site-react' || matrix.template == 'site-sveltekit' || matrix.template == 'site-webawesome'
+        if: matrix.template == 'js' || matrix.template == 'jupyter' || matrix.template == 'cppjswasm' || matrix.template == 'cppjswasm-capi' || matrix.template == 'rustjswasm' || matrix.template == 'uitk-svelte' || matrix.template == 'uitk-webawesome' || matrix.template == 'site-react' || matrix.template == 'site-sveltekit' || matrix.template == 'site-webawesome'
 
       - name: Setup Rust
         uses: actions-ext/rust/setup@af6343171cd1a86c4183da96de7eb96e15599662
@@ -105,7 +106,7 @@ jobs:
 
       - name: Install JavaScript dependencies
         run: pnpm install
-        if: matrix.template == 'js' || matrix.template == 'jupyter' || matrix.template == 'cppjswasm' || matrix.template == 'rustjswasm'
+        if: matrix.template == 'js' || matrix.template == 'jupyter' || matrix.template == 'cppjswasm' || matrix.template == 'cppjswasm-capi' || matrix.template == 'rustjswasm'
 
       - name: Build Rust fixture
         run: cargo build
@@ -134,4 +135,4 @@ jobs:
         run: python .github/scripts/check_sdist_artifacts.py ../python-template-${{ matrix.template }}
         env:
           HATCH_BUILD_NO_HOOKS: '1'
-        if: matrix.template == 'cpp' || matrix.template == 'cpp-capi' || matrix.template == 'cppjswasm' || matrix.template == 'rust' || matrix.template == 'rust-capi' || matrix.template == 'rustjswasm'
+        if: matrix.template == 'cpp' || matrix.template == 'cpp-capi' || matrix.template == 'cppjswasm' || matrix.template == 'cppjswasm-capi' || matrix.template == 'rust' || matrix.template == 'rust-capi' || matrix.template == 'rustjswasm'

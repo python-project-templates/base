@@ -1,0 +1,46 @@
+#include <pybind11/pybind11.h>
+#include <stdexcept>
+#include <string>
+
+#include "{{ module }}/{{ module }}.h"
+
+namespace py = pybind11;
+
+namespace {
+
+// Owns an example in lib{{ module }} through the C ABI.
+class Example {
+public:
+  explicit Example(const std::string& value)
+    : handle({{ module }}_example_new(value.c_str())) {
+    if(handle == nullptr)
+      throw std::runtime_error("{{ module }}_example_new failed");
+  }
+  ~Example() { {{ module }}_example_free(handle); }
+  Example(const Example&)            = delete;
+  Example& operator=(const Example&) = delete;
+
+  std::string stuff() const { return {{ module }}_example_stuff(handle); }
+
+  void set_stuff(const std::string& value) {
+    if({{ module }}_example_set_stuff(handle, value.c_str()) != 0)
+      throw std::runtime_error("{{ module }}_example_set_stuff failed");
+  }
+
+private:
+  {{ module }}_example* handle;
+};
+
+}
+
+PYBIND11_MODULE(extension_cpp, m) {
+  m.doc() = "pybind11 extension module";
+
+  m.def("add", &{{ module }}_add, "A function that adds two numbers");
+
+  py::class_<Example>(m, "Example")
+    .def(py::init<const std::string&>())
+    .def_property("stuff", &Example::stuff, &Example::set_stuff)
+    .def("__str__", [](const Example& e) { return e.stuff(); })
+    .def("__repr__", [](const Example& e) { return std::string("Example<") + e.stuff() + ">"; });
+}
