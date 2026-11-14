@@ -23,7 +23,7 @@ One selector chooses a template:
 - `Python / Rust` generates a Python package with Rust bindings via PyO3 from `python/rust/`. With `add_c_abi`, it also builds a C ABI library that the extension links against and wheels ship with its header.
 - `Python / Jupyter Widget` generates a Python package with a Jupyter extension from `python/jupyter/`.
 - `Python / Rust + JavaScript + WebAssembly` generates a Rust package with Python and WebAssembly bindings from `python/rustjswasm/`.
-- `Python / C++ + JavaScript + WebAssembly` generates a C++ package with Python and WebAssembly bindings from `python/cppjswasm/`.
+- `Python / C++ + JavaScript + WebAssembly` generates a C++ package with Python and WebAssembly bindings from `python/cppjswasm/`. `add_c_abi` adds the same C ABI library for the Python extension.
 - `JavaScript / UI Toolkit / Svelte` generates a Svelte package with shared design tokens, components, and a demo app from `javascript/uitk-svelte/`.
 - `JavaScript / UI Toolkit / Lit + Web Awesome` generates Lit custom elements with Web Awesome, shared design tokens, and a demo app from `javascript/uitk-webawesome/`.
 - `JavaScript / Site / React` generates a React site with Vite, Vitest, and Playwright from `javascript/site-react/`.
