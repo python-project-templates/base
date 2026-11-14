@@ -77,9 +77,11 @@ def test_c_consumer_builds_against_the_installed_package(tmp_path):
     source.write_text(C_CONSUMER)
     executable = tmp_path / ("consumer.exe" if platform == "win32" else "consumer")
     env = dict(os.environ)
+    if platform == "win32":
+        # Windows has no rpath, so the program finds the DLL through PATH whichever compiler built it.
+        env["PATH"] = library_dir + os.pathsep + env["PATH"]
     if Path(compiler).stem.lower() == "cl":
         command = [compiler, "/nologo", f"/I{get_include()}", str(source), f"/Fe:{executable}", "/link", f"/LIBPATH:{library_dir}", f"{library}.lib"]
-        env["PATH"] = library_dir + os.pathsep + env["PATH"]
     else:
         command = [
             compiler,
