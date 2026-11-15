@@ -85,7 +85,7 @@ add_c_abi:
   type: bool
   default: false
   help: Build a C ABI library that the Python extension links against
-  when: "{{ add_extension in ['cpp', 'rust'] }}"
+  when: "{{ add_extension in ['cpp', 'cppjswasm', 'rust'] }}"
 
 python_version_primary:
   type: str

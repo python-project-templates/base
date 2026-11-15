@@ -1,0 +1,46 @@
+# Builds and installs lib{{ module }} without Python, for conda, vcpkg, and system packages.
+cmake_minimum_required(VERSION 3.20)
+project({{ module }} VERSION 0.1.0 LANGUAGES CXX)
+
+include(CMakePackageConfigHelpers)
+
+add_library({{ module }} SHARED {{ project_name_formatted }}/c_api.cpp {{ project_name_formatted }}/example.cpp)
+add_library({{ module }}::{{ module }} ALIAS {{ module }})
+target_compile_features({{ module }} PRIVATE cxx_std_17)
+target_compile_definitions({{ module }} PRIVATE {{ module | upper }}_BUILD)
+target_include_directories(
+  {{ module }}
+  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../{{ module }}/include> $<INSTALL_INTERFACE:include>
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
+)
+# SOVERSION is {{ module | upper }}_ABI_VERSION.
+set_target_properties(
+  {{ module }}
+  PROPERTIES VERSION ${PROJECT_VERSION}
+             SOVERSION 1
+             CXX_VISIBILITY_PRESET hidden
+             VISIBILITY_INLINES_HIDDEN ON
+             INSTALL_NAME_DIR "@rpath"
+)
+
+install(
+  TARGETS {{ module }}
+  EXPORT {{ module }}Targets
+  RUNTIME DESTINATION bin
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+)
+install(DIRECTORY ../{{ module }}/include/ DESTINATION include)
+install(EXPORT {{ module }}Targets NAMESPACE {{ module }}:: DESTINATION lib/cmake/{{ module }})
+
+configure_package_config_file(
+  cmake/{{ module }}Config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/{{ module }}Config.cmake
+  INSTALL_DESTINATION lib/cmake/{{ module }}
+)
+write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/{{ module }}ConfigVersion.cmake COMPATIBILITY SameMinorVersion)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/{{ module }}Config.cmake ${CMAKE_CURRENT_BINARY_DIR}/{{ module }}ConfigVersion.cmake
+        DESTINATION lib/cmake/{{ module }}
+)
+
+configure_file(cmake/{{ module }}.pc.in ${CMAKE_CURRENT_BINARY_DIR}/{{ module }}.pc @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/{{ module }}.pc DESTINATION lib/pkgconfig)

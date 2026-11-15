@@ -5,6 +5,8 @@ import { node_modules_external } from "./tools/externals.mjs";
 import fs from "fs";
 import cpy from "cpy";
 
+const EXTENSION = "../{{ module }}/extension";
+
 const BUNDLES = [
   {
     entryPoints: ["src/ts/index.ts"],
@@ -25,7 +27,7 @@ async function build() {
       }
     }
   }
-  fs.rmSync("../{{ module }}/extension", {
+  fs.rmSync(EXTENSION, {
     recursive: true,
     force: true,
   });
@@ -45,8 +47,8 @@ async function build() {
   await Promise.all(BUNDLES.map(bundle)).catch(() => process.exit(1));
 
   // Copy servable assets to python extension (exclude esm/)
-  fs.mkdirSync("../{{ module }}/extension", { recursive: true });
-  await cpy("dist/**/*", "../{{ module }}/extension", {
+  fs.mkdirSync(EXTENSION, { recursive: true });
+  await cpy("dist/**/*", EXTENSION, {
     filter: (file) =>
       !file.relativePath.startsWith("esm/") &&
       !file.relativePath.startsWith("dist/esm/"),

@@ -1,0 +1,50 @@
+#include "{{ module }}/{{ module }}.h"
+
+#include "{{ project_name_formatted }}/example.hpp"
+
+struct {{ module }}_example {
+  Example value;
+};
+
+// The function names contain the module name, so clang-format would break these lines differently for each project.
+// clang-format off
+
+uint32_t {{ module }}_abi_version(void) {
+  return {{ module | upper }}_ABI_VERSION;
+}
+
+int32_t {{ module }}_add(int32_t i, int32_t j) {
+  return add(i, j);
+}
+
+// Exceptions must not cross the C boundary, so each function that allocates reports failure through its return value.
+{{ module }}_example* {{ module }}_example_new(const char* value) {
+  if(value == nullptr)
+    return nullptr;
+  try {
+    return new {{ module }}_example{Example(value)};
+  } catch(...) {
+    return nullptr;
+  }
+}
+
+void {{ module }}_example_free({{ module }}_example* example) {
+  delete example;
+}
+
+const char* {{ module }}_example_stuff(const {{ module }}_example* example) {
+  return example->value.stuff.c_str();
+}
+
+int32_t {{ module }}_example_set_stuff({{ module }}_example* example, const char* value) {
+  if(value == nullptr)
+    return -1;
+  try {
+    example->value.stuff = value;
+    return 0;
+  } catch(...) {
+    return -1;
+  }
+}
+
+// clang-format on

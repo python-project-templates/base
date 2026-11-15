@@ -1,1 +1,6 @@
+class Example:
+    stuff: str
+
+    def __init__(self, value: str) -> None: ...
+
 def add(i: int, j: int) -> int: ...
