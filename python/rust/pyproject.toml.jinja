@@ -1,7 +1,7 @@
 [build-system]
 requires = [
     "hatchling",
-    "hatch-rs>={% if add_c_abi %}0.5.0{% elif add_pyodide %}0.3.0{% else %}0.1.4{% endif %}",
+    "hatch-rs>=0.6.1",
 ]
 build-backend = "hatchling.build"
 
@@ -46,7 +46,7 @@ develop = [
     "check-dist",
     "cibuildwheel",
     "codespell",
-    "hatch-rs{% if add_c_abi %}>=0.5.0{% elif add_pyodide %}>=0.3.0{% endif %}",
+    "hatch-rs>=0.6.1",
     "hatchling",
     "mdformat",
     "mdformat-myst",
