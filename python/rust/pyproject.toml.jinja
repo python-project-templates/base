@@ -168,6 +168,9 @@ verbose = true
 abi3 = true
 module = "{{ module }}"
 path = "."
+{% if not add_c_abi -%}
+env = { PYO3_BUILD_EXTENSION_MODULE = "1" }
+{% endif -%}
 {% if add_c_abi -%}
 target-dir = "project"
 
@@ -197,6 +200,7 @@ name = "{{ module }}"
 manifest = "Cargo.toml"
 destination = "{{ module }}/{python_extension_name}"
 links = ["{{ module }}_capi"]
+env = { PYO3_BUILD_EXTENSION_MODULE = "1" }
 
 [tool.hatch.build.hooks.hatch-rs.artifacts.library-source-features]
 bundled = ["capi"]
